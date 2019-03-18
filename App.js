@@ -4,9 +4,10 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
+import AppContainer from './navigation/StackNavigation';
 
-import reducer from './components/reducer';
-import RepoList from './components/RepoList';
+import reducer from './screens/reducer';
+import RepoList from './screens/RepoList';
 
 const client = axios.create({
   baseURL: 'https://api.github.com',
@@ -20,7 +21,7 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <View style={styles.container}>
-          <RepoList />
+          <AppContainer />
         </View>
       </Provider>
     );
@@ -30,7 +31,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    marginTop: 50
+    backgroundColor: '#fff'
   }
 });

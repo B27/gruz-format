@@ -1,18 +1,25 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { connect } from 'react-redux';
+import { username } from '../constants';
 
 import { listRepos } from './reducer';
 
 class RepoList extends React.Component {
+  static navigationOptions = {
+    title: 'Груз-формат'
+  };
 
   componentDidMount() {
-    this.props.listRepos('romust');//вместо dispatch
+    this.props.listRepos(username);//вместо dispatch
   }
   renderItem = ({ item }) => (
-    <View style={styles.item}>
+    <TouchableOpacity 
+      style={styles.item}
+      onPress={() => this.props.navigation.navigate('Detail', { name: item.name })}
+    >
       <Text>{item.name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   render() {
@@ -22,6 +29,7 @@ class RepoList extends React.Component {
         styles={styles.container}
         data={repos}
         renderItem={this.renderItem}
+        keyExtractor={ (item, index) => index.toString() }
       />
     );
   }
