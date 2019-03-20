@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { getRepoDetail } from './reducer';
 import { username } from '../constants';
 
-class RepoDetail extends Component {
+class RepoDetailScreen extends Component {
   static navigationOptions = {
     title: 'RepoDetail'
   };
   componentDidMount() {
-    const {name} = this.props.navigation.state.params;
+    const { name } = this.props.navigation.state.params;
     this.props
       .getRepoDetail(username, name)
   }
@@ -32,9 +32,15 @@ class RepoDetail extends Component {
         <Text>{description}</Text>
         <Text>Forks: {forks_count}</Text>
         <Text>Stars: {stargazers_count}</Text>
+        <Button title="Выйти из аккаунта" onPress={() => this._signOutAsync()} />
       </View>
     );
   }
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('Auth');
+  };
 }
 
 const mapStateToProps = ({ repoInfo, loadingInfo }) => ({
@@ -46,4 +52,4 @@ const mapDispatchToProps = {
   getRepoDetail
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RepoDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(RepoDetailScreen);

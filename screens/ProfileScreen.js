@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { getUser } from './reducer';
 import { username } from '../constants';
 
-class Profile extends Component {
+class Profilecreen extends Component {
   static navigationOptions = {
     title: 'Profile'
   };

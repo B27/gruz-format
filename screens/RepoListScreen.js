@@ -5,7 +5,7 @@ import { username } from '../constants';
 
 import { listRepos } from './reducer';
 
-class RepoList extends React.Component {
+class RepoListScreen extends React.Component {
   static navigationOptions = {
     title: 'Груз-формат'
   };
@@ -57,4 +57,4 @@ const mapDispatchToProps = {
   listRepos
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RepoList);
+export default connect(mapStateToProps, mapDispatchToProps)(RepoListScreen);
