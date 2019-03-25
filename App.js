@@ -10,7 +10,7 @@ import reducer from './screens/reducer';
 
 
 const client = axios.create({
-  baseURL: 'https://api.github.com',
+  baseURL: 'https://gruz.bw2api.ru',
   resonseType: 'json'
 });
 

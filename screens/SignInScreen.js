@@ -7,35 +7,21 @@ import {
     Text,
     ImageBackground,
     Dimensions,
-    TouchableOpacity,
-    KeyboardAvoidingView
+    TouchableOpacity
 } from 'react-native';
 import bgImage from '../images/background.png';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import axios from 'axios';
 const { width: WIDTH } = Dimensions.get('window');
 
 class SignInScreen extends React.Component {
     state = {
-        login: '',
-        password: '',
-        showPass: true,
-        press: false
+        phone: ''
     }
     static navigationOptions = {
         header: null
     };
-
-    showPass = () => {
-        if (this.state.press == false) {
-            this.setState({ showPass: false, press: true })
-        } else {
-            this.setState({ showPass: true, press: false })
-        }
-    }
 
     render() {
         return (
@@ -43,9 +29,9 @@ class SignInScreen extends React.Component {
                 style={{flex: 1}}
                 contentContainerStyle={{ flex: 1 }}
                 resetScrollToCoords={{ x: 0, y: 0 }}
-                enableResetScrollToCoords='true'
-                enableOnAndroid='true'
-                enableAutomaticScroll='true'
+                enableResetScrollToCoords={true}
+                enableOnAndroid={true}
+                enableAutomaticScroll={true}
             >
                 <ImageBackground source={bgImage} style={styles.backgroundContainer}>
                     <View style={styles.logoContainer}>
@@ -56,36 +42,24 @@ class SignInScreen extends React.Component {
                         <Icon name={'fiber-manual-record'} size={42} color={'white'} style={styles.logoIcon} />
                     </View>
                     <View style={styles.inputBlock}>
-
+                        <Text style={styles.h2}>Введите номер телефона</Text>
                         <View style={styles.inputContainer} behavior="padding" enabled>
 
-                            <Icon name={'person'} size={28} color="#FFC234" style={styles.inputIcon} />
+                            <Icon name={'phone'} size={28} color="#FFC234" style={styles.inputIcon} />
+                            <Text style={styles.countryCode}>+7</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Логин"
+                                placeholder="Номер телефона"
                                 placeholderTextColor="grey"
-                                onChangeText={(login) => this.setState({ login })}
+                                keyboardType='numeric'
+                                onChangeText={(phone) => this.setState({ phone })}
                             />
 
                         </View>
-
-                        <View style={styles.inputContainer}>
-                            <Icon name={'lock'} size={28} color="#FFC234" style={styles.inputIcon} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Пароль"
-                                secureTextEntry={this.state.showPass}
-                                placeholderTextColor="grey"
-                                onChangeText={(password) => this.setState({ password })}
-                            />
-                            <TouchableOpacity style={styles.btnEye}
-                                onPress={this.showPass.bind(this)}>
-                                <Icon2 name={this.state.press == false ? 'md-eye' : 'md-eye-off'} size={26} color="grey" />
-                            </TouchableOpacity>
-                        </View>
+                        <Text style={styles.description}>На указанный Вами номер будет отправлено СМС с кодом подтверждения</Text>
 
                         <TouchableOpacity style={styles.btnLogin} onPress={() => this._signInAsync()}>
-                            <Text style={styles.text} >ВОЙТИ</Text>
+                            <Text style={styles.text} >ПРОДОЛЖИТЬ</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -95,8 +69,15 @@ class SignInScreen extends React.Component {
     }
 
     _signInAsync = async () => {
-        await AsyncStorage.setItem('userToken', 'abc');
-        this.props.navigation.navigate('App');
+        if(this.state.phone) {
+            const res = await axios.post('/enter/phone', {phoneNum: this.state.phone})
+            .catch((err) => {
+                console.log(err);
+            });
+            console.log(res)
+        }
+        // await AsyncStorage.setItem('userToken', 'abc');
+        //this.props.navigation.navigate('App');
     };
 }
 
@@ -131,7 +112,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 15,
         fontSize: 16,
-        paddingLeft: 45,
+        paddingLeft: 71,
         marginHorizontal: 25
     },
     inputIcon: {
@@ -153,12 +134,28 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: 'black',
         justifyContent: 'center',
-        marginTop: 20
+        marginTop: 30
     },
     text: {
         color: '#FFC234',
         fontSize: 16,
         textAlign: 'center'
+    },
+    countryCode: {
+        position: 'absolute',
+        top: 12,
+        paddingLeft: 71,
+        
+        fontSize: 16,
+    },
+    h2: {
+        fontSize: 18
+    },
+    description: {
+        color: 'grey',
+        marginHorizontal: 35,
+        textAlign: 'center',
+        top: 10
     }
 })
 export default SignInScreen;
