@@ -25,14 +25,14 @@ class SignInScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAwareScrollView
-                style={{flex: 1}}
-                contentContainerStyle={{ flex: 1 }}
-                resetScrollToCoords={{ x: 0, y: 0 }}
-                enableResetScrollToCoords={true}
-                enableOnAndroid={true}
-                enableAutomaticScroll={true}
-            >
+            // <KeyboardAwareScrollView
+            //     style={{flex: 1}}
+            //     contentContainerStyle={{ flex: 1 }}
+            //     resetScrollToCoords={{ x: 0, y: 0 }}
+            //     enableResetScrollToCoords={true}
+            //     enableOnAndroid={true}
+            //     enableAutomaticScroll={true}
+            // >
                 <ImageBackground source={bgImage} style={styles.backgroundContainer}>
                     <View style={styles.logoContainer}>
                         <Text style={styles.logoText}>
@@ -64,20 +64,27 @@ class SignInScreen extends React.Component {
 
                     </View>
                 </ImageBackground>
-            </KeyboardAwareScrollView>
+            // </KeyboardAwareScrollView>
         );
     }
 
     _signInAsync = async () => {
         if(this.state.phone) {
-            const res = await axios.post('/enter/phone', {phoneNum: this.state.phone})
+            console.log(this.state.phone);
+            
+            await axios.post('/enter/phone', {phoneNum: this.state.phone})
             .catch((err) => {
                 console.log(err);
+            })
+            .then(async (res)=> {
+                console.log(res.data);
+                await AsyncStorage.setItem('phoneNum', this.state.phone)
+                this.props.navigation.navigate('Sms');
             });
-            console.log(res)
+            
         }
-        // await AsyncStorage.setItem('userToken', 'abc');
-        //this.props.navigation.navigate('App');
+        //  await AsyncStorage.setItem('userToken', 'abc');
+        // this.props.navigation.navigate('App');
     };
 }
 

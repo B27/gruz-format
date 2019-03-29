@@ -3,14 +3,19 @@ import RepoDetailScreen from '../screens/RepoDetailScreen';
 import RepoListScreen from '../screens/RepoListScreen';
 import SignInScreen from '../screens/SignInScreen';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
+import AppLoadingScreen from '../screens/AppLoadingScreen';
+import SmsScreen from '../screens/SmsScreen';
+import UserInfoScreen from '../screens/UserInfoScreen';
 
 const AppStack = createStackNavigator({ 
-    Home: RepoListScreen,
-    Detail: RepoDetailScreen
+    Home: AppLoadingScreen,
+    Detail: RepoDetailScreen,
+    UserInfo: UserInfoScreen,//регистрация и рабочие страницы должны находиться в свиче
 });
 
 const AuthStack = createStackNavigator({
-    SignIn: SignInScreen
+    SignIn: SignInScreen,
+    Sms: SmsScreen
 });
 
 export default createAppContainer(createSwitchNavigator(
