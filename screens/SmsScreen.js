@@ -1,19 +1,17 @@
 import React from 'react';
 import {
-    StyleSheet,
     View,
     AsyncStorage,
     TextInput,
     Text,
     ImageBackground,
-    Dimensions,
     TouchableOpacity
 } from 'react-native';
 import bgImage from '../images/background.png';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
-const { width: WIDTH } = Dimensions.get('window');
+import styles from '../styles';
 
 class SmsScreen extends React.Component {
     state = {
@@ -41,7 +39,7 @@ class SmsScreen extends React.Component {
                             <Icon name={'phone'} size={28} color="#FFC234" style={styles.inputIcon} />
 
                             <TextInput
-                                style={styles.input}
+                                style={styles.inputWithIcon}
                                 placeholder="_ _ _ _"
                                 placeholderTextColor="grey"
                                 keyboardType='numeric'
@@ -50,7 +48,7 @@ class SmsScreen extends React.Component {
 
                         </View>
                        
-                        <TouchableOpacity style={styles.btnLogin} onPress={() => this._signInAsync()}>
+                        <TouchableOpacity style={styles.button} onPress={() => this._signInAsync()}>
                             <Text style={styles.text} >ВХОД</Text>
                         </TouchableOpacity>
 
@@ -80,91 +78,10 @@ class SmsScreen extends React.Component {
                     this.props.navigation.navigate('RegisterPerson')
                 }
                 
-            }
-                //console.log('token: ' + res.data.token);     
-                //console.log('token: ' + JSON.stringify(res.data));              
-                 //await AsyncStorage.setItem('userToken', 'abc');
-                 //
-            
-                //  await axios.get('/user/info', { headers: { Authorization: 'Bearer ' + res.data.token } })
-                
-                // .catch((err) => {
-                //     console.log(err);
-                // })
-                // .then((res)=>{
-                //     console.log('infoooooooooooooooo: ' + JSON.stringify(res.data));
-                //     this.props.navigation.navigate('App');
-                // });
-            
-        }
-        
+            }            
+        }       
     };
 }
 
-const styles = StyleSheet.create({
-    backgroundContainer: {
-        flex:1,
-        width: null,
-        height: null,
-    },
-    logoContainer: {
-        marginLeft: 24,
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingBottom: '5%'
-    },
-    logoText: {
-        color: 'white',
-        fontSize: 32,
-        fontWeight: '500',
-    },
-    logoIcon: {
-        marginTop: 15
-    },
-    inputBlock: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: "center"
-    },
-    input: {
-        width: WIDTH - 55,
-        height: 45,
-        borderWidth: 1,
-        borderRadius: 15,
-        fontSize: 16,
-        paddingLeft: 65,
-        marginHorizontal: 25
-    },
-    inputIcon: {
-        position: 'absolute',
-        top: 8,
-        left: 37
-    },
-    inputContainer: {
-        marginTop: 10
-    },
-    btnEye: {
-        position: 'absolute',
-        top: 8,
-        right: 37
-    },
-    btnLogin: {
-        width: WIDTH / 2,
-        height: 45,
-        borderRadius: 25,
-        backgroundColor: 'black',
-        justifyContent: 'center',
-        marginTop: 30
-    },
-    text: {
-        color: '#FFC234',
-        fontSize: 16,
-        textAlign: 'center'
-    },
-    h2: {
-        fontSize: 18
-    }
-
-})
 export default SmsScreen;
 
