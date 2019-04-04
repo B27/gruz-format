@@ -7,8 +7,7 @@ import {
     View,
 } from 'react-native';
 
-
-class AuthLoadingScreen extends React.Component {
+class AppLoadingScreen extends React.Component {
     constructor(props) {
         super(props);
         this._bootstrapAsync();
@@ -16,8 +15,7 @@ class AuthLoadingScreen extends React.Component {
 
     _bootstrapAsync = async () => {
         const userToken = await AsyncStorage.getItem('token');
-        const filledProfile = await AsyncStorage.getItem('filledProphile'); //заполнен ли профиль
-        this.props.navigation.navigate(userToken ? (filledProfile ? 'App' : 'RegisterPerson') : 'Auth');
+        this.props.navigation.navigate(userToken ? 'UserInfo' : 'Auth');
     };
 
     render() {
@@ -30,4 +28,4 @@ class AuthLoadingScreen extends React.Component {
     }
 }
 
-export default AuthLoadingScreen;
+export default AppLoadingScreen;

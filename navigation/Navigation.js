@@ -7,24 +7,47 @@ import AppLoadingScreen from '../screens/AppLoadingScreen';
 import SmsScreen from '../screens/SmsScreen';
 import UserInfoScreen from '../screens/UserInfoScreen';
 
-const AppStack = createStackNavigator({ 
-    Home: AppLoadingScreen,
+import EditUserScreen from '../screens/EditUserScreen';
+import { Dimensions } from 'react-native';
+
+const {height, width} = Dimensions.get('window');
+
+const AppStack = createStackNavigator({ //основной стек авторизованного пользователя
+    Home: AppLoadingScreen,//???
     Detail: RepoDetailScreen,
     UserInfo: UserInfoScreen,//регистрация и рабочие страницы должны находиться в свиче
 });
 
-const AuthStack = createStackNavigator({
+const AuthStack = createStackNavigator({ //стэк аутентификации
     SignIn: SignInScreen,
-    Sms: SmsScreen
-});
+    Sms: SmsScreen,
+    RegisterPerson: EditUserScreen
+},
+    {
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: '#FFC234',
+                textAlign: 'center',
+                height: 0.10*height,
+                textAlign: 'center',
+            },
+            headerTitleStyle: {
+                
+                
+              },
+            
+        }
+    });
 
-export default createAppContainer(createSwitchNavigator(
+
+export default createAppContainer(createSwitchNavigator( //свитч проверки авторизации
     {
         AuthLoading: AuthLoadingScreen,
         App: AppStack,
         Auth: AuthStack
     },
     {
-        initialRouteName: 'AuthLoading'
+        initialRouteName: 'AuthLoading',
+
     }
 ));
