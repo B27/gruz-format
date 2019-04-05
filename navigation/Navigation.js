@@ -6,7 +6,7 @@ import AuthLoadingScreen from '../screens/AuthLoadingScreen';
 import AppLoadingScreen from '../screens/AppLoadingScreen';
 import SmsScreen from '../screens/SmsScreen';
 import UserInfoScreen from '../screens/UserInfoScreen';
-
+import DocumentsScreen from '../screens/DocumentsScreen';
 import EditUserScreen from '../screens/EditUserScreen';
 import { Dimensions } from 'react-native';
 
@@ -21,7 +21,8 @@ const AppStack = createStackNavigator({ //основной стек автори
 const AuthStack = createStackNavigator({ //стэк аутентификации
     SignIn: SignInScreen,
     Sms: SmsScreen,
-    RegisterPerson: EditUserScreen
+    RegisterPerson: EditUserScreen,
+    Documents: DocumentsScreen
 },
     {
         defaultNavigationOptions: {
@@ -30,12 +31,7 @@ const AuthStack = createStackNavigator({ //стэк аутентификации
                 textAlign: 'center',
                 height: 0.10*height,
                 textAlign: 'center',
-            },
-            headerTitleStyle: {
-                
-                
-              },
-            
+            },           
         }
     });
 

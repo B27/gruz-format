@@ -8,6 +8,7 @@ import {
     Image
 } from 'react-native';
 import styles from '../styles'
+import LocalImage from '../components/LocalImage'
 
 class EditUserScreen extends React.Component {
 
@@ -28,16 +29,20 @@ class EditUserScreen extends React.Component {
             flexGrow: 1,
             alignSelf: 'center',
         },
-    };
+    };//style={styles.registrationPhoto}
 
     render() {
         return (
             <ScrollView contentContainerStyle={styles.registrationScreen}>
-                
-                <View style={styles.inputContainer} behavior="padding" enabled>
-                <TouchableOpacity>
-                    <Image style={styles.registrationPhoto} source={require('../images/unknown.png')} />
+                <TouchableOpacity style={styles.registrationPhotoContainer}>
+                    <LocalImage  
+                        source={require('../images/unknown.png')}
+                        originalWidth = {909}
+                        originalHeight = {465} 
+                    />
                 </TouchableOpacity>
+                <View style={styles.inputContainer} behavior="padding" enabled>
+                
                     <TextInput
                         style={styles.input}
                         placeholder="Имя"
@@ -106,12 +111,15 @@ class EditUserScreen extends React.Component {
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.buttonBottom} onPress={() => this._signInAsync()}>
+                <TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
                     <Text style={styles.text} >ПРОДОЛЖИТЬ</Text>
                 </TouchableOpacity>
 
             </ScrollView>
         );
+    }
+    _nextScreen = () => {
+        this.props.navigation.navigate('Documents');
     }
 }
 

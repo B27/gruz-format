@@ -67,10 +67,14 @@ const styles = StyleSheet.create({
         top: 8,
         left: 15
     },
+    buttonIcon: {
+
+    },
     inputContainer: {
         width: WIDTH - 55,
         marginHorizontal: 25,
-        marginTop: 10
+        marginTop: 10,
+        flex: 1
     },
     btnEye: {
         position: 'absolute',
@@ -118,10 +122,18 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     registrationPhoto: {
-    
-        
-        height: 250,
-    resizeMode: 'contain'
+        width: '100%',
+    },
+    registrationPhotoContainer: {
+
+    },
+    camButton: {
+        backgroundColor: '#FFC234',
+        marginBottom: 15,
+        width: 45,
+        height: 45,
+        borderRadius: 25,
+        justifyContent: 'center',
     }
 })
 export default styles;
