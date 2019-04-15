@@ -4,14 +4,17 @@ import {
     ScrollView,
     TextInput,
     Text,
-    TouchableOpacity,
-    Image
+    TouchableOpacity
 } from 'react-native';
 import styles from '../styles'
 import LocalImage from '../components/LocalImage'
+import { Permissions } from 'expo';
 
 class EditUserScreen extends React.Component {
-
+    
+    componentDidMount() {
+        this.checkPermissions();
+    }
     state = {
         lastname: '',
         firstname: '',
@@ -19,7 +22,8 @@ class EditUserScreen extends React.Component {
         birthDate: '',
         address: '',
         height: '',
-        weight: ''
+        weight: '',
+        message: ''
     };
     static navigationOptions = {
         title: 'Регистрация',
@@ -30,7 +34,13 @@ class EditUserScreen extends React.Component {
             alignSelf: 'center',
         },
     };//style={styles.registrationPhoto}
-
+    
+    checkPermissions = async ()=> {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        if (status !== 'granted') {
+            this.setState({message: 'Вам нужно дать разрешение'});
+        } else this.setState({message: 'Все норм'}); 
+               }
     render() {
         return (
             <ScrollView contentContainerStyle={styles.registrationScreen}>
@@ -41,6 +51,7 @@ class EditUserScreen extends React.Component {
                         originalHeight = {465} 
                     />
                 </TouchableOpacity>
+                <Text>{this.state.message}</Text>
                 <View style={styles.inputContainer} behavior="padding" enabled>
                 
                     <TextInput

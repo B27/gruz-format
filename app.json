@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "testReactNative",
-    "slug": "testReactNative",
+    "name": "Груз-Формат",
+    "slug": "gruz-format",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -23,7 +23,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "ru.baikalweb.gruz"
+    },
+    "android": {
+      "permissions": ["CAMERA"],
+      "package": "ru.baikalweb.gruz"
     }
   }
 }

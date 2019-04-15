@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         width: WIDTH - 55,
         marginHorizontal: 25,
         marginTop: 10,
-        flex: 1
+//        flex: 1
     },
     btnEye: {
         position: 'absolute',

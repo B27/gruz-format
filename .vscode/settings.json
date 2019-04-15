@@ -1,0 +1,13 @@
+{
+    "sshfs.configs": [
+        {
+            "host": "s5.ibb.su",
+            "name": "football",
+            "passphrase": "kkjl44",
+            "port": 2223,
+            "privateKeyPath": ".ssh/myKey",
+            "root": "/home/clockfake/footbal",
+            "username": "clockfake"
+        }
+    ]
+}
