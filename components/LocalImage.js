@@ -10,7 +10,7 @@ const LocalImage = ({source, originalWidth, originalHeight}) => {
     let newWidth = originalWidth * widthChange
     let newHeight = originalHeight * widthChange
     return (
-        <Image source={{uri: 'https://briefly.ru/static/authors/gogol.jpg'}} style={{width: newWidth, height: newHeight}} />
+        <Image source={source} style={{width: newWidth, height: newHeight}} />
     )
 }
 

@@ -103,6 +103,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center'
     },
+    blackText: {
+        color: 'black',
+        fontSize: 16,
+        textAlign: 'center'
+    },
 
     h2: {
         fontSize: 18
@@ -134,6 +139,32 @@ const styles = StyleSheet.create({
         height: 45,
         borderRadius: 25,
         justifyContent: 'center',
-    }
+    },
+
+    choiceCameraRoll: {
+        height: 200,
+        backgroundColor: "white",
+        shadowColor: "black",
+        width: WIDTH * 0.9,
+        elevation: 5, 
+        borderRadius: 10
+    },
+    choiceCameraRollItem: {
+        backgroundColor: '#FFC234',
+        borderRadius:10,
+        margin: 5,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    choiceCameraRollCancel: {
+        backgroundColor: 'black',
+        borderRadius: 10,
+        margin: 5,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
 })
 export default styles;
