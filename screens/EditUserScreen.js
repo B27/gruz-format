@@ -11,11 +11,13 @@ import LocalImage from "../components/LocalImage";
 import { Permissions } from "expo";
 import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
 import CameraModal from "./modals/CameraModal";
+import PreviewModal from './modals/PreviewModal';
 
 class EditUserScreen extends React.Component {
 	state = {
         choiceModalVisible: false,
-        cameraModalVisible: false,
+		cameraModalVisible: false,
+		previewModalVisible: false,
 		lastname: "",
 		firstname: "",
 		patronimyc: "",
@@ -34,17 +36,13 @@ class EditUserScreen extends React.Component {
 			alignSelf: "center"
 		}
 	};
-    closeModals = () => {
-        this.setState({
-            choiceModalVisible: false,
-            cameraModalVisible: false
-        });
-    }
+
 	render() {
 		return (
 			<ScrollView contentContainerStyle={styles.registrationScreen}>
             <ChoiceCameraRoll visible = {this.state.choiceModalVisible} closeModal={this.closeModals} openCamera={this.openCamera}/>
-            <CameraModal visible = {this.state.cameraModalVisible} closeModal={this.closeModals}/>
+            <CameraModal visible = {this.state.cameraModalVisible} closeModal={this.closeModals} openPreview={this.openPreview}/>
+			<PreviewModal visible = {this.state.previewModalVisible} closeModal = {this.closePreviewModal}/>
 				<TouchableOpacity
 					style={styles.registrationPhotoContainer}
 					onPress={() => this.openCameraRoll()}
@@ -137,18 +135,26 @@ class EditUserScreen extends React.Component {
 	_nextScreen = () => {
 		this.props.navigation.navigate("Documents");
 	};
-	openCameraRoll = async () => {
-		const { status } = await Permissions.askAsync(Permissions.CAMERA);
-		if (status !== "granted") {
-			this.setState({ message: "Вам нужно дать разрешение" });
-		} else {
-			this.setState({ message: "Все норм" });
+	openCameraRoll = () => {
 			this.setState({ choiceModalVisible: true });
-		}
     };
     openCamera = () => {
         this.setState({ cameraModalVisible: true });
-    }
+	}
+	openPreview = () => {
+		this.setState({ previewModalVisible: true })
+	}
+	closeModals = () => {
+        this.setState({
+            choiceModalVisible: false,
+            cameraModalVisible: false
+        });
+	}
+	closePreviewModal = () => {
+		this.setState({
+			previewModalVisible: false
+		})
+	}
 }
 
 export default EditUserScreen;
