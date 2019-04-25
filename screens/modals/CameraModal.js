@@ -126,9 +126,10 @@ export default class CameraModal extends React.Component {
 	renderFlashButton = () => {};
 	takePicture = async () => {
 		if (this.camera) {
+			this.props.openPreview();
 			const { uri } = await this.camera.takePictureAsync();
 			const asset = await MediaLibrary.createAssetAsync(uri);
-			return this.props.openPreview();
+			this.props.openPreview(asset.uri);
 		}
 	};
 	// onPictureSaved = async photo => {

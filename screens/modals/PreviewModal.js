@@ -1,6 +1,14 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Modal } from "react-native";
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	Modal,
+	Image,
+	ActivityIndicator
+} from "react-native";
 import styles from "../../styles";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 class PreviewModal extends React.Component {
 	render() {
@@ -11,19 +19,33 @@ class PreviewModal extends React.Component {
 				visible={this.props.visible}
 				onRequestClose={() => {
 					this.props.closeModal();
-                }}
-                
+				}}
 			>
 				
-						<TouchableOpacity
-							onPress={() => {
-								this.props.closeModal();
-							}}
-						>
-							<Text style={styles.text}>Отменить</Text>
-						</TouchableOpacity>
-					
-				
+				<View style={{ flex: 1, justifyContent: "center" }}>
+					{this.props.previewUri === undefined ? (
+						<ActivityIndicator size="large" color="#FFC234" />
+					) : (
+						<Image
+							source={{ uri: this.props.previewUri }}
+							style={styles.preview}
+						/>
+					)}
+				</View>
+				<TouchableOpacity
+					style={{ position: "absolute", left: 10, top: 10 }}
+					onPress={() => {
+						this.props.closeModal();
+					}}
+				>
+					<Icon name="chevron-left" size={40} color="white" />
+				</TouchableOpacity>
+				<TouchableOpacity style={{ position: "absolute", right: 10, top: 10 }}onPress={() => {
+						this.props.setPicture(this.props.previewUri);
+					}}
+				>
+					<Icon name="check-circle-outline" size={40} color="white" />
+				</TouchableOpacity>
 			</Modal>
 		);
 	}

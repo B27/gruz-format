@@ -9,9 +9,17 @@ const LocalImage = ({source, originalWidth, originalHeight}) => {
     let widthChange = (windowWidth-50)/originalWidth
     let newWidth = originalWidth * widthChange
     let newHeight = originalHeight * widthChange
-    return (
-        <Image source={source} style={{width: newWidth, height: newHeight}} />
-    )
+    console.log();
+    if(typeof(source)==="number"){
+        return (
+            <Image source={source} style={{width: newWidth, height: newHeight}} />
+        )
+    } else {
+        return (
+            <Image source={{uri: source}} style={{width: newWidth, height: newHeight}} />
+        )
+    }
+    
 }
 
 export default LocalImage

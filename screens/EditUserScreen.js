@@ -18,6 +18,8 @@ class EditUserScreen extends React.Component {
         choiceModalVisible: false,
 		cameraModalVisible: false,
 		previewModalVisible: false,
+		previewUri: null,
+		pictureUri: require("../images/unknown.png"),
 		lastname: "",
 		firstname: "",
 		patronimyc: "",
@@ -42,13 +44,13 @@ class EditUserScreen extends React.Component {
 			<ScrollView contentContainerStyle={styles.registrationScreen}>
             <ChoiceCameraRoll visible = {this.state.choiceModalVisible} closeModal={this.closeModals} openCamera={this.openCamera}/>
             <CameraModal visible = {this.state.cameraModalVisible} closeModal={this.closeModals} openPreview={this.openPreview}/>
-			<PreviewModal visible = {this.state.previewModalVisible} closeModal = {this.closePreviewModal}/>
+			<PreviewModal previewUri = {this.state.previewUri} visible = {this.state.previewModalVisible} closeModal = {this.closePreviewModal} setPicture = {this.setPicture}/>
 				<TouchableOpacity
 					style={styles.registrationPhotoContainer}
 					onPress={() => this.openCameraRoll()}
 				>
 					<LocalImage
-						source={require("../images/unknown.png")}
+						source={this.state.pictureUri}
 						originalWidth={909}
 						originalHeight={465}
 					/>
@@ -135,14 +137,30 @@ class EditUserScreen extends React.Component {
 	_nextScreen = () => {
 		this.props.navigation.navigate("Documents");
 	};
+
+	
 	openCameraRoll = () => {
 			this.setState({ choiceModalVisible: true });
     };
     openCamera = () => {
         this.setState({ cameraModalVisible: true });
 	}
-	openPreview = () => {
-		this.setState({ previewModalVisible: true })
+	openPreview = (uri) => {
+		console.log(uri);
+		
+		this.setState({ 
+			previewModalVisible: true,
+			previewUri: uri 
+		})
+	}
+	setPicture = (uri) => {
+		this.setState({
+			pictureUri: uri,
+			choiceModalVisible: false,
+			cameraModalVisible: false,
+			previewModalVisible: false
+		})
+		
 	}
 	closeModals = () => {
         this.setState({

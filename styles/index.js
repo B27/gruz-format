@@ -165,6 +165,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-
+    preview: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        height: HEIGHT,
+        width: WIDTH
+    }
 })
 export default styles;

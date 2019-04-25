@@ -3,8 +3,8 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://ky-hbb.romust.gruz-format.exp.direct",
+  "packagerNgrokUrl": "https://packager.ky-hbb.romust.gruz-format.exp.direct",
+  "ngrokPid": 782,
   "webpackServerPort": null
 }
