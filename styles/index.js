@@ -129,9 +129,7 @@ const styles = StyleSheet.create({
     registrationPhoto: {
         width: '100%',
     },
-    registrationPhotoContainer: {
 
-    },
     camButton: {
         backgroundColor: '#FFC234',
         marginBottom: 15,

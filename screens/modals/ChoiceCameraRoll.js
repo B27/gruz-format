@@ -24,11 +24,11 @@ class ChoiceCameraRoll extends React.Component {
 					<View style={styles.choiceCameraRoll}>
 						<TouchableOpacity
 							style={styles.choiceCameraRollItem}
-							onPress={this.props.openCamera}
+							onPress={this.props.pickFromCamera}
 						>
 							<Text style={styles.blackText}>Сделать фото...</Text>
 						</TouchableOpacity>
-						<TouchableOpacity style={styles.choiceCameraRollItem}>
+						<TouchableOpacity style={styles.choiceCameraRollItem} onPress={this.props.selectPicture}>
 							<Text style={styles.blackText}>Выбрать из галереи...</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
