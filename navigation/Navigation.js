@@ -8,6 +8,7 @@ import SmsScreen from '../screens/SmsScreen';
 import UserInfoScreen from '../screens/UserInfoScreen';
 import DocumentsScreen from '../screens/DocumentsScreen';
 import EditUserScreen from '../screens/EditUserScreen';
+import EditCarScreen from '../screens/EditCarScreen';
 import { Dimensions } from 'react-native';
 
 const {height, width} = Dimensions.get('window');
@@ -22,7 +23,8 @@ const AuthStack = createStackNavigator({ //стэк аутентификации
     SignIn: SignInScreen,
     Sms: SmsScreen,
     RegisterPerson: EditUserScreen,
-    Documents: DocumentsScreen
+    Documents: DocumentsScreen,
+    EditCar: EditCarScreen
 },
     {
         defaultNavigationOptions: {

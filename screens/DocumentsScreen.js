@@ -62,7 +62,7 @@ class DocumentsScreen extends React.Component {
 
                 </View>
 
-                <TouchableOpacity style={styles.buttonBottom} onPress={() => this._signInAsync()}>
+                <TouchableOpacity style={styles.buttonBottom} onPress={() => this.props.navigation.navigate("EditCarScreen")}>
                     <Text style={styles.text} >ПРОДОЛЖИТЬ</Text>
                 </TouchableOpacity>
 
