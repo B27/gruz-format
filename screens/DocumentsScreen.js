@@ -9,11 +9,14 @@ import {
 } from 'react-native';
 import styles from '../styles'
 import LocalImage from '../components/LocalImage'
-import Icon from 'react-native-vector-icons/MaterialIcons' 
+import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
+
 
 class DocumentsScreen extends React.Component {
 
     state = {
+        choiceModalVisible: false,
+        pictureUri: require("../images/unknown.png"),
         lastname: '',
         firstname: '',
         patronimyc: '',
@@ -35,7 +38,12 @@ class DocumentsScreen extends React.Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.registrationScreen}>
-                
+                <ChoiceCameraRoll
+					pickFromCamera={this.pickFromCamera}
+					selectPicture={this.selectPicture}
+					visible={this.state.choiceModalVisible}
+					closeModal={this.closeModals}
+				/>
                 <View style={styles.inputContainer} behavior="padding" enabled>
                 
                     <TextInput
@@ -50,9 +58,22 @@ class DocumentsScreen extends React.Component {
                         placeholderTextColor="grey"
                         onChangeText={(lastname) => this.setState({ lastname })}
                     />
-                    <TouchableOpacity style={styles.camButton}>
-                        <Icon name={'photo-library'} size={28} color="black" style={styles.buttonIcon} />
-                    </TouchableOpacity>
+                    <Text>Фотография первой страницы паспорта:</Text>
+                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openCameraRoll()}>
+					<LocalImage
+						source={this.state.pictureUri}
+						originalWidth={909}
+						originalHeight={465}
+					/>
+				</TouchableOpacity>
+                    <Text>Фотография страницы паспорта c пропиской:</Text>
+                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openCameraRoll()}>
+					<LocalImage
+						source={this.state.pictureUri}
+						originalWidth={909}
+						originalHeight={465}
+					/>
+				</TouchableOpacity>
                     <TextInput
                         style={styles.input}
                         placeholder="Номер договора"
@@ -69,6 +90,9 @@ class DocumentsScreen extends React.Component {
             </ScrollView>
         );
     }
+    openCameraRoll = () => {
+		this.setState({ choiceModalVisible: true });
+	};
 }
 
 

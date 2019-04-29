@@ -169,6 +169,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: HEIGHT,
         width: WIDTH
+    },
+    fullScreenPicture: {
+        marginVertical: 10
     }
 })
 export default styles;
