@@ -14,17 +14,27 @@ const styleTestTouchableOpacity = {
 };
 const styleImage = { borderRadius: 15, width: 70, height: 70 };
 
-function ImageChooser(props) {
-  const pictureUri = require("../images/camera.png");
+function ImageChooser({ openModal, img }) {
+  let pictureUri = img;
+  if (!img) pictureUri = require("../images/camera.png");
 
-  return (
-    <TouchableOpacity
-      style={styleTestTouchableOpacity}
-      onPress={props.openModal}
-    >
-      <Image source={pictureUri} style={styleImage} resizeMode="cover" />
-    </TouchableOpacity>
-  );
+  if (typeof pictureUri === "number") {
+    return (
+      <TouchableOpacity style={styleTestTouchableOpacity} onPress={openModal}>
+        <Image source={pictureUri} style={styleImage} resizeMode="cover" />
+      </TouchableOpacity>
+    );
+  } else {
+    return (
+      <TouchableOpacity style={styleTestTouchableOpacity} onPress={openModal}>
+        <Image
+          source={{ uri: pictureUri }}
+          style={styleImage}
+          resizeMode="cover"
+        />
+      </TouchableOpacity>
+    );
+  }
 }
 
 export default ImageChooser;

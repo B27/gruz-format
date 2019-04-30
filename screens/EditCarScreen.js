@@ -14,6 +14,7 @@ import { Permissions, ImagePicker } from "expo";
 
 class EditCarScreen extends React.Component {
   state = {
+    imageNum: null,
     choiceModalVisible: false,
     pictureUri: require("../images/camera.png"),
     bodyType: "",
@@ -101,9 +102,9 @@ class EditCarScreen extends React.Component {
           />
           <Text style={styles.descriptionTwo}>Фотографии:</Text>
           <View style={styles.photoButtonContainer}>
-            <ImageChooser openModal={this.openModalImage} />
-            <ImageChooser openModal={this.openModalImage} />
-            <ImageChooser openModal={this.openModalImage} />
+            <ImageChooser openModal={this.openModalImage(1)} img={this.state.image1}/>
+            <ImageChooser openModal={this.openModalImage(2)} img={this.state.image2}/>
+            <ImageChooser openModal={this.openModalImage(3)} img={this.state.image3}/>
           </View>
         </View>
 
@@ -123,9 +124,10 @@ class EditCarScreen extends React.Component {
     });
   };
 
-  openModalImage = () => {
+  openModalImage = num => () => {
     this.setState({
-      choiceModalVisible: true
+      choiceModalVisible: true,
+      imageNum: num
     });
   };
 
@@ -136,7 +138,7 @@ class EditCarScreen extends React.Component {
       const { cancelled, uri } = await ImagePicker.launchCameraAsync({
         mediaTypes: "Images"
       });
-      if (!cancelled) this.setState({ pictureUri: uri });
+      if (!cancelled) this.setState({ [`image${this.state.imageNum}`]: uri });
     }
   };
 
@@ -149,7 +151,7 @@ class EditCarScreen extends React.Component {
         aspect: [1, 1],
         allowsEditing: true
       });
-      if (!cancelled) this.setState({ pictureUri: uri });
+      if (!cancelled) this.setState({ [`image${this.state.imageNum}`]: uri });
     }
   };
 }
