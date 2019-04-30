@@ -178,6 +178,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: HEIGHT,
         width: WIDTH
+    },
+    photoButtonContainer: {
+        flex: 1, 
+        flexDirection: 'row',  
+        justifyContent: 'space-around',
+        marginBottom: 16
     }
 })
 export default styles;

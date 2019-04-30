@@ -4,7 +4,8 @@ import {
   ScrollView,
   TextInput,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from "react-native";
 import styles from "../styles";
 import LocalImage from "../components/LocalImage";
@@ -13,10 +14,25 @@ import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
 import CameraModal from "./modals/CameraModal";
 import PreviewModal from "./modals/PreviewModal";
 import { Picker } from "native-base";
+import ImageChooser from "../components/ImageChooser";
+
+const styleTestTouchableOpacity = Object.assign(
+  {},
+  {
+    // borderWidth: 1,
+    // borderRadius: 15,
+    width: 70,
+    height: 70,
+    justifyContent: "center",
+    alignItems: "center"
+    //  alignContent: "flex-start"
+  }
+);
+const styleImage = { borderRadius: 15, width: 70, height: 70 };
 
 class EditCarScreen extends React.Component {
   state = {
-    pictureUri: require("../images/unknown.png"),
+    pictureUri: require("../images/camera.png"),
     bodyType: "",
     loadCapacity: "",
     length: "",
@@ -53,16 +69,6 @@ class EditCarScreen extends React.Component {
           closeModal={this.closePreviewModal}
           setPicture={this.setPicture}
         /> */}
-        <TouchableOpacity
-          style={styles.registrationPhotoContainer}
-          onPress={() => this.openCameraRoll()}
-        >
-          <LocalImage
-            source={this.state.pictureUri}
-            originalWidth={909}
-            originalHeight={465}
-          />
-        </TouchableOpacity>
         <Text>{this.state.message}</Text>
         <View style={styles.inputContainer} behavior="padding" enabled>
           <View
@@ -120,6 +126,12 @@ class EditCarScreen extends React.Component {
             placeholderTextColor="grey"
             onChangeText={height => this.setState({ height })}
           />
+          <Text style={styles.descriptionTwo}>Фотографии:</Text>
+          <View style={styles.photoButtonContainer}>
+            <ImageChooser />
+            <ImageChooser />
+            <ImageChooser />
+          </View>
         </View>
 
         <TouchableOpacity style={styles.buttonBottom} onPress={this.nextScreen}>
