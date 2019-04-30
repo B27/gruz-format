@@ -119,6 +119,13 @@ const styles = StyleSheet.create({
         top: 10,
         marginBottom: 10
     },
+    descriptionTwo: {
+        color: 'grey',
+        marginHorizontal: 6,
+        textAlign: 'left',
+        marginBottom: 10,
+
+    },
     //for ScrollView
     registrationScreen: {
         alignItems: 'center',
