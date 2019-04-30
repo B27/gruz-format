@@ -1,7 +1,8 @@
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
+import { Permissions, ImagePicker } from "expo";
 
-const styleTestTouchableOpacity = Object.assign({}, {
+const styleTestTouchableOpacity = {
   borderWidth: 1,
   borderRadius: 15,
   borderColor: "grey",
@@ -9,29 +10,21 @@ const styleTestTouchableOpacity = Object.assign({}, {
   height: 70,
   justifyContent: "center",
   alignItems: "center"
-//  alignContent: "flex-start"
-});
+  //  alignContent: "flex-start"
+};
 const styleImage = { borderRadius: 15, width: 70, height: 70 };
 
-function ImageChooser () {
+function ImageChooser(props) {
   const pictureUri = require("../images/camera.png");
 
   return (
     <TouchableOpacity
       style={styleTestTouchableOpacity}
-      onPress={openCameraRoll()}
+      onPress={props.openModal}
     >
-      <Image
-        source={pictureUri}
-        style={styleImage}
-        resizeMode="cover"
-      />
+      <Image source={pictureUri} style={styleImage} resizeMode="cover" />
     </TouchableOpacity>
   );
-};
-
-openCameraRoll = () => {
-  
-};
+}
 
 export default ImageChooser;

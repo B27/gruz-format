@@ -1,37 +1,20 @@
+import { Picker } from "native-base";
 import React from "react";
 import {
-  View,
   ScrollView,
-  TextInput,
   Text,
+  TextInput,
   TouchableOpacity,
-  Image
+  View
 } from "react-native";
-import styles from "../styles";
-import LocalImage from "../components/LocalImage";
-import { Permissions } from "expo";
-import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
-import CameraModal from "./modals/CameraModal";
-import PreviewModal from "./modals/PreviewModal";
-import { Picker } from "native-base";
 import ImageChooser from "../components/ImageChooser";
-
-const styleTestTouchableOpacity = Object.assign(
-  {},
-  {
-    // borderWidth: 1,
-    // borderRadius: 15,
-    width: 70,
-    height: 70,
-    justifyContent: "center",
-    alignItems: "center"
-    //  alignContent: "flex-start"
-  }
-);
-const styleImage = { borderRadius: 15, width: 70, height: 70 };
+import styles from "../styles";
+import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
+import { Permissions, ImagePicker } from "expo";
 
 class EditCarScreen extends React.Component {
   state = {
+    choiceModalVisible: false,
     pictureUri: require("../images/camera.png"),
     bodyType: "",
     loadCapacity: "",
@@ -53,22 +36,12 @@ class EditCarScreen extends React.Component {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.registrationScreen}>
-        {/* <ChoiceCameraRoll
+        <ChoiceCameraRoll
+          pickFromCamera={this.pickFromCamera}
+          selectPicture={this.selectPicture}
           visible={this.state.choiceModalVisible}
           closeModal={this.closeModals}
-          openCamera={this.openCamera}
         />
-        <CameraModal
-          visible={this.state.cameraModalVisible}
-          closeModal={this.closeModals}
-          openPreview={this.openPreview}
-        />
-        <PreviewModal
-          previewUri={this.state.previewUri}
-          visible={this.state.previewModalVisible}
-          closeModal={this.closePreviewModal}
-          setPicture={this.setPicture}
-        /> */}
         <Text>{this.state.message}</Text>
         <View style={styles.inputContainer} behavior="padding" enabled>
           <View
@@ -128,9 +101,9 @@ class EditCarScreen extends React.Component {
           />
           <Text style={styles.descriptionTwo}>Фотографии:</Text>
           <View style={styles.photoButtonContainer}>
-            <ImageChooser />
-            <ImageChooser />
-            <ImageChooser />
+            <ImageChooser openModal={this.openModalImage} />
+            <ImageChooser openModal={this.openModalImage} />
+            <ImageChooser openModal={this.openModalImage} />
           </View>
         </View>
 
@@ -144,38 +117,40 @@ class EditCarScreen extends React.Component {
     //    this.props.navigation.navigate("Documents");
   };
 
-  openCameraRoll = () => {
-    this.setState({ choiceModalVisible: true });
-  };
-  openCamera = () => {
-    this.setState({ cameraModalVisible: true });
-  };
-  openPreview = uri => {
-    console.log(uri);
-
-    this.setState({
-      previewModalVisible: true,
-      previewUri: uri
-    });
-  };
-  setPicture = uri => {
-    this.setState({
-      pictureUri: uri,
-      choiceModalVisible: false,
-      cameraModalVisible: false,
-      previewModalVisible: false
-    });
-  };
   closeModals = () => {
     this.setState({
-      choiceModalVisible: false,
-      cameraModalVisible: false
+      choiceModalVisible: false
     });
   };
-  closePreviewModal = () => {
+
+  openModalImage = () => {
     this.setState({
-      previewModalVisible: false
+      choiceModalVisible: true
     });
+  };
+
+  pickFromCamera = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status === "granted") {
+      this.setState({ choiceModalVisible: false });
+      const { cancelled, uri } = await ImagePicker.launchCameraAsync({
+        mediaTypes: "Images"
+      });
+      if (!cancelled) this.setState({ pictureUri: uri });
+    }
+  };
+
+  selectPicture = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === "granted") {
+      this.setState({ choiceModalVisible: false });
+      const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: "Images",
+        aspect: [1, 1],
+        allowsEditing: true
+      });
+      if (!cancelled) this.setState({ pictureUri: uri });
+    }
   };
 }
 
