@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import styles from '../styles'
 import LocalImage from '../components/LocalImage'
+import { Permissions, ImagePicker } from "expo";
 import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
 
 
@@ -16,7 +17,9 @@ class DocumentsScreen extends React.Component {
 
     state = {
         choiceModalVisible: false,
-        pictureUri: require("../images/unknown.png"),
+        firstPageUri: require("../images/unknown.png"),
+        secondPageUri: require("../images/unknown.png"),
+        firstPage: true,
         lastname: '',
         firstname: '',
         patronimyc: '',
@@ -33,7 +36,7 @@ class DocumentsScreen extends React.Component {
             flexGrow: 1,
             alignSelf: 'center',
         },
-    };//style={styles.registrationPhoto}
+    };
 
     render() {
         return (
@@ -59,17 +62,17 @@ class DocumentsScreen extends React.Component {
                         onChangeText={(lastname) => this.setState({ lastname })}
                     />
                     <Text>Фотография первой страницы паспорта:</Text>
-                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openCameraRoll()}>
+                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openFirstCameraRoll()}>
 					<LocalImage
-						source={this.state.pictureUri}
+						source={this.state.firstPageUri}
 						originalWidth={909}
 						originalHeight={465}
 					/>
 				</TouchableOpacity>
                     <Text>Фотография страницы паспорта c пропиской:</Text>
-                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openCameraRoll()}>
+                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openSecondCameraRoll()}>
 					<LocalImage
-						source={this.state.pictureUri}
+						source={this.state.secondPageUri}
 						originalWidth={909}
 						originalHeight={465}
 					/>
@@ -90,8 +93,48 @@ class DocumentsScreen extends React.Component {
             </ScrollView>
         );
     }
-    openCameraRoll = () => {
-		this.setState({ choiceModalVisible: true });
+    openFirstCameraRoll = () => {
+		this.setState({ choiceModalVisible: true, first: true });
+    };
+
+    openSecondCameraRoll = () => {
+		this.setState({ choiceModalVisible: true, first: false });
+    };
+    
+    closeModals = () => {
+		this.setState({
+			choiceModalVisible: false
+		});
+    };
+    
+    pickFromCamera = async () => {
+		const { status } = await Permissions.askAsync(Permissions.CAMERA);
+		if (status === "granted") {
+			this.setState({ choiceModalVisible: false });
+			const { cancelled, uri } = await ImagePicker.launchCameraAsync({
+				mediaTypes: "Images"
+			});
+			if (!cancelled) {
+                if (this.state.first) this.setState({ firstPageUri: uri });
+                else if (!this.state.first) this.setState({ secondPageUri: uri });
+            } 
+		}
+	};
+
+	selectPicture = async () => {
+		const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+		if (status === "granted") {
+			this.setState({ choiceModalVisible: false });
+			const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: "Images",
+				aspect: [1, 1],
+				allowsEditing: true
+			});
+			if (!cancelled) {
+                if (this.state.first) this.setState({ firstPageUri: uri });
+                else if (!this.state.first) this.setState({ secondPageUri: uri });
+            }
+		}
 	};
 }
 
