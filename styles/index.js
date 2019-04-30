@@ -136,9 +136,7 @@ const styles = StyleSheet.create({
     registrationPhoto: {
         width: '100%',
     },
-    registrationPhotoContainer: {
 
-    },
     camButton: {
         backgroundColor: '#FFC234',
         marginBottom: 15,
@@ -184,6 +182,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',  
         justifyContent: 'space-around',
         marginBottom: 16
+    },
+    fullScreenPicture: {
+        marginVertical: 10
     }
 })
 export default styles;

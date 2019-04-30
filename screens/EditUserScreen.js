@@ -8,17 +8,12 @@ import {
 } from "react-native";
 import styles from "../styles";
 import LocalImage from "../components/LocalImage";
-import { Permissions } from "expo";
+import { Permissions, ImagePicker } from "expo";
 import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
-import CameraModal from "./modals/CameraModal";
-import PreviewModal from './modals/PreviewModal';
 
 class EditUserScreen extends React.Component {
 	state = {
-        choiceModalVisible: false,
-		cameraModalVisible: false,
-		previewModalVisible: false,
-		previewUri: null,
+		choiceModalVisible: false,
 		pictureUri: require("../images/unknown.png"),
 		lastname: "",
 		firstname: "",
@@ -42,13 +37,13 @@ class EditUserScreen extends React.Component {
 	render() {
 		return (
 			<ScrollView contentContainerStyle={styles.registrationScreen}>
-            <ChoiceCameraRoll visible = {this.state.choiceModalVisible} closeModal={this.closeModals} openCamera={this.openCamera}/>
-            <CameraModal visible = {this.state.cameraModalVisible} closeModal={this.closeModals} openPreview={this.openPreview}/>
-			<PreviewModal previewUri = {this.state.previewUri} visible = {this.state.previewModalVisible} closeModal = {this.closePreviewModal} setPicture = {this.setPicture}/>
-				<TouchableOpacity
-					style={styles.registrationPhotoContainer}
-					onPress={() => this.openCameraRoll()}
-				>
+				<ChoiceCameraRoll
+					pickFromCamera={this.pickFromCamera}
+					selectPicture={this.selectPicture}
+					visible={this.state.choiceModalVisible}
+					closeModal={this.closeModals}
+				/>
+				<TouchableOpacity onPress={() => this.openCameraRoll()}>
 					<LocalImage
 						source={this.state.pictureUri}
 						originalWidth={909}
@@ -138,41 +133,39 @@ class EditUserScreen extends React.Component {
 		this.props.navigation.navigate("Documents");
 	};
 
-	
 	openCameraRoll = () => {
-			this.setState({ choiceModalVisible: true });
-    };
-    openCamera = () => {
-        this.setState({ cameraModalVisible: true });
-	}
-	openPreview = (uri) => {
-		console.log(uri);
-		
-		this.setState({ 
-			previewModalVisible: true,
-			previewUri: uri 
-		})
-	}
-	setPicture = (uri) => {
-		this.setState({
-			pictureUri: uri,
-			choiceModalVisible: false,
-			cameraModalVisible: false,
-			previewModalVisible: false
-		})
-		
-	}
+		this.setState({ choiceModalVisible: true });
+	};
+
 	closeModals = () => {
-        this.setState({
-            choiceModalVisible: false,
-            cameraModalVisible: false
-        });
-	}
-	closePreviewModal = () => {
 		this.setState({
-			previewModalVisible: false
-		})
-	}
+			choiceModalVisible: false
+		});
+	};
+
+	pickFromCamera = async () => {
+		const { status } = await Permissions.askAsync(Permissions.CAMERA);
+		if (status === "granted") {
+			this.setState({ choiceModalVisible: false });
+			const { cancelled, uri } = await ImagePicker.launchCameraAsync({
+				mediaTypes: "Images"
+			});
+			if (!cancelled) this.setState({ pictureUri: uri });
+		}
+	};
+
+	selectPicture = async () => {
+		const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+		if (status === "granted") {
+			this.setState({ choiceModalVisible: false });
+			const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: "Images",
+				aspect: [1, 1],
+				allowsEditing: true
+			});
+			if (!cancelled) this.setState({ pictureUri: uri });
+		}
+	};
 }
 
 export default EditUserScreen;
