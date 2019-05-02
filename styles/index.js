@@ -31,7 +31,20 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         fontSize: 16,
         paddingLeft: 15,
-        marginBottom: 15
+        marginBottom: 15,
+        justifyContent: 'center'
+    },
+    datePickerText: {
+        fontSize: 16,
+        color: 'grey',
+    },
+    inputWithIcon: {
+        height: 45,
+        borderWidth: 1,
+        borderRadius: 15,
+        fontSize: 16,
+        paddingLeft: 45,
+        
     },
     inputHalf: {
         flex:1,
@@ -67,9 +80,6 @@ const styles = StyleSheet.create({
         top: 8,
         left: 15
     },
-    buttonIcon: {
-
-    },
     inputContainer: {
         width: WIDTH - 55,
         marginHorizontal: 25,
@@ -79,7 +89,7 @@ const styles = StyleSheet.create({
     btnEye: {
         position: 'absolute',
         top: 8,
-        right: 37
+        right: 20
     },
     button: {
         width: WIDTH / 2,
@@ -185,6 +195,10 @@ const styles = StyleSheet.create({
     },
     fullScreenPicture: {
         marginVertical: 10
+    },
+    registrationQuestion: {
+        marginTop: 10,
+        fontSize: 16
     }
 })
 export default styles;

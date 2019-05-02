@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 944,
-  "expoServerNgrokUrl": "https://ky-hbb.anonymous.gruz-format.exp.direct",
-  "packagerNgrokUrl": "https://packager.ky-hbb.anonymous.gruz-format.exp.direct",
-  "ngrokPid": 8140,
+  "packagerPid": 4492,
+  "expoServerNgrokUrl": "https://ky-hbb.romust.gruz-format.exp.direct",
+  "packagerNgrokUrl": "https://packager.ky-hbb.romust.gruz-format.exp.direct",
+  "ngrokPid": 4512,
   "webpackServerPort": null
 }

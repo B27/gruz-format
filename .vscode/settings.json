@@ -6,7 +6,7 @@
             "passphrase": "kkjl44",
             "port": 2223,
             "privateKeyPath": ".ssh/myKey",
-            "root": "/home/clockfake/footbal",
+            "root": "/home/clockfake/",
             "username": "clockfake"
         }
     ]
