@@ -9,12 +9,14 @@ import UserInfoScreen from '../screens/UserInfoScreen';
 import DocumentsScreen from '../screens/DocumentsScreen';
 import EditUserScreen from '../screens/EditUserScreen';
 import EditCarScreen from '../screens/EditCarScreen';
+import MainScreen from '../screens/MainScreen'
 import { Dimensions } from 'react-native';
 
 const {height, width} = Dimensions.get('window');
 
 const AppStack = createStackNavigator({ //основной стек авторизованного пользователя
     Home: AppLoadingScreen,//???
+    Main: MainScreen,
     Detail: RepoDetailScreen,
     UserInfo: UserInfoScreen,//регистрация и рабочие страницы должны находиться в свиче
 });
