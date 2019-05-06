@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 10056,
+  "expoServerNgrokUrl": "https://dy-xb3.anonymous.gruz-format.exp.direct",
+  "packagerNgrokUrl": "https://packager.dy-xb3.anonymous.gruz-format.exp.direct",
+  "ngrokPid": 12760,
   "webpackServerPort": null
 }

@@ -86,7 +86,7 @@ class SignInScreen extends React.Component {
 
 					<TouchableOpacity
 						style={styles.button}
-						onPress={() => this._signInAsync()}
+						onPress={this._signInAsync}
 					>
 						<Text style={styles.text}>ВОЙТИ</Text>
 					</TouchableOpacity>
@@ -104,13 +104,15 @@ class SignInScreen extends React.Component {
 		);
 	}
 	goToRegistartionScreen = () => {
-		console.log("erfref");
+		console.log("SignInScreen goToRegistartionScreen");
 
 		this.props.navigation.navigate("RegisterPerson");
 	};
-	_signInAsync = async () => {
-		
-		if (this.state.phone) {
+	_signInAsync = () => {
+		console.log("SignInScreen navigate to Main", this.props.navigation.state);
+		this.props.navigation.navigate("Main") ;
+	// Удалить перед слиянием
+	/* 	if (this.state.phone) {
 		    console.log(this.state.phone);
 
 		    await axios.post('/enter/phone', { phoneNum: this.state.phone })
@@ -123,7 +125,7 @@ class SignInScreen extends React.Component {
 		            this.props.navigation.navigate('Sms');
 		        });
 
-		}
+		} */
 	};
 	showPass = () => {
 		if (this.state.press == false) {

@@ -15,7 +15,7 @@ import { Dimensions } from 'react-native';
 const {height, width} = Dimensions.get('window');
 
 const AppStack = createStackNavigator({ //основной стек авторизованного пользователя
-    Home: AppLoadingScreen,//???
+ //   Home: AppLoadingScreen,  // эта штука сломала навигацию, раскомментировать ЗАПРЕЩЕНО
     Main: MainScreen,
     Detail: RepoDetailScreen,
     UserInfo: UserInfoScreen,//регистрация и рабочие страницы должны находиться в свиче

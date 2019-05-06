@@ -1,8 +1,12 @@
 import React from "react";
-import { ScrollView, Text, TouchableHighlight } from "react-native";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
 import styles from "../styles";
 
 class EditCarScreen extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  
   state = {};
 
   static navigationOptions = {
@@ -13,24 +17,32 @@ class EditCarScreen extends React.Component {
       flexGrow: 1,
       alignSelf: "center"
     }
-  };
+  }; 
 
   render() {
     return (
       <ScrollView /* contentContainerStyle={styles.registrationScreen} */>
-        <MenuItem onPress={this.nextScreen} />
+        <MenuItem name="sdf" onPress={this.nextScreen} />
       </ScrollView>
     );
   }
 
-  nextScreen = () => {};
+  nextScreen = () => {console.log("MainScreen log")};
 }
 
 function MenuItem({ name, ...other }) {
   return (
-    <TouchableHighlight {...other} style={styles.buttonBottom}>
+    <TouchableOpacity {...other} style={{
+      width: 125,
+      height: 45,
+      borderRadius: 25,
+      backgroundColor: 'red',
+      alignContent: 'center',
+      marginTop: 10,
+      marginBottom: 20
+  }}>
       <Text>{name}</Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 }
 
