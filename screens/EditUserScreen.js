@@ -6,7 +6,8 @@ import {
 	Text,
 	TouchableOpacity,
 	DatePickerAndroid,
-	Picker
+	Picker,
+	AsyncStorage
 } from "react-native";
 import styles from "../styles";
 import LocalImage from "../components/LocalImage";
@@ -26,14 +27,16 @@ class EditUserScreen extends React.Component {
 		password: "",
 		birthDate: "Дата рождения",
 		city: "",
+		cityId: null,
 		street: "",
 		house: "",
 		flat: "",
 		height: "",
 		weight: "",
 		message: "",
-		cities: [{name:'Город'}, {name:'Улан-Удэ'}, {name:'Чита'}],
-		list: []
+		cities: [],
+		list: [],
+		userId: null
 	};
 	static navigationOptions = {
 		title: "Регистрация",
@@ -45,23 +48,23 @@ class EditUserScreen extends React.Component {
 		}
 	};
 
-	componentDidMount(){
+	componentDidMount() {
 		(async () => {
-			try{
-				( async () => this.setState({
-					cities:
-					[{name:'Город'},...(await axios.get("/cities/1000/1")).data.map(
-						({name,id}) => ({name,id})
-					)]
-					}
-				)
-				)();
-			}catch(err){
+			try {
+				(async () =>
+					this.setState({
+						cities: [
+							{ name: "Город", id: 1 },
+							...(await axios.get("/cities/1000/1")).data.map(
+								({ name, id }) => ({ name, id })
+							)
+						]
+					}))();
+			} catch (err) {
 				console.log(err);
 			}
 		})();
-		
-	};
+	}
 	render() {
 		return (
 			<ScrollView contentContainerStyle={styles.registrationScreen}>
@@ -80,7 +83,6 @@ class EditUserScreen extends React.Component {
 				</TouchableOpacity>
 
 				<View style={styles.inputContainer} behavior="padding" enabled>
-					
 					<TextInput
 						style={styles.input}
 						placeholder="Номер телефона"
@@ -115,12 +117,7 @@ class EditUserScreen extends React.Component {
 						placeholderTextColor="grey"
 						onChangeText={patronimyc => this.setState({ patronimyc })}
 					/>
-					<TextInput
-						style={styles.input}
-						placeholder="Город"
-						placeholderTextColor="grey"
-						onChangeText={city => this.setState({ city })}
-					/>
+
 					<View
 						style={{
 							height: 45,
@@ -132,13 +129,25 @@ class EditUserScreen extends React.Component {
 						}}
 					>
 						<Picker
+							selectedValue={this.state.cityId}
 							onValueChange={(itemValue, itemIndex) =>
-								this.setState({ city: itemValue })
+								this.setState({ cityId: itemValue })
 							}
 							placeholder="Тип кузова"
-							style={{color: 'grey'}}
+							style={{ color: "grey" }}
 						>
-							{this.state.cities.map(({name:city}, index) => <Picker.Item color = {!index ? 'grey' : 'black'} key={city} label={city} value={city} />)}
+							{this.state.cities.map(({ name: city, id: id }, index) => {
+								console.log(city, id);
+
+								return (
+									<Picker.Item
+										color={!index ? "grey" : "black"}
+										key={city}
+										label={city}
+										value={id}
+									/>
+								);
+							})}
 						</Picker>
 					</View>
 					<TextInput
@@ -212,7 +221,7 @@ class EditUserScreen extends React.Component {
 			this.state.birthDate === "Дата рождения" ||
 			this.state.height === "" ||
 			this.state.weight === "" ||
-			this.state.city === "" ||
+			this.state.cityId === "" ||
 			this.state.street === "" ||
 			this.state.house === "" ||
 			this.state.flat === ""
@@ -231,18 +240,45 @@ class EditUserScreen extends React.Component {
 					address: `${this.state.city} ${this.state.street} ${
 						this.state.house
 					} ${this.state.flat}`,
-					city: this.state.city,
+					city: this.state.cityId,
 					height: this.state.height,
 					weight: this.state.weight
 				})
 				.catch(err => {
 					console.log(err);
 				})
-				.then(async res => {
+				.then(res => {
 					console.log(res.data);
 					//await AsyncStorage.setItem("phoneNum", this.state.phone);
+					this.setState({ userId: res.data._id });
 					this.props.navigation.navigate("Documents");
 				});
+			const response = await axios
+				.post("/login", {
+					login: this.state.phone,
+					password: this.state.password
+				})
+				.catch(err => {
+					console.log(err);
+				});
+
+			console.log(response.data);
+			//await AsyncStorage.setItem("token", res.data.token);
+			axios.defaults.headers = {
+				Authorization: "Bearer " + response.data.token
+			};
+
+			const data = new FormData();
+			console.log(this.state.pictureUri);
+
+			data.append("user", {
+				uri: this.state.pictureUri,
+				type: "image/jpeg", 
+				name: "image.jpg"
+			});
+			console.log(data);
+
+			await axios.patch("/worker/upload/" + this.state.userId, data);
 		}
 	};
 
