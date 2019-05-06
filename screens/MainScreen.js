@@ -1,12 +1,19 @@
 import React from "react";
-import { ScrollView, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  TouchableHighlight,
+  Image
+} from "react-native";
 import styles from "../styles";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 class EditCarScreen extends React.Component {
   constructor(props) {
     super(props);
   }
-  
+
   state = {};
 
   static navigationOptions = {
@@ -17,32 +24,50 @@ class EditCarScreen extends React.Component {
       flexGrow: 1,
       alignSelf: "center"
     }
-  }; 
+  };
 
   render() {
     return (
       <ScrollView /* contentContainerStyle={styles.registrationScreen} */>
-        <MenuItem name="sdf" onPress={this.nextScreen} />
+        <View
+          style={{ flex: 1, flexDirection: "column", paddingHorizontal: 4 }}
+        >
+          <MenuItem item="Заявки" onPress={this.nextScreen} />
+          <MenuItem item="Мои заказы" icon="truck" onPress={this.nextScreen} />
+          <MenuItem item="Баланс" icon="wallet" onPress={this.nextScreen} />
+          <MenuItem item="Моё авто" onPress={this.nextScreen} />
+          <MenuItem item="Настройки" icon="gear" onPress={this.nextScreen} />
+          <MenuItem item="Инструкции" icon="info-circle" onPress={this.nextScreen} />
+        </View>
       </ScrollView>
     );
   }
 
-  nextScreen = () => {console.log("MainScreen log")};
+  nextScreen = () => {
+    console.log("MainScreen log");
+  };
 }
 
-function MenuItem({ name, ...other }) {
+function MenuItem({ item, icon, ...other }) {
   return (
-    <TouchableOpacity {...other} style={{
-      width: 125,
-      height: 45,
-      borderRadius: 25,
-      backgroundColor: 'red',
-      alignContent: 'center',
-      marginTop: 10,
-      marginBottom: 20
-  }}>
-      <Text>{name}</Text>
-    </TouchableOpacity>
+    <TouchableHighlight
+      {...other}
+      style={{
+        height: 48,
+        justifyContent: "center"
+      }}
+      underlayColor="#FFC234"
+    >
+      <View style={{ flexDirection: "row" }}>
+        <Icon
+          name={icon}
+          size={24}
+          //		color="#FFC234"
+          style={{marginHorizontal: 12}}
+        />
+        <Text style={styles.mainMenuItemText}>{item.toUpperCase()}</Text>
+      </View>
+    </TouchableHighlight>
   );
 }
 

@@ -118,6 +118,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center'
     },
+    mainMenuItemText: {
+        color: 'black',
+        fontSize: 20,
+     //   textAlign: 'center'
+    },
 
     h2: {
         fontSize: 18
