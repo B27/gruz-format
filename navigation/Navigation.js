@@ -22,6 +22,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const { height, width } = Dimensions.get("window");
 import CustomDrawerContentComponent from "./CustomDrawerContentComponent";
 
+function IconMenuItem({ tintColor, name }) {
+  return <Icon name={name} size={24} style={{ color: tintColor }} />;
+}
+
 const AppStack = createDrawerNavigator(
   {
     //основной стек авторизованного пользователя
@@ -31,64 +35,45 @@ const AppStack = createDrawerNavigator(
       screen: MainScreen,
       navigationOptions: {
         drawerLabel: "Заявки",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="inbox" size={24} style={{ color: tintColor }} />
-        )
+        drawerIcon: <IconMenuItem name="inbox" />
       }
     },
     Page2: {
       screen: RepoDetailScreen,
       navigationOptions: {
         drawerLabel: "Мои заказы",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="truck" size={24} style={{ color: tintColor }} />
-        )
-      }
-    },
-    Page3: {
-      screen: UserInfoScreen,
-      navigationOptions: {
-        drawerLabel: "Баланс",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="money" size={24} style={{ color: tintColor }} />
-        )
+        drawerIcon: <IconMenuItem name="truck" />
       }
     },
     Page4: {
       screen: MainScreen,
       navigationOptions: {
         drawerLabel: "Моё авто",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="wrench" size={24} style={{ color: tintColor }} />
-        )
+        drawerIcon: <IconMenuItem name="wrench" />
       }
     },
     Page5: {
       screen: RepoDetailScreen,
       navigationOptions: {
         drawerLabel: "Настройки",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="gear" size={24} style={{ color: tintColor }} />
-        )
+        drawerIcon: <IconMenuItem name="gear" />
       }
     },
     Page6: {
       screen: UserInfoScreen,
       navigationOptions: {
         drawerLabel: "Инструкции",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="info-circle" size={24} style={{ color: tintColor }} />
-        )
+        drawerIcon: <IconMenuItem name="info-circle" />
       }
-    },
+    }
   },
   {
-    drawerWidth: width * 0.9,
+    drawerWidth: width * 0.8,
     contentComponent: CustomDrawerContentComponent,
     contentOptions: {
       activeBackgroundColor: "#FFC234",
-      activeTintColor: "black",
-/*       iconContainerStyle: {
+      activeTintColor: "black"
+      /*       iconContainerStyle: {
         width: 45,
         border: 2
       } */
