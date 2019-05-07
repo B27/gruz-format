@@ -6,8 +6,10 @@ import { username } from '../constants';
 
 class UserInfoScreen extends Component {
   static navigationOptions = {
-    title: 'RepoDetail'
+    title: 'UserInfo',
+    drawerLabel: 'UserInfo',
   };
+  
   componentDidMount() {
 
 

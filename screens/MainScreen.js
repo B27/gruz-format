@@ -9,6 +9,17 @@ import {
 import styles from "../styles";
 import Icon from "react-native-vector-icons/FontAwesome";
 
+class LogoTitle extends React.Component {
+  render() {
+    return (
+      <Image
+        source={require("../images/background.png")}
+        style={{ width: 150, height: 30 }}
+      />
+    );
+  }
+}
+
 class EditCarScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -17,13 +28,14 @@ class EditCarScreen extends React.Component {
   state = {};
 
   static navigationOptions = {
-    title: "Иванов В.В.",
-    headerLeft: null,
+    headerTitle: <LogoTitle />,
+    drawerLabel: "Мои заказы"
+    /*  headerLeft: null,
     headerTitleStyle: {
       textAlign: "center",
       flexGrow: 1,
       alignSelf: "center"
-    }
+    } */
   };
 
   render() {
@@ -32,18 +44,23 @@ class EditCarScreen extends React.Component {
         <View
           style={{ flex: 1, flexDirection: "column", paddingHorizontal: 4 }}
         >
-          <MenuItem item="Заявки" onPress={this.nextScreen} />
+          <MenuItem item="Заявки" icon="inbox" onPress={this.nextScreen} />
           <MenuItem item="Мои заказы" icon="truck" onPress={this.nextScreen} />
-          <MenuItem item="Баланс" icon="wallet" onPress={this.nextScreen} />
-          <MenuItem item="Моё авто" onPress={this.nextScreen} />
+          <MenuItem item="Баланс" icon="money" onPress={this.nextScreen} />
+          <MenuItem item="Моё авто" icon="wrench" onPress={this.nextScreen} />
           <MenuItem item="Настройки" icon="gear" onPress={this.nextScreen} />
-          <MenuItem item="Инструкции" icon="info-circle" onPress={this.nextScreen} />
+          <MenuItem
+            item="Инструкции"
+            icon="info-circle"
+            onPress={this.nextScreen}
+          />
         </View>
       </ScrollView>
     );
   }
 
-  nextScreen = () => {
+  nextScreen = el => {
+    console.log(el);
     console.log("MainScreen log");
   };
 }
@@ -63,7 +80,7 @@ function MenuItem({ item, icon, ...other }) {
           name={icon}
           size={24}
           //		color="#FFC234"
-          style={{marginHorizontal: 12}}
+          style={{ marginHorizontal: 12 }}
         />
         <Text style={styles.mainMenuItemText}>{item.toUpperCase()}</Text>
       </View>
