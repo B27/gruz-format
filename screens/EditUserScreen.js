@@ -263,7 +263,7 @@ class EditUserScreen extends React.Component {
 				});
 
 			console.log(response.data);
-			//await AsyncStorage.setItem("token", res.data.token);
+			await AsyncStorage.setItem("token", response.data.token);
 			axios.defaults.headers = {
 				Authorization: "Bearer " + response.data.token
 			};
@@ -277,7 +277,7 @@ class EditUserScreen extends React.Component {
 				name: "image.jpg"
 			});
 			console.log(data);
-
+			await AsyncStorage.setItem("userId", this.state.userId);
 			await axios.patch("/worker/upload/" + this.state.userId, data);
 		}
 	};

@@ -1,113 +1,181 @@
-import React from 'react';
+import React from "react";
 import {
-    View,
-    ScrollView,
-    TextInput,
-    Text,
-    TouchableOpacity,
-    Image
-} from 'react-native';
-import styles from '../styles'
-import LocalImage from '../components/LocalImage'
+	View,
+	ScrollView,
+	TextInput,
+	Text,
+	TouchableOpacity,
+	AsyncStorage,
+	CheckBox,
+	WebView
+} from "react-native";
+import styles from "../styles";
+import LocalImage from "../components/LocalImage";
 import { Permissions, ImagePicker } from "expo";
+import axios from "axios";
 import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
 
-
 class DocumentsScreen extends React.Component {
+	state = {
+		choiceModalVisible: false,
+		firstPageUri: require("../images/unknown.png"),
+		secondPageUri: require("../images/unknown.png"),
+		firstPage: true,
+		passportNumber: null,
+		passportSeries: null,
+		agreement: null,
+		message: null,
+		policy: false
+	};
+	static navigationOptions = {
+		title: "Регистрация",
+		headerLeft: null,
+		headerTitleStyle: {
+			textAlign: "center",
+			flexGrow: 1,
+			alignSelf: "center"
+		}
+	};
 
-    state = {
-        choiceModalVisible: false,
-        firstPageUri: require("../images/unknown.png"),
-        secondPageUri: require("../images/unknown.png"),
-        firstPage: true,
-        lastname: '',
-        firstname: '',
-        patronimyc: '',
-        birthDate: '',
-        address: '',
-        height: '',
-        weight: ''
-    };
-    static navigationOptions = {
-        title: 'Регистрация',
-        headerLeft: null,
-        headerTitleStyle: {
-            textAlign: 'center',
-            flexGrow: 1,
-            alignSelf: 'center',
-        },
-    };
-
-    render() {
-        return (
-            <ScrollView contentContainerStyle={styles.registrationScreen}>
-                <ChoiceCameraRoll
+	render() {
+		return (
+			<ScrollView contentContainerStyle={styles.registrationScreen}>
+				<ChoiceCameraRoll
 					pickFromCamera={this.pickFromCamera}
 					selectPicture={this.selectPicture}
 					visible={this.state.choiceModalVisible}
 					closeModal={this.closeModals}
 				/>
-                <View style={styles.inputContainer} behavior="padding" enabled>
-                
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Номер паспорта"
-                        placeholderTextColor="grey"
-                        onChangeText={(firstname) => this.setState({ firstname })}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Серия паспорта"
-                        placeholderTextColor="grey"
-                        onChangeText={(lastname) => this.setState({ lastname })}
-                    />
-                    <Text>Фотография первой страницы паспорта:</Text>
-                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openFirstCameraRoll()}>
-					<LocalImage
-						source={this.state.firstPageUri}
-						originalWidth={909}
-						originalHeight={465}
+				<View style={styles.inputContainer} behavior="padding" enabled>
+					<TextInput
+						style={styles.input}
+						placeholder="Номер паспорта"
+						placeholderTextColor="grey"
+						keyboardType="numeric"
+						onChangeText={passportNumber => this.setState({ passportNumber })}
 					/>
-				</TouchableOpacity>
-                    <Text>Фотография страницы паспорта c пропиской:</Text>
-                    <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openSecondCameraRoll()}>
-					<LocalImage
-						source={this.state.secondPageUri}
-						originalWidth={909}
-						originalHeight={465}
+					<TextInput
+						style={styles.input}
+						placeholder="Серия паспорта"
+						placeholderTextColor="grey"
+						keyboardType="numeric"
+						onChangeText={passportSeries => this.setState({ passportSeries })}
 					/>
+					<Text>Фотография первой страницы паспорта:</Text>
+					<TouchableOpacity
+						style={styles.fullScreenPicture}
+						onPress={() => this.openFirstCameraRoll()}
+					>
+						<LocalImage
+							source={this.state.firstPageUri}
+							originalWidth={909}
+							originalHeight={465}
+						/>
+					</TouchableOpacity>
+					<Text>Фотография страницы паспорта c пропиской:</Text>
+					<TouchableOpacity
+						style={styles.fullScreenPicture}
+						onPress={() => this.openSecondCameraRoll()}
+					>
+						<LocalImage
+							source={this.state.secondPageUri}
+							originalWidth={909}
+							originalHeight={465}
+						/>
+					</TouchableOpacity>
+					<TextInput
+						style={styles.input}
+						placeholder="Номер договора"
+						placeholderTextColor="grey"
+						onChangeText={agreement => this.setState({ agreement })}
+					/>
+				</View>
+				<View style={styles.policy}>
+					<CheckBox
+						value={this.state.policy}
+						onValueChange={() => this.setState({ policy: !this.state.policy })}
+					/>
+					<View style={{ flexDirection: "column" }}>
+						<Text>Я согласен на обработку моих персональных данных</Text>
+						<Text
+							style={{ color: "#c69523" }}
+							onPress={this.goToRegistartionScreen}
+						>
+							Политика конфиденциальности
+						</Text>
+					</View>
+				</View>
+				
+				<Text style={{ color: "red" }}>{this.state.message}</Text>
+				<TouchableOpacity
+					style={styles.buttonBottom}
+					onPress={() => this._nextScreen()}
+				>
+					<Text style={styles.text}>ПРОДОЛЖИТЬ</Text>
 				</TouchableOpacity>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Номер договора"
-                        placeholderTextColor="grey"
-                        onChangeText={(patronimyc) => this.setState({ patronimyc })}
-                    />
+			</ScrollView>
+		);
+	}
+	_nextScreen = async () => {
+		if (
+			typeof this.state.firstPageUri === "number" ||
+			typeof this.state.secondPageUri === "number" ||
+			this.state.passportNumber === null ||
+			this.state.passportSeries === null ||
+			this.state.agreement === null
+		) {
+			this.setState({ message: "Все поля должны быть заполнены" });
+		} else {
+			const id = await AsyncStorage.getItem("userId");
+			await axios
+				.patch("/worker/" + id, {
+					passportNumber: this.state.passportNumber,
+					passportSeries: this.state.passportSeries,
+					agreement: this.state.agreement
+				})
+				.catch(err => {
+					console.log(err);
+				})
+				.then(res => {
+					console.log(res.data);
+					//await AsyncStorage.setItem("phoneNum", this.state.phone);
+					this.props.navigation.navigate("EditCar");
+				});
 
-                </View>
+			const data = new FormData();
+			console.log(this.state.pictureUri);
 
-                <TouchableOpacity style={styles.buttonBottom} onPress={() => this.props.navigation.navigate("EditCar")}>
-                    <Text style={styles.text} >ПРОДОЛЖИТЬ</Text>
-                </TouchableOpacity>
+			data.append("pass", {
+				uri: this.state.firstPageUri,
+				type: "image/jpeg",
+				name: "image.jpg"
+			});
+			data.append("pass_reg", {
+				uri: this.state.secondPageUri,
+				type: "image/jpeg",
+				name: "image.jpg"
+			});
 
-            </ScrollView>
-        );
-    }
-    openFirstCameraRoll = () => {
+			console.log(data);
+
+			await axios.patch("/worker/upload/" + id, data);
+		}
+	};
+	openFirstCameraRoll = () => {
 		this.setState({ choiceModalVisible: true, first: true });
-    };
+	};
 
-    openSecondCameraRoll = () => {
+	openSecondCameraRoll = () => {
 		this.setState({ choiceModalVisible: true, first: false });
-    };
-    
-    closeModals = () => {
+	};
+
+	closeModals = () => {
 		this.setState({
 			choiceModalVisible: false
 		});
-    };
-    
-    pickFromCamera = async () => {
+	};
+
+	pickFromCamera = async () => {
 		const { status } = await Permissions.askAsync(Permissions.CAMERA);
 		if (status === "granted") {
 			this.setState({ choiceModalVisible: false });
@@ -115,9 +183,9 @@ class DocumentsScreen extends React.Component {
 				mediaTypes: "Images"
 			});
 			if (!cancelled) {
-                if (this.state.first) this.setState({ firstPageUri: uri });
-                else if (!this.state.first) this.setState({ secondPageUri: uri });
-            } 
+				if (this.state.first) this.setState({ firstPageUri: uri });
+				else if (!this.state.first) this.setState({ secondPageUri: uri });
+			}
 		}
 	};
 
@@ -131,13 +199,11 @@ class DocumentsScreen extends React.Component {
 				allowsEditing: true
 			});
 			if (!cancelled) {
-                if (this.state.first) this.setState({ firstPageUri: uri });
-                else if (!this.state.first) this.setState({ secondPageUri: uri });
-            }
+				if (this.state.first) this.setState({ firstPageUri: uri });
+				else if (!this.state.first) this.setState({ secondPageUri: uri });
+			}
 		}
 	};
 }
 
-
 export default DocumentsScreen;
-
