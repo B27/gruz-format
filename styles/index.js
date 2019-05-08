@@ -204,6 +204,38 @@ const styles = StyleSheet.create({
     registrationQuestion: {
         marginTop: 10,
         fontSize: 16
+    },
+    drawerUserContainer: { 
+        flexDirection: "row",
+        height: 120,
+        backgroundColor: "#FFC234",
+        //   alignContent: "center",
+        alignItems: "center",
+        padding: 18,
+        paddingTop: 40       
+    },
+    drawerUserName: {
+        flex: 2,
+        textAlign: "center",
+        fontSize: 24,
+        paddingLeft: 6
+    },
+    drawerTopItem: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        alignItems: "center",
+        borderBottomWidth: 1,
+        height: 56,
+        borderColor: "#C4C4C4",
+        padding: 12
+    },
+    drawerFontTopItem: {
+        fontSize: 16
+    },
+    drawerLicenseAgreement: { 
+        alignSelf: "center", 
+        paddingTop: 120, 
+        paddingBottom: 16 
     }
 })
 export default styles;
