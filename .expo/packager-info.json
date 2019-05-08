@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 1656,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": "https://ky-hbb.romust.gruz-format.exp.direct",
   "packagerNgrokUrl": "https://packager.ky-hbb.romust.gruz-format.exp.direct",
-  "ngrokPid": 1678,
+  "ngrokPid": 695,
   "webpackServerPort": null
 }

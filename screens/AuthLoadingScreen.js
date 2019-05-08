@@ -6,6 +6,7 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
+import axios from 'axios';
 
 
 class AuthLoadingScreen extends React.Component {
@@ -16,8 +17,13 @@ class AuthLoadingScreen extends React.Component {
 
     _bootstrapAsync = async () => {
         const userToken = await AsyncStorage.getItem('token');
+        console.log(userToken);
+        
+        axios.defaults.headers = {
+            Authorization: "Bearer " + userToken
+        }
         const filledProfile = await AsyncStorage.getItem('filledProphile'); //заполнен ли профиль
-        this.props.navigation.navigate(userToken ? (filledProfile ? 'App' : 'Documents') : 'Auth');
+        this.props.navigation.navigate(userToken ? (filledProfile ? 'App' : 'EditCar') : 'Auth');
     };
 
     render() {

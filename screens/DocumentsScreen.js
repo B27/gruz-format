@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 	AsyncStorage,
 	CheckBox,
-	WebView
+	Linking
 } from "react-native";
 import styles from "../styles";
 import LocalImage from "../components/LocalImage";
@@ -25,7 +25,8 @@ class DocumentsScreen extends React.Component {
 		passportSeries: null,
 		agreement: null,
 		message: null,
-		policy: false
+		policy: false,
+		policyURL: 'https://gruz.bw2api.ru/policy.pdf'
 	};
 	static navigationOptions = {
 		title: "Регистрация",
@@ -36,7 +37,10 @@ class DocumentsScreen extends React.Component {
 			alignSelf: "center"
 		}
 	};
-
+	componentDidMount(){
+		console.log(axios.defaults.headers);
+		
+	}
 	render() {
 		return (
 			<ScrollView contentContainerStyle={styles.registrationScreen}>
@@ -99,7 +103,7 @@ class DocumentsScreen extends React.Component {
 						<Text>Я согласен на обработку моих персональных данных</Text>
 						<Text
 							style={{ color: "#c69523" }}
-							onPress={this.goToRegistartionScreen}
+							onPress={() => {Linking.openURL(this.state.policyURL)}}
 						>
 							Политика конфиденциальности
 						</Text>
@@ -122,7 +126,8 @@ class DocumentsScreen extends React.Component {
 			typeof this.state.secondPageUri === "number" ||
 			this.state.passportNumber === null ||
 			this.state.passportSeries === null ||
-			this.state.agreement === null
+			this.state.agreement === null ||
+			!this.state.policy
 		) {
 			this.setState({ message: "Все поля должны быть заполнены" });
 		} else {
