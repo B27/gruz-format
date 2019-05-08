@@ -16,11 +16,12 @@ import DocumentsScreen from "../screens/DocumentsScreen";
 import EditUserScreen from "../screens/EditUserScreen";
 import EditCarScreen from "../screens/EditCarScreen";
 import MainScreen from "../screens/MainScreen";
+import AppDrawer from "./AppDrawer";
 import { Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const { height, width } = Dimensions.get("window");
-import CustomDrawerContentComponent from "./CustomDrawerContentComponent";
+
 
 function IconMenuItem({ tintColor, name }) {
   return <Icon name={name} size={24} style={{ color: tintColor }} />;
@@ -69,7 +70,7 @@ const AppStack = createDrawerNavigator(
   },
   {
     drawerWidth: width * 0.8,
-    contentComponent: CustomDrawerContentComponent,
+    contentComponent: AppDrawer,
     contentOptions: {
       activeBackgroundColor: "#FFC234",
       activeTintColor: "black"
