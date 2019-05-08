@@ -16,6 +16,7 @@ class AuthLoadingScreen extends React.Component {
     }
 
     _bootstrapAsync = async () => {
+        console.log("AuthLoadingScreen bootstrapAsync");
         const userToken = await AsyncStorage.getItem('token');
         console.log(userToken);
         
