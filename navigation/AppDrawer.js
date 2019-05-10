@@ -47,14 +47,14 @@ class CustomDrawerContentComponent extends React.Component {
 								<SwitchToggle switchOn={this.state.switchValue} onPress={this._onChangeSwitchValue} />
 							</View>
 						</View>
-						<View style={styles.drawerTopItem}>
+						<TouchableOpacity style={styles.drawerTopItem} onPress={() => {this.props.navigation.navigate('Balance')}}>
 							<Text style={styles.drawerFontTopItem}>Баланс</Text>
 							<Text style={styles.drawerFontTopItem}>{`${this.state.balance} руб.`}</Text>
-						</View>
+						</TouchableOpacity>
 						<DrawerItems {...this.props} />
 					</View>
 					<Text style={styles.drawerLicenseAgreement} onPress={this._licenseAgreementPress}>
-						Лицензионное соглашение
+						Политика конфиденциальности
 					</Text>
 				</SafeAreaView>
 			</View>

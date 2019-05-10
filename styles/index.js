@@ -281,38 +281,36 @@ const styles = StyleSheet.create({
 
 		paddingBottom: 16
 	},
-	
+
 	instructionBase: {
-        paddingLeft: '3%',
-        paddingRight: '3%',
-        paddingTop: 5,
-    },
-    
-    instructionView: {
-        backgroundColor:'#FAFAFA',
-        padding: 5,
-        borderRadius: 3,
-        justifyContent: 'center',
-    },
-    
-    instructionViewTitle: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: "space-between",
-        height: 40,
-        alignItems: 'center',
-        padding: 5,
-    },
-    
-    instructionTitle: {
-        fontSize: 16,
-    },
-    
-    instructionText: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        padding: 5,
-    },
+		marginHorizontal: 15,
+		marginTop: 10	
+	},
+
+	instructionView: {
+		
+		padding: 5,
+		borderRadius: 3,
+		justifyContent: 'center'
+	},
+
+	instructionViewTitle: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		height: 40,
+		alignItems: 'center',
+	},
+
+	instructionTitle: {
+		fontSize: 16
+	},
+
+	instructionText: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		padding: 5
+	}},
     orderRow: {
         display: 'flex',
         flexDirection: 'row',
@@ -331,6 +329,6 @@ const styles = StyleSheet.create({
     },
     orderIcon: {
         paddingRight: 5
-    }
+    },
 });
 export default styles;
