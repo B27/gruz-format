@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
 	View,
 	ScrollView,
@@ -8,43 +8,43 @@ import {
 	DatePickerAndroid,
 	Picker,
 	AsyncStorage
-} from "react-native";
-import styles from "../styles";
-import LocalImage from "../components/LocalImage";
-import { Permissions, ImagePicker } from "expo";
-import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
-import axios from "axios";
-import { maxFromBits } from "uuid-js";
+} from 'react-native';
+import styles from '../styles';
+import LocalImage from '../components/LocalImage';
+import { Permissions, ImagePicker } from 'expo';
+import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
+import axios from 'axios';
+import { maxFromBits } from 'uuid-js';
 
 class EditUserScreen extends React.Component {
 	state = {
 		choiceModalVisible: false,
-		pictureUri: require("../images/unknown.png"),
-		lastname: "",
-		firstname: "",
-		patronimyc: "",
-		phone: "",
-		password: "",
-		birthDate: "Дата рождения",
-		city: "",
+		pictureUri: require('../images/unknown.png'),
+		lastname: '',
+		firstname: '',
+		patronimyc: '',
+		phone: '',
+		password: '',
+		birthDate: 'Дата рождения',
+		city: '',
 		cityId: null,
-		street: "",
-		house: "",
-		flat: "",
-		height: "",
-		weight: "",
-		message: "",
+		street: '',
+		house: '',
+		flat: '',
+		height: '',
+		weight: '',
+		message: '',
 		cities: [],
 		list: [],
 		userId: null
 	};
 	static navigationOptions = {
-		title: "Регистрация",
+		title: 'Регистрация',
 		headerLeft: null,
 		headerTitleStyle: {
-			textAlign: "center",
+			textAlign: 'center',
 			flexGrow: 1,
-			alignSelf: "center"
+			alignSelf: 'center'
 		}
 	};
 
@@ -54,10 +54,11 @@ class EditUserScreen extends React.Component {
 				(async () =>
 					this.setState({
 						cities: [
-							{ name: "Город", id: 1 },
-							...(await axios.get("/cities/1000/1")).data.map(
-								({ name, id }) => ({ name, id })
-							)
+							{ name: 'Город', id: 1 },
+							...(await axios.get('/cities/1000/1')).data.map(({ name, id }) => ({
+								name,
+								id
+							}))
 						]
 					}))();
 			} catch (err) {
@@ -75,18 +76,14 @@ class EditUserScreen extends React.Component {
 					closeModal={this.closeModals}
 				/>
 				<TouchableOpacity onPress={() => this.openCameraRoll()}>
-					<LocalImage
-						source={this.state.pictureUri}
-						originalWidth={909}
-						originalHeight={465}
-					/>
+					<LocalImage source={this.state.pictureUri} originalWidth={909} originalHeight={465} />
 				</TouchableOpacity>
 
-				<View style={styles.inputContainer} behavior="padding" enabled>
+				<View style={styles.inputContainer} behavior='padding' enabled>
 					<TextInput
 						style={styles.input}
-						placeholder="Номер телефона"
-						placeholderTextColor="grey"
+						placeholder='Номер телефона'
+						placeholderTextColor='grey'
 						onChangeText={phone => this.setState({ phone })}
 					/>
 
@@ -94,27 +91,27 @@ class EditUserScreen extends React.Component {
 
 					<TextInput
 						style={styles.input}
-						placeholder="Пароль"
+						placeholder='Пароль'
 						secureTextEntry={true}
-						placeholderTextColor="grey"
+						placeholderTextColor='grey'
 						onChangeText={password => this.setState({ password })}
 					/>
 					<TextInput
 						style={styles.input}
-						placeholder="Имя"
-						placeholderTextColor="grey"
+						placeholder='Имя'
+						placeholderTextColor='grey'
 						onChangeText={firstname => this.setState({ firstname })}
 					/>
 					<TextInput
 						style={styles.input}
-						placeholder="Фамилия"
-						placeholderTextColor="grey"
+						placeholder='Фамилия'
+						placeholderTextColor='grey'
 						onChangeText={lastname => this.setState({ lastname })}
 					/>
 					<TextInput
 						style={styles.input}
-						placeholder="Отчество"
-						placeholderTextColor="grey"
+						placeholder='Отчество'
+						placeholderTextColor='grey'
 						onChangeText={patronimyc => this.setState({ patronimyc })}
 					/>
 
@@ -125,86 +122,75 @@ class EditUserScreen extends React.Component {
 							borderRadius: 15,
 							paddingLeft: 5,
 							marginBottom: 15,
-							justifyContent: "center"
+							justifyContent: 'center'
 						}}
 					>
 						<Picker
 							selectedValue={this.state.cityId}
 							onValueChange={(itemValue, itemIndex) =>
-								this.setState({ cityId: itemValue })
+								this.setState({
+									cityId: itemValue
+								})
 							}
-							placeholder="Тип кузова"
-							style={{ color: "grey" }}
+							placeholder='Тип кузова'
+							style={{ color: 'grey' }}
 						>
 							{this.state.cities.map(({ name: city, id: id }, index) => {
 								console.log(city, id);
 
-								return (
-									<Picker.Item
-										color={!index ? "grey" : "black"}
-										key={city}
-										label={city}
-										value={id}
-									/>
-								);
+								return <Picker.Item color={!index ? 'grey' : 'black'} key={city} label={city} value={id} />;
 							})}
 						</Picker>
 					</View>
 					<TextInput
 						style={styles.input}
-						placeholder="Улица"
-						placeholderTextColor="grey"
+						placeholder='Улица'
+						placeholderTextColor='grey'
 						onChangeText={street => this.setState({ street })}
 					/>
-					<View style={{ flex: 1, flexDirection: "row" }}>
+					<View style={{ flex: 1, flexDirection: 'row' }}>
 						<TextInput
 							style={styles.inputHalf}
-							placeholder="Дом"
-							placeholderTextColor="grey"
+							placeholder='Дом'
+							placeholderTextColor='grey'
 							onChangeText={house => this.setState({ house })}
 						/>
 						<View style={{ width: 15 }} />
 						<TextInput
 							style={styles.inputHalf}
-							placeholder="Квартира"
-							placeholderTextColor="grey"
+							placeholder='Квартира'
+							placeholderTextColor='grey'
 							onChangeText={flat => this.setState({ flat })}
 						/>
 					</View>
-					<TouchableOpacity
-						style={styles.input}
-						onPress={() => this.openDatePicker()}
-					>
+					<TouchableOpacity style={styles.input} onPress={() => this.openDatePicker()}>
 						<Text style={styles.datePickerText}>
-							{this.state.birthDate != "Дата рождения"
+							{this.state.birthDate != 'Дата рождения'
 								? `${this.state.birthDate.getDate()}.${this.state.birthDate.getMonth()}.${this.state.birthDate.getFullYear()}`
 								: this.state.birthDate}
 						</Text>
 					</TouchableOpacity>
 
-					<View style={{ flex: 1, flexDirection: "row" }}>
+					<View style={{ flex: 1, flexDirection: 'row' }}>
 						<TextInput
 							style={styles.inputHalf}
-							placeholder="Рост"
-							placeholderTextColor="grey"
-							keyboardType="numeric"
+							placeholder='Рост'
+							placeholderTextColor='grey'
+							keyboardType='numeric'
 							onChangeText={height => this.setState({ height })}
 						/>
 						<View style={{ width: 15 }} />
 						<TextInput
 							style={styles.inputHalf}
-							placeholder="Вес"
-							placeholderTextColor="grey"
-							keyboardType="numeric"
+							placeholder='Вес'
+							placeholderTextColor='grey'
+							keyboardType='numeric'
 							onChangeText={weight => this.setState({ weight })}
 						/>
 					</View>
 				</View>
-				<Text style={{ color: "red" }}>{this.state.message}</Text>
-				<TouchableOpacity
-					style={styles.buttonBottom}
-					onPress={() => this._nextScreen()}
-				>
+				<Text style={{ color: 'red' }}>{this.state.message}</Text>
+				<TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
 					<Text style={styles.text}>ПРОДОЛЖИТЬ</Text>
 				</TouchableOpacity>
 			</ScrollView>
@@ -212,34 +198,30 @@ class EditUserScreen extends React.Component {
 	}
 	_nextScreen = async () => {
 		if (
-			typeof this.state.pictureUri === "number" ||
-			this.state.lastname === "" ||
-			this.state.firstname === "" ||
-			this.state.patronimyc === "" ||
-			this.state.phone === "" ||
-			this.state.password === "" ||
-			this.state.birthDate === "Дата рождения" ||
-			this.state.height === "" ||
-			this.state.weight === "" ||
-			this.state.cityId === "" ||
-			this.state.street === "" ||
-			this.state.house === "" ||
-			this.state.flat === ""
+			typeof this.state.pictureUri === 'number' ||
+			this.state.lastname === '' ||
+			this.state.firstname === '' ||
+			this.state.patronimyc === '' ||
+			this.state.phone === '' ||
+			this.state.password === '' ||
+			this.state.birthDate === 'Дата рождения' ||
+			this.state.height === '' ||
+			this.state.weight === '' ||
+			this.state.cityId === '' ||
+			this.state.street === '' ||
+			this.state.house === '' ||
+			this.state.flat === ''
 		) {
-			this.setState({ message: "Все поля должны быть заполнены" });
+			this.setState({ message: 'Все поля должны быть заполнены' });
 		} else {
 			await axios
-				.post("/worker", {
-					name: `${this.state.lastname} ${this.state.firstname} ${
-						this.state.patronimyc
-					}`,
+				.post('/worker', {
+					name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
 					login: this.state.phone,
 					phoneNum: this.state.phone,
 					password: this.state.password,
 					birthDate: this.state.birthDate,
-					address: `${this.state.city} ${this.state.street} ${
-						this.state.house
-					} ${this.state.flat}`,
+					address: `${this.state.city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
 					city: this.state.cityId,
 					height: this.state.height,
 					weight: this.state.weight
@@ -251,10 +233,10 @@ class EditUserScreen extends React.Component {
 					console.log(res.data);
 					//await AsyncStorage.setItem("phoneNum", this.state.phone);
 					this.setState({ userId: res.data._id });
-					this.props.navigation.navigate("Documents");
+					this.props.navigation.navigate('Documents');
 				});
 			const response = await axios
-				.post("/login", {
+				.post('/login', {
 					login: this.state.phone,
 					password: this.state.password
 				})
@@ -263,22 +245,22 @@ class EditUserScreen extends React.Component {
 				});
 
 			console.log(response.data);
-			await AsyncStorage.setItem("token", response.data.token);
+			await AsyncStorage.setItem('token', response.data.token);
 			axios.defaults.headers = {
-				Authorization: "Bearer " + response.data.token
+				Authorization: 'Bearer ' + response.data.token
 			};
 
 			const data = new FormData();
 			console.log(this.state.pictureUri);
 
-			data.append("user", {
+			data.append('user', {
 				uri: this.state.pictureUri,
-				type: "image/jpeg", 
-				name: "image.jpg"
+				type: 'image/jpeg',
+				name: 'image.jpg'
 			});
 			console.log(data);
-			await AsyncStorage.setItem("userId", this.state.userId);
-			await axios.patch("/worker/upload/" + this.state.userId, data);
+			await AsyncStorage.setItem('userId', this.state.userId);
+			await axios.patch('/worker/upload/' + this.state.userId, data);
 		}
 	};
 
@@ -294,7 +276,7 @@ class EditUserScreen extends React.Component {
 				this.setState({ birthDate: date });
 			}
 		} catch ({ code, message }) {
-			console.warn("Cannot open date picker", message);
+			console.warn('Cannot open date picker', message);
 		}
 	};
 
@@ -310,10 +292,10 @@ class EditUserScreen extends React.Component {
 
 	pickFromCamera = async () => {
 		const { status } = await Permissions.askAsync(Permissions.CAMERA);
-		if (status === "granted") {
+		if (status === 'granted') {
 			this.setState({ choiceModalVisible: false });
 			const { cancelled, uri } = await ImagePicker.launchCameraAsync({
-				mediaTypes: "Images"
+				mediaTypes: 'Images'
 			});
 			if (!cancelled) this.setState({ pictureUri: uri });
 		}
@@ -321,10 +303,10 @@ class EditUserScreen extends React.Component {
 
 	selectPicture = async () => {
 		const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-		if (status === "granted") {
+		if (status === 'granted') {
 			this.setState({ choiceModalVisible: false });
 			const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
-				mediaTypes: "Images",
+				mediaTypes: 'Images',
 				aspect: [1, 1],
 				allowsEditing: true
 			});
