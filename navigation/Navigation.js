@@ -17,6 +17,7 @@ import EditUserScreen from '../screens/EditUserScreen';
 import EditCarScreen from '../screens/EditCarScreen';
 import MainScreen from '../screens/MainScreen';
 import InstructionScreen from '../screens/InstructionScreen'
+import BalanceScreen from '../screens/BalanceScreen';
 import AppDrawer from './AppDrawer';
 import { Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -27,6 +28,20 @@ function IconMenuItem({ tintColor, name }) {
     return <Icon name={name} size={24} style={{ color: tintColor }} />;
 }
 
+const InstructionsStack = createStackNavigator({
+    Instructions: InstructionScreen
+},
+{
+    defaultNavigationOptions: {
+        headerStyle: {
+            backgroundColor: '#FFC234',
+            textAlign: 'center',
+            height: 0.1 * height,
+            textAlign: 'center'
+        }
+    }
+})
+
 const AppStack = createDrawerNavigator(
     {
         //основной стек авторизованного пользователя
@@ -34,7 +49,7 @@ const AppStack = createDrawerNavigator(
 
         Main: {
             screen: createStackNavigator(
-                { Main: MainScreen },
+                { Main: MainScreen, Balance: BalanceScreen },
                 {
                     defaultNavigationOptions: {
                         headerStyle: {
@@ -73,7 +88,7 @@ const AppStack = createDrawerNavigator(
             }
         },
         Page6: {
-            screen: InstructionScreen,
+            screen: InstructionsStack,
             navigationOptions: {
                 drawerLabel: 'Инструкции',
                 drawerIcon: <IconMenuItem name='info-circle' />
@@ -93,6 +108,8 @@ const AppStack = createDrawerNavigator(
         }
     }
 );
+
+
 
 const AuthStack = createStackNavigator(
     {

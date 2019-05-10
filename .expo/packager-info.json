@@ -1,10 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 3228,
-  "expoServerNgrokUrl": "https://ku-98j.anonymous.gruz-app.exp.direct",
-  "packagerNgrokUrl": "https://packager.ku-98j.anonymous.gruz-app.exp.direct",
-  "ngrokPid": 7624,
-  "webpackServerPort": null
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": "https://ku-98j.romust.gruz-format.exp.direct",
+  "packagerNgrokUrl": "https://packager.ku-98j.romust.gruz-format.exp.direct",
+  "ngrokPid": 2330
 }
