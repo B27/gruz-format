@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { Row } from "native-base";
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
 const styles = StyleSheet.create({
     backgroundContainer: {
@@ -244,6 +245,33 @@ const styles = StyleSheet.create({
         alignSelf: "center", 
         paddingTop: 120, 
         paddingBottom: 16 
-    }
+    },
+    instructionBase: {
+        paddingLeft: '3%',
+        paddingRight: '3%',
+        paddingTop: 5,
+    },
+    instructionView: {
+        backgroundColor:'#FAFAFA',
+        padding: 5,
+        borderRadius: 3,
+        justifyContent: 'center',
+    },
+    instructionViewTitle: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        height: 40,
+        alignItems: 'center',
+        padding: 5,
+    },
+    instructionTitle: {
+        fontSize: 16,
+    },
+    instructionText: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        padding: 5,
+    },    
 })
 export default styles;
