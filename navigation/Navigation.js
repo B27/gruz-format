@@ -5,6 +5,7 @@ import {
     createDrawerNavigator
 } from 'react-navigation';
 import RepoDetailScreen from '../screens/RepoDetailScreen';
+import Order from '../screens/Order';
 import RepoListScreen from '../screens/RepoListScreen';
 import SignInScreen from '../screens/SignInScreen';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
@@ -96,7 +97,7 @@ const AppStack = createDrawerNavigator(
 const AuthStack = createStackNavigator(
     {
         //стэк аутентификации
-        SignIn: SignInScreen,
+        SignIn: Order,
         Sms: SmsScreen,
         RegisterPerson: EditUserScreen,
         Documents: DocumentsScreen,

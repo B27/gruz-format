@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 16
 	},
 	
-	    instructionBase: {
+	instructionBase: {
         paddingLeft: '3%',
         paddingRight: '3%',
         paddingTop: 5,
@@ -312,6 +312,25 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         padding: 5,
-    },    
+    },
+    orderRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        height: 40,
+        alignItems: 'center',
+        padding: 5,
+    },
+    orderRowView: {
+        paddingTop: 10,
+        width: WIDTH - 55,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "space-between",
+        alignItems: 'center',
+    },
+    orderIcon: {
+        paddingRight: 5
+    }
 });
 export default styles;

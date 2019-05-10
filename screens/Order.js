@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import styles from "../styles";
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import LocalImage from "../components/LocalImage";
 import { Permissions, ImagePicker } from "expo";
 import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
@@ -18,7 +19,7 @@ class Order extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            moverView: false,
+            orderV: false,
         }
     }
     static navigationOptions = {
@@ -30,34 +31,34 @@ class Order extends React.Component {
 			alignSelf: "center"
 		}
     };
-    pressMover = () => {
+    pressOrder = () => {
         this.setState({ 
-            moverView: !this.state.moverView,
-        })
-    }
-    pressDriver = () => {
-        this.setState({ 
-            driverView: !this.state.driverView,
+            orderV: !this.state.orderV,
         })
     }
 
 	render() {
-        const { moverView } = this.state;
+        const { orderV } = this.state;
 		return (
-			<ScrollView>
-                <View style={ styles.instructionBase }>
-                    <View style={ styles.instructionView }>
-                        <View style={ styles.instructionViewTitle }>
-                            <Text
-                                style={ styles.instructionTitle }
-                                onPress={ this.pressMover }>Грузчик
-                            </Text>
-                            { moverView ? <Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} onPress={ this.pressMover }/> : <Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} onPress={ this.pressMover }/> }
+            <TouchableOpacity style={ styles.registrationScreen } onPress={ this.pressOrder }>
+            <View>
+                <View style={ styles.orderRowView } >
+                    <View>
+                        <View style={ styles.orderRow }>
+                            <Icon name={ 'md-time' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
+                            <Text>Время</Text>
                         </View>
-                    { moverView && ( 
+                        <View style={ styles.orderRow }>
+                            <Icon2 name={ 'gps-fixed' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
+                            <Text>Адрес</Text>
+                        </View>
+                    </View>
+                    { orderV ? <Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} /> : <Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} /> }
+                </View> 
+            { orderV && ( 
                     <Fragment >
-                            <ScrollView>
-                                <Text style={ styles.instructionText }>
+                            <ScrollView contentContainerStyle={styles.registrationScreen}>
+                                <Text >
                                     По старой традиции торжественный парад, посвящённый в этом году 74-годовщине Победы в Великой Отечественной войне, начался в десять часов утра. 
                                     Посмотреть на пешие колонны и военную технику на площадь Советов пришли тысячи жителей Улан-Удэ и гостей столицы. На главной трибуне города почётные места заняли ветераны и труженики тыла.
                                     Перед военнослужащими и зрителями с поздравительной речью выступил командующий общевойсковым объединением генерал-майор Михаил Носулев.
@@ -65,9 +66,8 @@ class Order extends React.Component {
                                 </Text>
                             </ScrollView>
                     </Fragment>) }
-                    </View>
-                </View >                
-            </ScrollView>
+            </View>
+            </TouchableOpacity>
 		);
 	}
 }
