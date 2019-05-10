@@ -283,13 +283,12 @@ const styles = StyleSheet.create({
 	},
 
 	instructionBase: {
-		paddingLeft: '3%',
-		paddingRight: '3%',
-		paddingTop: 5
+		marginHorizontal: 15,
+		marginTop: 10	
 	},
 
 	instructionView: {
-		backgroundColor: '#FAFAFA',
+		
 		padding: 5,
 		borderRadius: 3,
 		justifyContent: 'center'
@@ -301,7 +300,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		height: 40,
 		alignItems: 'center',
-		padding: 5
 	},
 
 	instructionTitle: {

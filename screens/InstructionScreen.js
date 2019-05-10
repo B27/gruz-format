@@ -1,23 +1,22 @@
 import React, { Fragment } from 'react';
-import { View, ScrollView, Text } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 class InstructionScreen extends React.Component {
 	state = {
-			moverView: false,
-			driverView: false
-    }
-    
+		moverView: false,
+		driverView: false
+	};
+
 	static navigationOptions = {
 		title: 'Информация',
-        headerLeft: null,
-        headerTitleStyle: {
-			textAlign: "center",
+		headerLeft: null,
+		headerTitleStyle: {
+			textAlign: 'center',
 			flexGrow: 1,
-			alignSelf: "center"
+			alignSelf: 'center'
 		}
-		
 	};
 	pressMover = () => {
 		this.setState({
@@ -37,16 +36,14 @@ class InstructionScreen extends React.Component {
 				{/* Грузчик */}
 				<View style={styles.instructionBase}>
 					<View style={styles.instructionView}>
-						<View style={styles.instructionViewTitle}>
-							<Text style={styles.instructionTitle} onPress={this.pressMover}>
-								Грузчик
-							</Text>
+						<TouchableOpacity style={styles.instructionViewTitle} onPress={this.pressMover}>
+							<Text style={styles.instructionTitle}>Грузчик</Text>
 							{moverView ? (
-								<Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} onPress={this.pressMover} />
+								<Icon name='ios-arrow-up' size={42} color={'#d3d3d3'} />
 							) : (
-								<Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} onPress={this.pressMover} />
+								<Icon name='ios-arrow-down' size={42} color={'#d3d3d3'} />
 							)}
-						</View>
+						</TouchableOpacity>
 						{moverView && (
 							<Fragment>
 								<ScrollView>
@@ -69,16 +66,16 @@ class InstructionScreen extends React.Component {
 				{/* Водитель */}
 				<View style={styles.instructionBase}>
 					<View style={styles.instructionView}>
-						<View style={styles.instructionViewTitle}>
-							<Text style={styles.instructionTitle} onPress={this.pressDriver}>
+						<TouchableOpacity style={styles.instructionViewTitle} onPress={this.pressDriver}>
+							<Text style={styles.instructionTitle} onPress={this.pressDriver}> 
 								Водитель
 							</Text>
 							{driverView ? (
-								<Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} onPress={this.pressDriver} />
+								<Icon name='ios-arrow-up' size={42} color={'#d3d3d3'} onPress={this.pressDriver} />
 							) : (
-								<Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} onPress={this.pressDriver} />
+								<Icon name='ios-arrow-down' size={42} color={'#d3d3d3'} onPress={this.pressDriver} />
 							)}
-						</View>
+						</TouchableOpacity>
 						{driverView && (
 							<Fragment>
 								<ScrollView>
