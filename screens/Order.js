@@ -40,7 +40,8 @@ class Order extends React.Component {
 	render() {
         const { orderV } = this.state;
 		return (
-            <TouchableOpacity style={ styles.registrationScreen } onPress={ this.pressOrder }>
+        <View style={ styles.instructionBase }>
+            <TouchableOpacity onPress={ this.pressOrder }>
             <View>
                 <View style={ styles.orderRowView } >
                     <View>
@@ -54,11 +55,13 @@ class Order extends React.Component {
                         </View>
                     </View>
                     { orderV ? <Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} /> : <Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} /> }
-                </View> 
+                </View>
+            </View>
+            </TouchableOpacity>
             { orderV && ( 
                     <Fragment >
-                            <ScrollView contentContainerStyle={styles.registrationScreen}>
-                                <Text >
+                            <ScrollView >
+                                <Text style={ styles.instructionText }>
                                     По старой традиции торжественный парад, посвящённый в этом году 74-годовщине Победы в Великой Отечественной войне, начался в десять часов утра. 
                                     Посмотреть на пешие колонны и военную технику на площадь Советов пришли тысячи жителей Улан-Удэ и гостей столицы. На главной трибуне города почётные места заняли ветераны и труженики тыла.
                                     Перед военнослужащими и зрителями с поздравительной речью выступил командующий общевойсковым объединением генерал-майор Михаил Носулев.
@@ -66,10 +69,8 @@ class Order extends React.Component {
                                 </Text>
                             </ScrollView>
                     </Fragment>) }
-            </View>
-            </TouchableOpacity>
-		);
-	}
+        </View>
+        )}
 }
 
 export default Order;
