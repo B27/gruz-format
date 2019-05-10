@@ -312,6 +312,25 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'flex-start',
 		padding: 5
-	}
+    },
+    
+    mainFontUserName: {
+        fontSize: 32,
+        textAlign: 'center',
+        padding: 12
+    },
+
+    mainFontUserType: {
+        fontSize: 24,
+        textAlign: 'center',
+        color: '#4D443F',
+   //     padding: 12
+    },
+
+    mainTopBackground: {
+        height: 250,
+        backgroundColor: '#FFC234',
+        padding: 18
+    }
 });
 export default styles;

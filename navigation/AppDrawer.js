@@ -12,13 +12,13 @@ class CustomDrawerContentComponent extends React.Component {
 	}
 
 	state = {
-		switchValue: false,
+		workingStatus: false,
 		balance: 345,
 		userName: 'Иванов И.И.'
 	};
 
 	_onChangeSwitchValue = () => {
-		this.setState({ switchValue: !this.state.switchValue });
+		this.setState({ switchValue: !this.state.workingStatus });
 	};
 
 	_licenseAgreementPress = () => {
@@ -44,7 +44,7 @@ class CustomDrawerContentComponent extends React.Component {
 						<View style={styles.drawerTopItem}>
 							<Text style={styles.drawerFontTopItem}>Работаю</Text>
 							<View>
-								<SwitchToggle switchOn={this.state.switchValue} onPress={this._onChangeSwitchValue} />
+								<SwitchToggle switchOn={this.state.workingStatus} onPress={this._onChangeSwitchValue} />
 							</View>
 						</View>
 						<TouchableOpacity style={styles.drawerTopItem} onPress={() => {this.props.navigation.navigate('Balance')}}>
