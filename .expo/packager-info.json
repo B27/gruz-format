@@ -1,25 +1,9 @@
 {
   "devToolsPort": 19002,
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 2288,
-  "expoServerNgrokUrl": "https://ku-98j.anonymous.gruz-format.exp.direct",
-  "packagerNgrokUrl": "https://packager.ku-98j.anonymous.gruz-format.exp.direct",
-  "ngrokPid": 9888,
-=======
-=======
->>>>>>> Stashed changes
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": "https://ku-98j.romust.gruz-format.exp.direct",
-  "packagerNgrokUrl": "https://packager.ku-98j.romust.gruz-format.exp.direct",
-  "ngrokPid": 1157,
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-  "webpackServerPort": null
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }
