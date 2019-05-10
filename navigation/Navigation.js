@@ -16,6 +16,7 @@ import DocumentsScreen from '../screens/DocumentsScreen';
 import EditUserScreen from '../screens/EditUserScreen';
 import EditCarScreen from '../screens/EditCarScreen';
 import MainScreen from '../screens/MainScreen';
+import InstructionScreen from '../screens/InstructionScreen'
 import AppDrawer from './AppDrawer';
 import { Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -72,7 +73,7 @@ const AppStack = createDrawerNavigator(
             }
         },
         Page6: {
-            screen: UserInfoScreen,
+            screen: InstructionScreen,
             navigationOptions: {
                 drawerLabel: 'Инструкции',
                 drawerIcon: <IconMenuItem name='info-circle' />

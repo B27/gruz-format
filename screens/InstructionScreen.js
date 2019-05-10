@@ -14,7 +14,7 @@ import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
 import { maxFromBits } from "uuid-js";
 import { Button } from "react-native-elements";
 
-class Instruction extends React.Component {
+class InstructionScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -109,4 +109,4 @@ class Instruction extends React.Component {
 	}
 }
 
-export default Instruction;
+export default InstructionScreen;
