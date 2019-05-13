@@ -283,13 +283,11 @@ const styles = StyleSheet.create({
     },
 
     instructionBase: {
-        paddingLeft: '3%',
-        paddingRight: '3%',
-        paddingTop: 5
+        marginHorizontal: 15,
+        marginTop: 10
     },
 
     instructionView: {
-        backgroundColor: '#FAFAFA',
         padding: 5,
         borderRadius: 3,
         justifyContent: 'center'
@@ -300,8 +298,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: 40,
-        alignItems: 'center',
-        padding: 5
+        alignItems: 'center'
     },
 
     instructionTitle: {
@@ -312,6 +309,65 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         padding: 5
+    },
+
+    orderRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        height: 40,
+        alignItems: 'center',
+        padding: 5
+    },
+
+    orderRowView: {
+        display: 'flex',
+        flexDirection: 'row',
+        height: 40,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 5,
+        marginTop: 10,
+        marginBottom: 10
+    },
+
+    orderText: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        padding: 10
+    },
+
+    orderIcon: {
+        paddingRight: 5
+    },
+
+    orderIconTime: {
+        paddingRight: 5,
+        paddingLeft: 3
+    },
+
+    orderButton: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
+
+    orderBase: {
+        marginHorizontal: 15,
+        marginTop: 15,
+        marginBottom: 15
+    },
+
+    orderDescription: {
+        display: 'flex',
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'flex-start',
+        marginTop: 20
+    },
+
+    textButton: {
+        fontWeight: 'bold'
     },
 
     mainTopBackground: {
