@@ -316,14 +316,12 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         height: 40,
         alignItems: 'center',
-        padding: 5,
     },
     orderDescription: {
         display: 'flex',
         flexDirection: 'row',
         flex: 1,
         justifyContent: "flex-start",
-        padding: 5,
         marginHorizontal: 5,
 		marginTop: 10	
     },
@@ -344,6 +342,10 @@ const styles = StyleSheet.create({
 	},
     orderIcon: {
         paddingRight: 5
+    },
+    orderIconTime: {
+        paddingRight: 5,
+        paddingLeft: 2
     },
     orderButton: {
         display: 'flex',

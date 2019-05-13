@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import styles from "../styles";
 import Icon from 'react-native-vector-icons/Ionicons';
-import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Feather';
 import LocalImage from "../components/LocalImage";
 import { Permissions, ImagePicker } from "expo";
@@ -47,11 +47,11 @@ class Order extends React.Component {
                     <View style={ styles.orderRowView }>
                         <View>
                             <View style={ styles.orderRow }>
-                                <Icon name={ 'md-time' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
+                                <Icon name={ 'md-time' } color={ '#FFC234'} size={22} style={ styles.orderIconTime }/>
                                 <Text>Время</Text>
                             </View>
                             <View style={ styles.orderRow }>
-                                <Icon2 name={ 'gps-fixed' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
+                                <Icon2 name={ 'crosshairs-gps' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
                                 <Text>Адрес</Text>
                             </View>
                         </View>
