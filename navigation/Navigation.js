@@ -5,6 +5,7 @@ import {
     createDrawerNavigator
 } from 'react-navigation';
 import RepoDetailScreen from '../screens/RepoDetailScreen';
+import OrderScreen from '../screens/Order';
 import RepoListScreen from '../screens/RepoListScreen';
 import SignInScreen from '../screens/SignInScreen';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
@@ -65,7 +66,7 @@ const AppStack = createDrawerNavigator(
             }
         },
         Page2: {
-            screen: RepoDetailScreen,
+            screen: OrderScreen,
             navigationOptions: {
                 drawerLabel: 'Мои заказы',
                 drawerIcon: <IconMenuItem name='truck' />

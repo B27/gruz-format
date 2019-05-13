@@ -282,27 +282,24 @@ const styles = StyleSheet.create({
         paddingBottom: 16
     },
 
-    instructionBase: {
-        paddingLeft: '3%',
-        paddingRight: '3%',
-        paddingTop: 5
-    },
+	instructionBase: {
+		marginHorizontal: 15,
+		marginTop: 10	
+	},
 
-    instructionView: {
-        backgroundColor: '#FAFAFA',
-        padding: 5,
-        borderRadius: 3,
-        justifyContent: 'center'
-    },
+	instructionView: {
+		padding: 5,
+		borderRadius: 3,
+		justifyContent: 'center'
+	},
 
-    instructionViewTitle: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        height: 40,
-        alignItems: 'center',
-        padding: 5
-    },
+	instructionViewTitle: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		height: 40,
+		alignItems: 'center',
+	},
 
     instructionTitle: {
         fontSize: 16
@@ -312,6 +309,56 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         padding: 5
+    },
+
+    orderRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "flex-start",
+        height: 40,
+        alignItems: 'center',
+        padding: 5,
+    },
+    
+    orderDescription: {
+        display: 'flex',
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: "flex-start",
+        padding: 5,
+        marginHorizontal: 5,
+		marginTop: 10	
+    },
+
+    orderRowView: {
+        display: 'flex',
+        flexDirection: 'row',
+        height: 40,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 5,
+        marginTop: 10,
+        marginBottom: 10
+    },  
+
+    orderText: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		padding: 10
+    },
+    
+    orderIcon: {
+        paddingRight: 5
+    },
+
+    orderButton: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+    },
+
+    textButton: {
+        fontWeight: 'bold',
     },
 
     mainTopBackground: {
