@@ -317,21 +317,12 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
     },
-    orderDescription: {
-        display: 'flex',
-        flexDirection: 'row',
-        flex: 1,
-        justifyContent: "flex-start",
-        marginHorizontal: 5,
-		marginTop: 10	
-    },
     orderRowView: {
         display: 'flex',
         flexDirection: 'row',
         height: 40,
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 5,
         marginTop: 10,
         marginBottom: 10
     },  
@@ -345,12 +336,24 @@ const styles = StyleSheet.create({
     },
     orderIconTime: {
         paddingRight: 5,
-        paddingLeft: 2
+        paddingLeft: 3
     },
     orderButton: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end',
+    },
+    orderBase: {
+        marginHorizontal: 15,
+        marginTop: 15,
+        marginBottom: 15,	
+    },
+    orderDescription: {
+        display: 'flex',
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: "flex-start",
+		marginTop: 20	
     },
     textButton: {
         fontWeight: 'bold',
