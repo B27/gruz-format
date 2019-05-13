@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
 	},
 
 	instructionView: {
-		
 		padding: 5,
 		borderRadius: 3,
 		justifyContent: 'center'
@@ -310,23 +309,30 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'flex-start',
 		padding: 5
-	}},
+	},
     orderRow: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         height: 40,
         alignItems: 'center',
         padding: 5,
     },
     orderRowView: {
-        paddingTop: 10,
-        width: WIDTH - 55,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: "space-between",
+        height: 40,
+        justifyContent: 'space-between',
         alignItems: 'center',
-    },
+        padding: 5,
+        marginTop: 10,
+        marginBottom: 10
+    },  
+    orederText: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		padding: 10
+	},
     orderIcon: {
         paddingRight: 5
     },

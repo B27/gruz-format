@@ -41,27 +41,27 @@ class Order extends React.Component {
         const { orderV } = this.state;
 		return (
         <View style={ styles.instructionBase }>
-            <TouchableOpacity onPress={ this.pressOrder }>
-            <View>
-                <View style={ styles.orderRowView } >
-                    <View>
-                        <View style={ styles.orderRow }>
-                            <Icon name={ 'md-time' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
-                            <Text>Время</Text>
+            <TouchableOpacity onPress={ this.pressOrder } >
+           
+                    <View style={ styles.orderRowView }>
+                        <View>
+                            <View style={ styles.orderRow }>
+                                <Icon name={ 'md-time' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
+                                <Text>Время</Text>
+                            </View>
+                            <View style={ styles.orderRow }>
+                                <Icon2 name={ 'gps-fixed' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
+                                <Text>Адрес</Text>
+                            </View>
                         </View>
-                        <View style={ styles.orderRow }>
-                            <Icon2 name={ 'gps-fixed' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
-                            <Text>Адрес</Text>
-                        </View>
-                    </View>
-                    { orderV ? <Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} /> : <Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} /> }
-                </View>
-            </View>
+                        { orderV ? <Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} /> : <Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} /> }
+                    </View> 
+           
             </TouchableOpacity>
             { orderV && ( 
                     <Fragment >
                             <ScrollView >
-                                <Text style={ styles.instructionText }>
+                                <Text style={ styles.orederText }>
                                     По старой традиции торжественный парад, посвящённый в этом году 74-годовщине Победы в Великой Отечественной войне, начался в десять часов утра. 
                                     Посмотреть на пешие колонны и военную технику на площадь Советов пришли тысячи жителей Улан-Удэ и гостей столицы. На главной трибуне города почётные места заняли ветераны и труженики тыла.
                                     Перед военнослужащими и зрителями с поздравительной речью выступил командующий общевойсковым объединением генерал-майор Михаил Носулев.
