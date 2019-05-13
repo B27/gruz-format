@@ -318,6 +318,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 5,
     },
+    orderDescription: {
+        display: 'flex',
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: "flex-start",
+        padding: 5,
+        marginHorizontal: 5,
+		marginTop: 10	
+    },
     orderRowView: {
         display: 'flex',
         flexDirection: 'row',
@@ -328,7 +337,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10
     },  
-    orederText: {
+    orderText: {
 		flex: 1,
 		justifyContent: 'flex-start',
 		padding: 10
@@ -336,5 +345,13 @@ const styles = StyleSheet.create({
     orderIcon: {
         paddingRight: 5
     },
+    orderButton: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+    },
+    textButton: {
+        fontWeight: 'bold',
+    }
 });
 export default styles;

@@ -8,6 +8,7 @@ import {
 import styles from "../styles";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import Icon3 from 'react-native-vector-icons/Feather';
 import LocalImage from "../components/LocalImage";
 import { Permissions, ImagePicker } from "expo";
 import ChoiceCameraRoll from "./modals/ChoiceCameraRoll";
@@ -61,13 +62,21 @@ class Order extends React.Component {
             { orderV && ( 
                     <Fragment >
                             <ScrollView >
-                                <Text style={ styles.orederText }>
-                                    По старой традиции торжественный парад, посвящённый в этом году 74-годовщине Победы в Великой Отечественной войне, начался в десять часов утра. 
-                                    Посмотреть на пешие колонны и военную технику на площадь Советов пришли тысячи жителей Улан-Удэ и гостей столицы. На главной трибуне города почётные места заняли ветераны и труженики тыла.
-                                    Перед военнослужащими и зрителями с поздравительной речью выступил командующий общевойсковым объединением генерал-майор Михаил Носулев.
-                                    В своём выступлении генерал-майор напомнил всем о стойкости, героизме, воинской доблести и готовности к самопожертвованию воинов Великой Отечественной войны и тружеников тыла.
-                                </Text>
+                                <View style={ styles.orderDescription }>
+                                    <Icon3 name={ 'message-circle' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
+                                    <Text >
+                                        По старой традиции торжественный парад, посвящённый в этом году 74-годовщине Победы в Великой Отечественной войне, начался в десять часов утра. 
+                                        Посмотреть на пешие колонны и военную технику на площадь Советов пришли тысячи жителей Улан-Удэ и гостей столицы. На главной трибуне города почётные места заняли ветераны и труженики тыла.
+                                        Перед военнослужащими и зрителями с поздравительной речью выступил командующий общевойсковым объединением генерал-майор Михаил Носулев.
+                                        В своём выступлении генерал-майор напомнил всем о стойкости, героизме, воинской доблести и готовности к самопожертвованию воинов Великой Отечественной войны и тружеников тыла.
+                                    </Text>
+                                </View>
                             </ScrollView>
+                        <View style={ styles.orderButton }>
+                            <TouchableOpacity >
+                                <Text style={ styles.textButton }>ОТМЕНИТЬ</Text>
+                            </TouchableOpacity>
+                        </View>
                     </Fragment>) }
         </View>
         )}
