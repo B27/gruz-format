@@ -289,26 +289,33 @@ const styles = StyleSheet.create({
 
     instructionView: {
         padding: 5,
-        borderRadius: 3,
-        justifyContent: 'center'
     },
-
-    instructionViewTitle: {
+    
+    orderDescription: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        flex: 1,
+        justifyContent: "flex-start",
+        padding: 5,
+        marginHorizontal: 5,
+		marginTop: 10	
+    },
+
+    orderRowView: {
+        display: 'flex',
+        flexDirection: 'row',
         height: 40,
         alignItems: 'center'
     },
 
-    instructionTitle: {
-        fontSize: 16
+    orderButton: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
     },
 
-    instructionText: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        padding: 5
+    textButton: {
+        fontWeight: 'bold',
     },
 
     orderRow: {
