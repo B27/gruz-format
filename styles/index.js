@@ -402,6 +402,14 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         color: '#4D443F',
         paddingBottom: 8
+    },
+
+    mainWorkingItem: {
+        flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		height: 56,
+		padding: 12
     }
 });
 export default styles;

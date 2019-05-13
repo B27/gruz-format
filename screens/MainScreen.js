@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, ScrollView, Text, TouchableHighlight, Image, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, TouchableHighlight, Image, TouchableOpacity, FlatList } from 'react-native';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
+import Order from './Order';
+import SwitchToggle from '../components/SwitchToggle';
 
 class LogoTitle extends React.Component {
     _menuPress = () => {
@@ -30,12 +32,33 @@ class EditCarScreen extends React.Component {
         userType: USER_TYPE.driver,
         balance: 345,
         workingStatus: false,
+        refreshing: false,
         applications: [
-            { time: '13:30', location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56' },
-            { time: '13:30', location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56' },
-            { time: '13:30', location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56' },
-            { time: '13:30', location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56' },
-            { time: '13:30', location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56' }
+            {
+                _id: 1,
+                time: '13:30',
+                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            },
+            {
+                _id: 2,
+                time: '13:30',
+                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            },
+            {
+                _id: 3,
+                time: '13:30',
+                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            },
+            {
+                _id: 4,
+                time: '13:30',
+                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            },
+            { _id: 5, time: '13:30', location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56', comment: 'Коммент арий' }
         ] // заявки
     };
 
@@ -46,24 +69,44 @@ class EditCarScreen extends React.Component {
 
     render() {
         return (
-            <ScrollView>
-                <View style={styles.mainTopBackground}>
-                    <Text style={styles.mainFontUserName}>{this.state.userName}</Text>
-                    <Text style={styles.mainFontUserType}>{this.state.userType}</Text>
-                    <Text style={styles.mainFontBalance}>{`${this.state.balance} руб.`}</Text>
-                    <Text style={styles.mainFontTopUpBalance} onPress={this._topUpBalance}>
-                        Пополнить баланс
-                    </Text>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 4 }}>
+            <FlatList
+                ListHeaderComponent={
+                    <View>
+                        <View style={styles.mainTopBackground}>
+                            <Text style={styles.mainFontUserName}>{this.state.userName}</Text>
+                            <Text style={styles.mainFontUserType}>{this.state.userType}</Text>
+                            <Text style={styles.mainFontBalance}>{`${this.state.balance} руб.`}</Text>
+                            <Text style={styles.mainFontTopUpBalance} onPress={this._topUpBalance}>
+                                Пополнить баланс
+                            </Text>
+                        </View>
+                        <View style={styles.mainWorkingItem}>
+                            <Text style={styles.drawerFontTopItem}>Работаю</Text>
+                            <View>
+                                <SwitchToggle switchOn={this.state.workingStatus} onPress={this._onChangeSwitchValue} />
+                            </View>
+                        </View>
+                    </View>
+                }
+                keyExtractor={this._keyExtractor}
+                data={this.state.applications}
+                renderItem={({ item }) => <Order time={item.time} address={item.location} description={item.comment} />}
+                refreshing={this.state.refreshing}
+                onRefresh={() => {
+                    this.setState({ refreshing: true });
+                    setTimeout(() => {
+                        this.setState({ refreshing: false });
+                    }, 1000);
+                }}
+            />
+            /* <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 4 }}>
                     <MenuItem item='Заявки' icon='inbox' onPress={this._nextScreen} />
                     <MenuItem item='Мои заказы' icon='truck' onPress={this._nextScreen} />
                     <MenuItem item='Баланс' icon='money' onPress={this._nextScreen} />
                     <MenuItem item='Моё авто' icon='wrench' onPress={this._nextScreen} />
                     <MenuItem item='Настройки' icon='gear' onPress={this._nextScreen} />
                     <MenuItem item='Инструкции' icon='info-circle' onPress={this._nextScreen} />
-                </View>
-            </ScrollView>
+                </View> */
         );
     }
 
@@ -75,6 +118,12 @@ class EditCarScreen extends React.Component {
     _topUpBalance = event => {
         console.log(event);
         console.log('topUpBalance log');
+    };
+
+    _keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой струки нужен key типа String
+
+    _onChangeSwitchValue = () => {
+        this.setState({ workingStatus: !this.state.workingStatus });
     };
 }
 

@@ -5,6 +5,7 @@ import { DrawerItems, SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../styles';
 import { privacyPolicyURL } from '../constants';
+import SwitchToggle from '../components/SwitchToggle';
 
 class CustomDrawerContentComponent extends React.Component {
 	constructor(props) {
@@ -18,7 +19,7 @@ class CustomDrawerContentComponent extends React.Component {
 	};
 
 	_onChangeSwitchValue = () => {
-		this.setState({ switchValue: !this.state.workingStatus });
+		this.setState({ workingStatus: !this.state.workingStatus });
 	};
 
 	_licenseAgreementPress = () => {
@@ -62,28 +63,5 @@ class CustomDrawerContentComponent extends React.Component {
 	}
 }
 
-function SwitchToggle({ switchOn, onPress }) {
-	return (
-		<Switch
-			// trackColor={{ false: "grey", true: "#FFC234" }}
-			switchOn={switchOn}
-			onPress={onPress}
-			containerStyle={{
-				width: 45,
-				height: 25,
-				borderRadius: 25,
-				padding: 3
-			}}
-			circleStyle={{
-				width: 22,
-				height: 22,
-				borderRadius: 25
-			}}
-			circleColorOff='white'
-			circleColorOn='#FFC234'
-			duration={250}
-		/>
-	);
-}
 
 export default CustomDrawerContentComponent;
