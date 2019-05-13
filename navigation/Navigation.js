@@ -55,8 +55,6 @@ const AppStack = createDrawerNavigator(
                         headerStyle: {
                             backgroundColor: '#FFC234',
                             textAlign: 'center',
-                            height: 0.1 * height,
-                            textAlign: 'center'
                         }
                     }
                 }

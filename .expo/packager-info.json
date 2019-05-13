@@ -2,8 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 6980,
+  "packagerPid": 5984,
   "expoServerNgrokUrl": "https://ku-98j.anonymous.gruz-format.exp.direct",
   "packagerNgrokUrl": "https://packager.ku-98j.anonymous.gruz-format.exp.direct",
-  "ngrokPid": 5648
+  "ngrokPid": 11572,
+  "webpackServerPort": null
 }

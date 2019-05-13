@@ -1,11 +1,20 @@
 import React from 'react';
-import { View, ScrollView, Text, TouchableHighlight, Image } from 'react-native';
+import { View, ScrollView, Text, TouchableHighlight, Image, TouchableOpacity } from 'react-native';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 
 class LogoTitle extends React.Component {
+    _menuPress = () => {
+        this.props.navigationProps.toggleDrawer();
+    };
+
     render() {
-        return <Image source={require('../images/background.png')} style={{ width: 150, height: 30 }} />;
+        return (
+            <TouchableOpacity style={{ padding: 8 }} onPress={this._menuPress}>
+                <Icon2 name='md-menu' size={24} />
+            </TouchableOpacity>
+        );
     }
 }
 
@@ -30,7 +39,10 @@ class EditCarScreen extends React.Component {
         ] // заявки
     };
 
-    static navigationOptions = {};
+    static navigationOptions = ({ navigation }) => ({
+        headerLeft: <LogoTitle navigationProps={navigation} />,
+        headerLeftContainerStyle: { paddingLeft: 8 }
+    });
 
     render() {
         return (
@@ -38,22 +50,31 @@ class EditCarScreen extends React.Component {
                 <View style={styles.mainTopBackground}>
                     <Text style={styles.mainFontUserName}>{this.state.userName}</Text>
                     <Text style={styles.mainFontUserType}>{this.state.userType}</Text>
+                    <Text style={styles.mainFontBalance}>{`${this.state.balance} руб.`}</Text>
+                    <Text style={styles.mainFontTopUpBalance} onPress={this._topUpBalance}>
+                        Пополнить баланс
+                    </Text>
                 </View>
                 <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 4 }}>
-                    <MenuItem item='Заявки' icon='inbox' onPress={this.nextScreen} />
-                    <MenuItem item='Мои заказы' icon='truck' onPress={this.nextScreen} />
-                    <MenuItem item='Баланс' icon='money' onPress={this.nextScreen} />
-                    <MenuItem item='Моё авто' icon='wrench' onPress={this.nextScreen} />
-                    <MenuItem item='Настройки' icon='gear' onPress={this.nextScreen} />
-                    <MenuItem item='Инструкции' icon='info-circle' onPress={this.nextScreen} />
+                    <MenuItem item='Заявки' icon='inbox' onPress={this._nextScreen} />
+                    <MenuItem item='Мои заказы' icon='truck' onPress={this._nextScreen} />
+                    <MenuItem item='Баланс' icon='money' onPress={this._nextScreen} />
+                    <MenuItem item='Моё авто' icon='wrench' onPress={this._nextScreen} />
+                    <MenuItem item='Настройки' icon='gear' onPress={this._nextScreen} />
+                    <MenuItem item='Инструкции' icon='info-circle' onPress={this._nextScreen} />
                 </View>
             </ScrollView>
         );
     }
 
-    nextScreen = el => {
-        console.log(el);
+    _nextScreen = event => {
+        console.log(event);
         console.log('MainScreen log');
+    };
+
+    _topUpBalance = event => {
+        console.log(event);
+        console.log('topUpBalance log');
     };
 }
 
