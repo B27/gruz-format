@@ -410,6 +410,31 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		height: 56,
 		padding: 12
-    }
+    },
+
+    orderDetailButton: {
+        marginTop: 20,
+        marginHorizontal: 15,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+
+    executorBase: {
+        marginHorizontal: 15,
+        marginBottom: 5,
+    },
+    executorDescription: {
+        flex: 1,
+        justifyContent: "flex-start",
+        paddingLeft: 10
+    },
+    executorText: {
+        marginBottom: 10,
+        marginTop: 10,
+    },
+    executorTextDisp: {
+        marginBottom: 10,
+    },
 });
 export default styles;
