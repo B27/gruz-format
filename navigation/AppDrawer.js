@@ -5,6 +5,7 @@ import { DrawerItems, SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../styles';
 import { privacyPolicyURL } from '../constants';
+import SwitchToggle from '../components/SwitchToggle';
 
 class CustomDrawerContentComponent extends React.Component {
 	constructor(props) {
@@ -12,13 +13,13 @@ class CustomDrawerContentComponent extends React.Component {
 	}
 
 	state = {
-		switchValue: false,
+		workingStatus: false,
 		balance: 345,
 		userName: 'Иванов И.И.'
 	};
 
 	_onChangeSwitchValue = () => {
-		this.setState({ switchValue: !this.state.switchValue });
+		this.setState({ workingStatus: !this.state.workingStatus });
 	};
 
 	_licenseAgreementPress = () => {
@@ -44,7 +45,7 @@ class CustomDrawerContentComponent extends React.Component {
 						<View style={styles.drawerTopItem}>
 							<Text style={styles.drawerFontTopItem}>Работаю</Text>
 							<View>
-								<SwitchToggle switchOn={this.state.switchValue} onPress={this._onChangeSwitchValue} />
+								<SwitchToggle switchOn={this.state.workingStatus} onPress={this._onChangeSwitchValue} />
 							</View>
 						</View>
 						<TouchableOpacity style={styles.drawerTopItem} onPress={() => {this.props.navigation.navigate('Balance')}}>
@@ -62,28 +63,5 @@ class CustomDrawerContentComponent extends React.Component {
 	}
 }
 
-function SwitchToggle({ switchOn, onPress }) {
-	return (
-		<Switch
-			// trackColor={{ false: "grey", true: "#FFC234" }}
-			switchOn={switchOn}
-			onPress={onPress}
-			containerStyle={{
-				width: 45,
-				height: 25,
-				borderRadius: 25,
-				padding: 3
-			}}
-			circleStyle={{
-				width: 22,
-				height: 22,
-				borderRadius: 25
-			}}
-			circleColorOff='white'
-			circleColorOn='#FFC234'
-			duration={250}
-		/>
-	);
-}
 
 export default CustomDrawerContentComponent;

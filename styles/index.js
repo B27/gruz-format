@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
 	},
 
 	instructionView: {
-		
 		padding: 5,
 		borderRadius: 3,
 		justifyContent: 'center'
@@ -310,6 +309,107 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'flex-start',
 		padding: 5
-	}
+    },
+    
+    orderRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "flex-start",
+        height: 40,
+        alignItems: 'center',
+    },
+
+    orderRowView: {
+        display: 'flex',
+        flexDirection: 'row',
+        height: 40,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10
+    }, 
+
+    orderText: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		padding: 10
+    },
+    
+    orderIcon: {
+        paddingRight: 5
+    },
+
+    orderIconTime: {
+        paddingRight: 5,
+        paddingLeft: 3
+    },
+
+    orderButton: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+    },
+
+    orderBase: {
+        marginHorizontal: 15,
+        marginTop: 15,
+        marginBottom: 15,	
+    },
+
+    orderDescription: {
+        display: 'flex',
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: "flex-start",
+		marginTop: 20	
+    },
+
+    textButton: {
+        fontWeight: 'bold',
+    },
+
+    
+    mainTopBackground: {
+        flex: 1,
+        backgroundColor: '#FFC234',
+        padding: 18
+    },
+
+    mainFontUserName: {
+        fontSize: 32,
+        textAlign: 'center',
+        paddingBottom: 6
+    },
+
+    mainFontUserType: {
+        fontSize: 24,
+        textAlign: 'center',
+        color: '#4D443F',
+        fontWeight: '100',
+        paddingBottom: 42
+        //     padding: 12
+    },
+
+    mainFontBalance: {
+        fontSize: 24,
+        textAlign: 'center',
+        paddingBottom: 6
+    },
+
+    mainFontTopUpBalance: {
+        fontSize: 20,
+        textAlign: 'center',
+        textDecorationLine: 'underline',
+        color: '#4D443F',
+        paddingBottom: 8
+    },
+
+    mainWorkingItem: {
+        flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		height: 56,
+		padding: 12
+    }
 });
 export default styles;
