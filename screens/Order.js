@@ -21,11 +21,15 @@ class Order extends React.Component {
         this.props.onPressButton(this.props.id);
     };
 
+    _onPressCard = () => {
+        this.props.onPressCard(this.props.id);
+    }
+
     render() {
         const { orderExpanded } = this.state;
         const { style, buttonName, description, address, time, id } = this.props;
         return (
-            <View style={[styles.orderBase, style]} key={id}>
+            <TouchableOpacity style={[styles.orderBase, style]} key={id} onPress={this._onPressCard}>
                 <View style={styles.orderRowTopContainer}>
                     <View style={{ flex: 1 }}>
                         <View style={styles.orderRow}>
@@ -59,7 +63,7 @@ class Order extends React.Component {
                         </View>
                     </Fragment>
                 )}
-            </View>
+            </TouchableOpacity>
         );
     }
 }

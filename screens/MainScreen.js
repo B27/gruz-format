@@ -116,6 +116,8 @@ class EditCarScreen extends React.Component {
 
     _onPressOrderItemButton = id => {};
 
+    _onPressOrderCard = id => {};
+
     _onRefresh = () => {
         this.setState({ refreshing: true });
         setTimeout(() => {
@@ -131,6 +133,7 @@ class EditCarScreen extends React.Component {
             description={item.comment}
             style={{ marginHorizontal: 12, marginVertical: 6 }}
             onPressButton={this._onPressOrderItemButton}
+            onPressCard={this._onPressOrderCard}
             buttonName='ПРИНЯТЬ'
         />
     );
