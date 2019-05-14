@@ -18,14 +18,14 @@ class Order extends React.Component {
     };
 
     _onPressButton = () => {
-        this.props.onPress(this.props.id);
+        this.props.onPressButton(this.props.id);
     };
 
     render() {
         const { orderExpanded } = this.state;
-        const { style, buttonName, description, address, time } = this.props;
+        const { style, buttonName, description, address, time, id } = this.props;
         return (
-            <View style={[styles.orderBase, style]} key={this.props.id}>
+            <View style={[styles.orderBase, style]} key={id}>
                 <View style={styles.orderRowTopContainer}>
                     <View style={{ flex: 1 }}>
                         <View style={styles.orderRow}>

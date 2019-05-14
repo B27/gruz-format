@@ -43,9 +43,9 @@ class EditCarScreen extends React.Component {
             {
                 _id: 2,
                 time: '13:30',
-                location:
-                    `г.Хабаровск, большая длина текста должна правильно переноситься, иначе это приведёт к сложным последствиям ул. Краснофлотская, д.34, кв.56`,
-                comment: 'Коммент г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5арий'
+                location: `г.Хабаровск, большая длина текста должна правильно переноситься, иначе это приведёт к сложным последствиям ул. Краснофлотская, д.34, кв.56`,
+                comment:
+                    'Коммент г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5арий'
             },
             {
                 _id: 3,
@@ -90,33 +90,11 @@ class EditCarScreen extends React.Component {
                     </View>
                 }
                 keyExtractor={this._keyExtractor}
-                contentInset={{ top: 0, left: 8, bottom: 0, right: 8 }}
                 data={this.state.applications}
-                renderItem={({ item }) => (
-                    <Order
-                        time={item.time}
-                        address={item.location}
-                        description={item.comment}
-                        style={{ marginHorizontal: 12, marginVertical: 6 }}
-                        buttonName='ПРИНЯТЬ'
-                    />
-                )}
+                renderItem={this._renderItem}
                 refreshing={this.state.refreshing}
-                onRefresh={() => {
-                    this.setState({ refreshing: true });
-                    setTimeout(() => {
-                        this.setState({ refreshing: false });
-                    }, 1000);
-                }}
+                onRefresh={this._onRefresh}
             />
-            /* <View style={{ flex: 1, flexDirection: 'column', paddingHorizontal: 4 }}>
-                    <MenuItem item='Заявки' icon='inbox' onPress={this._nextScreen} />
-                    <MenuItem item='Мои заказы' icon='truck' onPress={this._nextScreen} />
-                    <MenuItem item='Баланс' icon='money' onPress={this._nextScreen} />
-                    <MenuItem item='Моё авто' icon='wrench' onPress={this._nextScreen} />
-                    <MenuItem item='Настройки' icon='gear' onPress={this._nextScreen} />
-                    <MenuItem item='Инструкции' icon='info-circle' onPress={this._nextScreen} />
-                </View> */
         );
     }
 
@@ -135,28 +113,26 @@ class EditCarScreen extends React.Component {
     _onChangeSwitchValue = () => {
         this.setState({ workingStatus: !this.state.workingStatus });
     };
-}
 
-function MenuItem({ item, icon, ...other }) {
-    return (
-        <TouchableHighlight
-            {...other}
-            style={{
-                height: 48,
-                justifyContent: 'center'
-            }}
-            underlayColor='#FFC234'
-        >
-            <View style={{ flexDirection: 'row' }}>
-                <Icon
-                    name={icon}
-                    size={24}
-                    //		color="#FFC234"
-                    style={{ marginHorizontal: 12 }}
-                />
-                <Text style={styles.mainMenuItemText}>{item.toUpperCase()}</Text>
-            </View>
-        </TouchableHighlight>
+    _onPressOrderItemButton = id => {};
+
+    _onRefresh = () => {
+        this.setState({ refreshing: true });
+        setTimeout(() => {
+            this.setState({ refreshing: false });
+        }, 1000);
+    };
+
+    _renderItem = ({ item }) => (
+        <Order
+            id={item._id}
+            time={item.time}
+            address={item.location}
+            description={item.comment}
+            style={{ marginHorizontal: 12, marginVertical: 6 }}
+            onPressButton={this._onPressOrderItemButton}
+            buttonName='ПРИНЯТЬ'
+        />
     );
 }
 
