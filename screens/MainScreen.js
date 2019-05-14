@@ -37,14 +37,15 @@ class EditCarScreen extends React.Component {
             {
                 _id: 1,
                 time: '13:30',
-                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                location: 'г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.56',
                 comment: 'Коммент арий'
             },
             {
                 _id: 2,
                 time: '13:30',
-                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
-                comment: 'Коммент арий'
+                location:
+                    `г.Хабаровск, большая длина текста должна правильно переноситься, иначе это приведёт к сложным последствиям ул. Краснофлотская, д.34, кв.56`,
+                comment: 'Коммент г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5арий'
             },
             {
                 _id: 3,
@@ -89,8 +90,17 @@ class EditCarScreen extends React.Component {
                     </View>
                 }
                 keyExtractor={this._keyExtractor}
+                contentInset={{ top: 0, left: 8, bottom: 0, right: 8 }}
                 data={this.state.applications}
-                renderItem={({ item }) => <Order time={item.time} address={item.location} description={item.comment} />}
+                renderItem={({ item }) => (
+                    <Order
+                        time={item.time}
+                        address={item.location}
+                        description={item.comment}
+                        style={{ marginHorizontal: 12, marginVertical: 6 }}
+                        buttonName='ПРИНЯТЬ'
+                    />
+                )}
                 refreshing={this.state.refreshing}
                 onRefresh={() => {
                     this.setState({ refreshing: true });

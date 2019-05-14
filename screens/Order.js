@@ -1,64 +1,67 @@
-import React, { Fragment } from "react";
-import {
-	View,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-} from "react-native";
-import styles from "../styles";
-import Icon from 'react-native-vector-icons/Ionicons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon3 from 'react-native-vector-icons/Feather';
-
+import React, { Fragment } from 'react';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
+import styles from '../styles/OrderStyle';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Order extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            orderV: false,
-        }
-    }
-    pressOrder = () => {
-        this.setState({ 
-            orderV: !this.state.orderV,
-        })
+            orderExpanded: false
+        };
     }
 
-	render() {
-        const { orderV } = this.state;
-		return (
-            <View style={ styles.orderBase } key={this.props.id}>
-            <TouchableOpacity onPress={ this.pressOrder } >
-                    <View style={ styles.orderRowView }>
-                        <View>
-                            <View style={ styles.orderRow }>
-                                <Icon name={ 'md-time' } color={ '#FFC234'} size={22} style={ styles.orderIconTime }/>
-                                <Text>{ this.props.time }</Text>
-                            </View>
-                            <View style={ styles.orderRow }>
-                                <Icon2 name={ 'crosshairs-gps' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
-                                <Text>{ this.props.address }</Text>
-                            </View>
+    _pressChevron = () => {
+        this.setState({
+            orderExpanded: !this.state.orderExpanded
+        });
+    };
+
+    _onPressButton = () => {
+        this.props.onPress(this.props.id);
+    };
+
+    render() {
+        const { orderExpanded } = this.state;
+        const { style, buttonName, description, address, time } = this.props;
+        return (
+            <View style={[styles.orderBase, style]} key={this.props.id}>
+                <View style={styles.orderRowTopContainer}>
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.orderRow}>
+                            <Icon name='clock-outline' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Text>{time}</Text>
                         </View>
-                            { orderV ? <Icon name='ios-arrow-up' size={42} color={'#E6E6E6'} /> : <Icon name='ios-arrow-down' size={42} color={'#E6E6E6'} /> }
-                    </View> 
-            </TouchableOpacity>
-            { orderV && ( 
-                <Fragment >
-                    <ScrollView >
-                        <View style={ styles.orderDescription }>
-                            <Icon3 name={ 'message-circle' } color={ '#FFC234'} size={22} style={ styles.orderIcon }/>
-                            <Text >{ this.props.description }</Text>
+                        <View style={styles.orderRow}>
+                            <Icon name='map-marker' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Text style={styles.locationText}>{address}</Text>
                         </View>
-                    </ScrollView>
-                        <View style={ styles.orderButton }>
-                            <TouchableOpacity >
-                                <Text style={ styles.textButton }>ОТМЕНИТЬ</Text>
+                    </View>
+                    <TouchableOpacity onPress={this._pressChevron}>
+                        {orderExpanded ? (
+                            <Icon name='chevron-up' size={42} color='#c4c4c4' style={styles.orderChevronIcon} />
+                        ) : (
+                            <Icon name='chevron-down' size={42} color='#c4c4c4' style={styles.orderChevronIcon} />
+                        )}
+                    </TouchableOpacity>
+                </View>
+
+                {orderExpanded && (
+                    <Fragment>
+                        <View style={styles.orderRow}>
+                            <Icon name='message-text' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Text style={styles.descriptionText}>{description}</Text>
+                        </View>
+                        <View style={styles.buttonRow}>
+                            <TouchableOpacity style={styles.button} onPress={this._onPressButton}>
+                                <Text style={styles.buttonText}>{buttonName}</Text>
                             </TouchableOpacity>
                         </View>
-                </Fragment>) }
-        </View>
-        )}
+                    </Fragment>
+                )}
+            </View>
+        );
+    }
 }
 
 export default Order;
