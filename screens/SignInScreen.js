@@ -70,23 +70,24 @@ class SignInScreen extends React.Component {
     };
     _signInAsync = async () => {
         // console.log("SignInScreen navigate to Main", this.props.navigation.state);
-        // this.props.navigation.navigate("Main") ;
+        this.props.navigation.navigate("Main") ;
         // Удалить перед слиянием
-        if (this.state.phone) {
-            console.log(this.state.phone);
+        // if (this.state.phone) {
+        //     console.log(this.state.phone);
 
-            await axios
-                .post('/enter/phone', { phoneNum: this.state.phone })
-                .catch(err => {
-                    console.log(err);
-                })
-                .then(async res => {
-                    console.log(res.data);
-                    await AsyncStorage.setItem('phoneNum', this.state.phone);
-                    this.props.navigation.navigate('Sms');
-                });
-        }
+        //     await axios
+        //         .post('/enter/phone', { phoneNum: this.state.phone })
+        //         .catch(err => {
+        //             console.log(err);
+        //         })
+        //         .then(async res => {
+        //             console.log(res.data);
+        //             await AsyncStorage.setItem('phoneNum', this.state.phone);
+        //             this.props.navigation.navigate('Sms');
+        //         });
+        // }
     };
+
     showPass = () => {
         if (this.state.press == false) {
             this.setState({ showPass: false, press: true });

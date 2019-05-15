@@ -3,7 +3,7 @@ import { View, ScrollView, Text, TouchableHighlight, Image, TouchableOpacity, Fl
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
-import Order from './Order';
+import Order from '../components/Order';
 import SwitchToggle from '../components/SwitchToggle';
 
 class LogoTitle extends React.Component {
@@ -116,7 +116,9 @@ class EditCarScreen extends React.Component {
 
     _onPressOrderItemButton = id => {};
 
-    _onPressOrderCard = id => {};
+    _onPressOrderCard = id => {
+        console.log("press card", id);
+    };
 
     _onRefresh = () => {
         this.setState({ refreshing: true });
