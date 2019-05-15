@@ -5,7 +5,6 @@ import {
 	createDrawerNavigator
 } from 'react-navigation';
 import RepoDetailScreen from '../screens/RepoDetailScreen';
-import Order from '../screens/Order';
 import OrderListScreen from '../screens/OrderList';
 import RepoListScreen from '../screens/RepoListScreen';
 import SignInScreen from '../screens/SignInScreen';

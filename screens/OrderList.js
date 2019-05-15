@@ -9,7 +9,7 @@ import styles from "../styles";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Feather';
-import Order from '../screens/Order'
+import Order from '../components/Order'
 
 
 class OrderList extends React.Component {

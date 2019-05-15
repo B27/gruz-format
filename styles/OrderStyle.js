@@ -7,7 +7,7 @@ const OrderStyle = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginHorizontal: 12,
         paddingVertical: 4
         // borderWidth: 1, borderColor: 'green'
@@ -57,12 +57,18 @@ const OrderStyle = StyleSheet.create({
         padding: 12
     },
 
-    descriptionText: {
-        marginRight: 32
+    clockText: {
+        marginTop: 2
     },
 
     locationText: {
         marginRight: 12
-    }
+    },
+
+    descriptionText: {
+        marginRight: 32
+    },
+
+
 });
 export default OrderStyle;

@@ -41,7 +41,7 @@ class Order extends React.Component {
                         <View style={{ flex: 1 }}>
                             <View style={styles.orderRow}>
                                 <Icon name='clock-outline' color='#FFC234' size={20} style={styles.orderIcon} />
-                                <Text>{time}</Text>
+                                <Text style={styles.clockText}>{time}</Text>
                             </View>
                             <View style={styles.orderRow}>
                                 <Icon name='map-marker' color='#FFC234' size={20} style={styles.orderIcon} />
