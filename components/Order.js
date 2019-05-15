@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
-import styles from '../styles/OrderStyle';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import styles from '../styles/OrderStyle';
 
 class Order extends React.Component {
     constructor(props) {
@@ -11,7 +11,7 @@ class Order extends React.Component {
         };
     }
 
-    _pressChevron = () => {
+    _pressExpand = () => {
         this.setState({
             orderExpanded: !this.state.orderExpanded
         });
@@ -21,20 +21,22 @@ class Order extends React.Component {
         this.props.onPressButton(this.props.id);
     };
 
-    _onPressCard = () => {
-        this.props.onPressCard(this.props.id);
-    };
+    // судя по ТЗ переход в подробную информация на кнопку Принять
+    // _onPressCard = () => {
+    //     this.props.onPressCard(this.props.id);
+    // };
 
     render() {
         const { orderExpanded } = this.state;
         const { style, buttonName, description, address, time, id } = this.props;
         return (
-            <TouchableHighlight
-                activeOpacity={0.1}
+            <TouchableOpacity
                 style={[styles.orderBase, style]}
                 key={id}
-                onPress={this._onPressCard}
-                underlayColor='#FFC234'
+                onPress={this._pressExpand}
+                // onPress срабатывает сразу после корректного нажатия, 
+                // но для того чтобы появилась анимация прозрачности необходимо держать компонент нажатым 10 секунд
+                delayPressIn={10000}
             >
                 <View>
                     <View style={styles.orderRowTopContainer}>
@@ -48,7 +50,7 @@ class Order extends React.Component {
                                 <Text style={styles.locationText}>{address}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={this._pressChevron}>
+                        <TouchableOpacity onPress={this._pressExpand}>
                             {orderExpanded ? (
                                 <Icon name='chevron-up' size={42} color='#c4c4c4' style={styles.orderChevronIcon} />
                             ) : (
@@ -71,7 +73,7 @@ class Order extends React.Component {
                         </Fragment>
                     )}
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
     }
 }
