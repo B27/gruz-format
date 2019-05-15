@@ -108,6 +108,7 @@ class EditCarScreen extends React.Component {
                 renderItem={this._renderItem}
                 refreshing={this.state.refreshing}
                 onRefresh={this._onRefresh}
+                ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
             />
         );
     }
@@ -150,7 +151,6 @@ class EditCarScreen extends React.Component {
             description={item.comment}
             style={{ marginHorizontal: 12, marginVertical: 6 }}
             onPressButton={this._onPressOrderItemButton}
-            onPressCard={this._onPressOrderCard}
             buttonName='ПРИНЯТЬ'
         />
     );
