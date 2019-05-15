@@ -1,2 +1,3 @@
-node_modules
-/.expo/*.json
+/node_modules
+.expo/settings.json
+.expo/packager-info.json
