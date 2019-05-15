@@ -88,7 +88,8 @@ class SignInScreen extends React.Component {
 		console.log(response.data);
 
 		if (response.data.token) {
-			await AsyncStorage.setItem('token', response.data.token);
+            await AsyncStorage.setItem('token', response.data.token);
+            await AsyncStorage.setItem('userId', response.data._id);
 			axios.defaults.headers = {
 				Authorization: 'Bearer ' + response.data.token
 			};

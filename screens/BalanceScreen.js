@@ -11,11 +11,7 @@ class BalanceScreen extends React.Component {
 	static navigationOptions = {
 		title: 'Пополнить баланс'
 	};
-	// headerTitleStyle: {
-	//     textAlign: "center",
-	//     flexGrow: 1,
-	//     alignSelf: "center"
-	// }
+
 	render() {
 		return (
 			<ScrollView contentContainerStyle={styles.registrationScreen}>

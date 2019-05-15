@@ -24,7 +24,7 @@ class AuthLoadingScreen extends React.Component {
             Authorization: "Bearer " + userToken
         }
         const filledProfile = await AsyncStorage.getItem('filledProphile'); //заполнен ли профиль
-        this.props.navigation.navigate(userToken ? (filledProfile ? 'App' : 'EditCar') : 'Auth');
+        this.props.navigation.navigate(userToken ? (filledProfile ? 'App' : 'Main') : 'Auth');
     };
 
     render() {
