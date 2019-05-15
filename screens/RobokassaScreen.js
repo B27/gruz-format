@@ -17,19 +17,21 @@ class RobokassaScreen extends React.Component {
     //     alignSelf: "center"
     // }
 	render() {
-        const pass2 = 'baMUf6569vYyLuHg5jsh';
+
+        const pass2 = 'z5pg0ih2E6y8qruYMPZo';
         const outSum = this.props.navigation.getParam('sum');
-        const userId = this.props.navigation.getParam('userId');
-        const invId = '1557823';
-        console.log(invId);
+        const userId = 0;//this.props.navigation.getParam('userId')
+        const invId = Number(new Date()).toString().slice(4);
+        console.log(invId, userId);
         
-        const hash = md5(`${outSum}:${invId}:${pass2}:UserID=${userId}`);
+        const hash = md5(`baikalweb:${outSum}:${invId}:${pass2}:Shp_UserID=${userId}`);//:Shp_UserID=${userId}
         console.log(hash);
         
 		return (
-            <WebView source={{ uri: `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=baikalweb&InvId=${invId}&Culture=ru&Encoding=utf-8&OutSum=${outSum}&SignatureValue=${hash}` }}/>
+            <WebView source={{ uri: `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=baikalweb&InvId=${invId}&Culture=ru&Encoding=utf-8&OutSum=${outSum}&IsTest=1&Shp_UserID=${userId}&SignatureValue=${hash}` }}/>
 		);
   }
 }
 
 export default RobokassaScreen;
+

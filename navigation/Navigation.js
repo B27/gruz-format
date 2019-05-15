@@ -101,7 +101,7 @@ const AppStack = createDrawerNavigator(
 		drawerWidth: width * 0.8,
 		contentComponent: AppDrawer,
 		contentOptions: {
-			activeBackgroundColor: '#FFC234',
+			activeBackgroundColor: 'transparent',
 			activeTintColor: 'black'
 			/*       iconContainerStyle: {
         width: 45,
