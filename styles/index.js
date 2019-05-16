@@ -321,10 +321,15 @@ const styles = StyleSheet.create({
         // borderWidth: 1, borderColor: 'green'
     },
 
-    orderRowTopContainer: {
+    cardRowTopContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start'
+    },
+
+    cardMargins: {
+        marginHorizontal: 12,
+        marginVertical: 6
     },
 
     orderText: {
@@ -361,7 +366,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    orderButton: {
+    cardButton: {
         padding: 12
     },
 

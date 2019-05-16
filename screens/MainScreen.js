@@ -3,7 +3,7 @@ import { View, Text, AsyncStorage, TouchableOpacity, FlatList } from 'react-nati
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
-import Order from '../components/Order';
+import OrderCard from '../components/OrderCard';
 import SwitchToggle from '../components/SwitchToggle';
 import axios from 'axios';
 
@@ -134,12 +134,12 @@ class MainScreen extends React.Component {
     };
 
     _renderItem = ({ item }) => (
-        <Order
+        <OrderCard
             id={item._id}
             time={item.time}
             address={item.location}
             description={item.comment}
-            style={{ marginHorizontal: 12, marginVertical: 6 }}
+            cardStyle={styles.cardMargins}
             onPressButton={this._onPressOrderItemButton}
             buttonName='ПРИНЯТЬ'
         />

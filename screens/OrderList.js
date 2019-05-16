@@ -9,7 +9,7 @@ import styles from "../styles";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Feather';
-import Order from '../components/Order'
+import OrderCard from '../components/OrderCard'
 
 
 class OrderList extends React.Component {
@@ -33,7 +33,7 @@ class OrderList extends React.Component {
         const { orders } = this.state;
 		return (
         <ScrollView>
-            { orders.map(order => <Order key={ order.id } time={ order.time } address={ order.address } description={ order.description }/>)}
+            { orders.map(order => <OrderCard cardStyle={styles.cardMargins} key={ order.id } time={ order.time } address={ order.address } description={ order.description }/>)}
         </ScrollView>
         )}
 }
