@@ -1,6 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Linking } from 'react-native';
-import Switch from 'react-native-switch-toggle';
+import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { DrawerItems, SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../styles';
@@ -27,7 +26,7 @@ class CustomDrawerContentComponent extends React.Component {
 	};
 
 	_userContainerPress = () => {
-		//TODO открытие окна информации о пользователе
+		this.props.navigation.navigate('Main');
 	};
 
 	render() {

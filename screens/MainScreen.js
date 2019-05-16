@@ -114,9 +114,8 @@ class EditCarScreen extends React.Component {
 		console.log('MainScreen log');
 	};
 
-	_topUpBalance = event => {
-		console.log(event);
-		console.log('topUpBalance log');
+	_topUpBalance = () => {
+        this.props.navigation.navigate('Balance')
 	};
 
 	_keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой струки нужен key типа String
