@@ -24,7 +24,7 @@ class ExpandCardBase extends React.Component {
         const { cardStyle, OpenComponent, HiddenComponent, id, expandAlways } = this.props;
         return (
             <TouchableOpacity
-                style={[styles.orderBase, cardStyle]}
+                style={[styles.cardBase, cardStyle]}
                 key={id}
                 onPress={expandAlways ? undefined : this._pressExpand}
                 // onPress срабатывает сразу после корректного нажатия,
@@ -35,16 +35,11 @@ class ExpandCardBase extends React.Component {
                     <View style={styles.cardRowTopContainer}>
                         <View style={{ flex: 1 }}>{OpenComponent}</View>
                         {expandAlways || (
-                            <TouchableOpacity onPress={this._pressExpand}>
+                            <TouchableOpacity style={styles.orderChevronIcon} onPress={this._pressExpand}>
                                 {cardExpanded ? (
-                                    <Icon name='chevron-up' size={42} color='#c4c4c4' style={styles.orderChevronIcon} />
+                                    <Icon name='chevron-up' size={42} color='#c4c4c4' />
                                 ) : (
-                                    <Icon
-                                        name='chevron-down'
-                                        size={42}
-                                        color='#c4c4c4'
-                                        style={styles.orderChevronIcon}
-                                    />
+                                    <Icon name='chevron-down' size={42} color='#c4c4c4' />
                                 )}
                             </TouchableOpacity>
                         )}

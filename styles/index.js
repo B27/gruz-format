@@ -114,6 +114,23 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
 
+    buttonConfirm: {
+        width: WIDTH / 3,
+        height: 45,
+        borderRadius: 25,
+        backgroundColor: '#FFC234',
+        justifyContent: 'center'
+    },
+
+    buttonCancel: {
+        width: WIDTH / 3,
+        height: 45,
+        borderWidth: 1,
+        borderRadius: 25,
+        backgroundColor: 'white',
+        justifyContent: 'center'
+    },
+
     buttonBottom: {
         width: WIDTH / 2,
         height: 45,
@@ -126,6 +143,11 @@ const styles = StyleSheet.create({
 
     text: {
         color: '#FFC234',
+        fontSize: 16,
+        textAlign: 'center'
+    },
+
+    buttonText: {
         fontSize: 16,
         textAlign: 'center'
     },
@@ -294,7 +316,6 @@ const styles = StyleSheet.create({
     },
 
     instructionViewTitle: {
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: 40,
@@ -321,10 +342,17 @@ const styles = StyleSheet.create({
         // borderWidth: 1, borderColor: 'green'
     },
 
+    cardH2: {
+        color: 'black',
+        fontSize: 16,
+        marginLeft: 16
+        //   textAlign: 'center'
+    },
+
     cardRowTopContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'flex-start'
+        alignItems: 'center'
     },
 
     cardMargins: {
@@ -339,7 +367,7 @@ const styles = StyleSheet.create({
     },
 
     orderChevronIcon: {
-        // borderWidth: 1
+        alignSelf: 'flex-start'
     },
 
     orderIcon: {
@@ -347,12 +375,11 @@ const styles = StyleSheet.create({
     },
 
     buttonRow: {
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end'
     },
 
-    orderBase: {
+    cardBase: {
         flex: 1,
         paddingTop: 4,
         paddingBottom: 4,
@@ -362,7 +389,18 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
 
-    buttonText: {
+    cardChat: {
+        flex: 1,
+        paddingTop: 4,
+        paddingBottom: 4,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 10,
+        marginHorizontal: 12,
+        marginTop: 6,
+        marginBottom: 16 + 45 + 16
+    },
+
+    cardButtonText: {
         fontWeight: 'bold'
     },
 
@@ -425,12 +463,17 @@ const styles = StyleSheet.create({
         padding: 12
     },
 
-    orderDetailButton: {
-        marginTop: 20,
-        marginHorizontal: 15,
-        display: 'flex',
+    buttonContainer: {
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between'
+    },
+
+    absoluteButtonContainer: {
+        position: 'absolute',
+        left: 25,
+        right: 25,
+        bottom: 16
     },
 
     executorBase: {

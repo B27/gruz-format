@@ -20,7 +20,7 @@ class OrderCard extends React.Component {
             <ExpandCardBase
                 expandAlways={expandAlways}
                 buttonName={buttonName}
-                cardStyle={[styles.orderBase, cardStyle]}
+                cardStyle={[styles.cardBase, cardStyle]}
                 id={id}
                 OpenComponent={
                     <Fragment>
@@ -43,7 +43,7 @@ class OrderCard extends React.Component {
                         {buttonName && (
                             <View style={styles.buttonRow}>
                                 <TouchableOpacity style={styles.cardButton} onPress={this._onPressButton}>
-                                    <Text style={styles.buttonText}>{buttonName}</Text>
+                                    <Text style={styles.cardButtonText}>{buttonName}</Text>
                                 </TouchableOpacity>
                             </View>
                         )}
