@@ -14,7 +14,7 @@ import Executor from '../screens/Executor'
 import Chat from '../screens/Chat'
 
 
-class OrderDetail extends React.Component {
+class OrderDetailScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,13 +22,7 @@ class OrderDetail extends React.Component {
         }
     }
     static navigationOptions = {
-		title: "Заказы",
-		headerLeft: null,
-		headerTitleStyle: {
-			textAlign: "center",
-			flexGrow: 1,
-			alignSelf: "center"
-		}
+		title: "Заказы"
     };
 
 	render() {
@@ -52,4 +46,4 @@ class OrderDetail extends React.Component {
         )}
 }
 
-export default OrderDetail;
+export default OrderDetailScreen;

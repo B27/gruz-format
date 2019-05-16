@@ -129,7 +129,9 @@ class EditCarScreen extends React.Component {
         this.setState({ workingStatus: !this.state.workingStatus });
     };
 
-    _onPressOrderItemButton = id => {};
+    _onPressOrderItemButton = id => {
+        this.props.navigation.navigate('OrderDetail');
+    };
 
     _onPressOrderCard = id => {
         console.log('press card', id);
