@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    button: {
+    orderButton: {
         padding: 12
     },
 
@@ -432,15 +432,18 @@ const styles = StyleSheet.create({
         marginHorizontal: 15,
         marginBottom: 5
     },
+
     executorDescription: {
         flex: 1,
         justifyContent: 'flex-start',
         paddingLeft: 10
     },
+
     executorText: {
         marginBottom: 10,
         marginTop: 10
     },
+
     executorTextDisp: {
         marginBottom: 10
     }

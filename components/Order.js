@@ -74,7 +74,7 @@ class Order extends React.Component {
                             </View>
                             {buttonName && (
                                 <View style={styles.buttonRow}>
-                                    <TouchableOpacity style={styles.button} onPress={this._onPressButton}>
+                                    <TouchableOpacity style={styles.orderButton} onPress={this._onPressButton}>
                                         <Text style={styles.buttonText}>{buttonName}</Text>
                                     </TouchableOpacity>
                                 </View>

@@ -7,31 +7,19 @@ import Order from '../components/Order';
 import SwitchToggle from '../components/SwitchToggle';
 import axios from 'axios';
 
-class LogoTitle extends React.Component {
-    _menuPress = () => {
-        this.props.navigationProps.toggleDrawer();
-    };
 
-    render() {
-        return (
-            <TouchableOpacity style={{ padding: 8 }} onPress={this._menuPress}>
-                <Icon2 name='md-menu' size={24} />
-            </TouchableOpacity>
-        );
-    }
-}
 
-class EditCarScreen extends React.Component {
+class MainScreen extends React.Component {
     componentDidMount = async () => {
         this.fetchData();
     };
     fetchData = async () => {
         const userId = await AsyncStorage.getItem('userId');
         const result = await axios.get(`/worker/${userId}`).catch(err => {
-            console.log(err);
+            console.log('get /worker/:userId error ', err);
         });
         if (result) {
-            console.log(result.data);
+            console.log('get /worker/:userId result.data: ', result.data);
             this.setState({
                 userName: result.data.name,
                 balance: result.data.balance,
@@ -78,7 +66,7 @@ class EditCarScreen extends React.Component {
     };
 
     static navigationOptions = ({ navigation }) => ({
-        headerLeft: <LogoTitle navigationProps={navigation} />,
+       headerLeft: <MenuIcon navigationProps={navigation} />,
         headerLeftContainerStyle: { paddingLeft: 8 }
     });
 
@@ -158,4 +146,18 @@ class EditCarScreen extends React.Component {
     );
 }
 
-export default EditCarScreen;
+class MenuIcon extends React.Component {
+    _menuPress = () => {
+        this.props.navigationProps.toggleDrawer();
+    };
+
+    render() {
+        return (
+            <TouchableOpacity style={{ padding: 8 }} onPress={this._menuPress}>
+                <Icon2 name='md-menu' size={24} />
+            </TouchableOpacity>
+        );
+    }
+}
+
+export default MainScreen;
