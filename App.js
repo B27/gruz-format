@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, AsyncStorage } from "react-native";
-import { createStore, applyMiddleware } from "redux";
-import { Provider, connect } from "react-redux";
+
+
 import axios from "axios";
-import axiosMiddleware from "redux-axios-middleware";
+import MyContext from './Context'
 import AppContainer from "./navigation/Navigation";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import reducer from "./screens/reducer";
+
 
 let token;
 (async () => (token = await AsyncStorage.getItem("token")))(); //Этот говнокод для того чтобы не вернулся промис
@@ -16,12 +16,11 @@ if (token) {
 	};
 }
 axios.defaults.baseURL = "https://gruz.bw2api.ru";
-const store = createStore(reducer, applyMiddleware()); //axiosMiddleware(client)
 
 export default class App extends React.Component {
 	render() {
 		return (
-			<Provider store={store}>
+			<MyContext.Provider value={{balance: '21'}}>
 				<View style={styles.container}>
 					<KeyboardAwareScrollView
 						style={{ flex: 1 }}
@@ -34,7 +33,7 @@ export default class App extends React.Component {
 						<AppContainer />
 					</KeyboardAwareScrollView>
 				</View>
-			</Provider>
+            </MyContext.Provider>
 		);
 	}
 }
