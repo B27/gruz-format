@@ -114,6 +114,23 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
 
+    buttonConfirm: {
+        width: WIDTH / 3,
+        height: 45,
+        borderRadius: 25,
+        backgroundColor: '#FFC234',
+        justifyContent: 'center'
+    },
+
+    buttonCancel: {
+        width: WIDTH / 3,
+        height: 45,
+        borderWidth: 1,
+        borderRadius: 25,
+        backgroundColor: 'white',
+        justifyContent: 'center'
+    },
+
     buttonBottom: {
         width: WIDTH / 2,
         height: 45,
@@ -126,6 +143,11 @@ const styles = StyleSheet.create({
 
     text: {
         color: '#FFC234',
+        fontSize: 16,
+        textAlign: 'center'
+    },
+
+    buttonText: {
         fontSize: 16,
         textAlign: 'center'
     },
@@ -294,7 +316,6 @@ const styles = StyleSheet.create({
     },
 
     instructionViewTitle: {
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: 40,
@@ -309,6 +330,94 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         padding: 5
+    },
+
+    orderRow: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        marginHorizontal: 12,
+        paddingVertical: 4
+        // borderWidth: 1, borderColor: 'green'
+    },
+
+    cardH2: {
+        color: 'black',
+        fontSize: 16,
+        marginLeft: 16
+        //   textAlign: 'center'
+    },
+
+    cardRowTopContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+
+    cardMargins: {
+        marginHorizontal: 12,
+        marginVertical: 6
+    },
+
+    orderText: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        padding: 10
+    },
+
+    orderChevronIcon: {
+        alignSelf: 'flex-start'
+    },
+
+    orderIcon: {
+        marginRight: 12
+    },
+
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
+
+    cardBase: {
+        flex: 1,
+        paddingTop: 4,
+        paddingBottom: 4,
+        backgroundColor: '#f1f1f1',
+        // borderWidth: 1,
+        // borderColor: 'red',
+        borderRadius: 10
+    },
+
+    cardChat: {
+        flex: 1,
+        paddingTop: 4,
+        paddingBottom: 4,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 10,
+        marginHorizontal: 12,
+        marginTop: 6,
+        marginBottom: 16 + 45 + 16
+    },
+
+    cardButtonText: {
+        fontWeight: 'bold'
+    },
+
+    cardButton: {
+        padding: 12
+    },
+
+    clockText: {
+        marginTop: 2
+    },
+
+    locationText: {
+        marginRight: 12
+    },
+
+    descriptionText: {
+        marginRight: 32
     },
 
     mainTopBackground: {
@@ -352,6 +461,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 56,
         padding: 12
+    },
+
+    buttonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+
+    absoluteButtonContainer: {
+        position: 'absolute',
+        left: 25,
+        right: 25,
+        bottom: 16
+    },
+
+    executorBase: {
+        marginHorizontal: 15,
+        marginBottom: 5
+    },
+
+    executorDescription: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        paddingLeft: 20
+    },
+
+    executorText: {
+        marginBottom: 10,
+        marginTop: 10
+    },
+
+    executorTextDisp: {
+        marginBottom: 10
     }
 });
 export default styles;
