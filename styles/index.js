@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
     executorDescription: {
         flex: 1,
         justifyContent: 'flex-start',
-        paddingLeft: 10
+        paddingLeft: 20
     },
 
     executorText: {

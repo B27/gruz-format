@@ -45,14 +45,14 @@ class OrderDetailScreen extends React.Component {
                                     <View>
                                         <Text style={styles.executorTextDisp}>Диспетчер:</Text>
                                         <View style={styles.orderRow}>
-                                            <TouchableOpacity>
+                                            <View>
                                                 <IconCam
                                                     name={'camera'}
                                                     color={'#FFC234'}
                                                     size={50}
                                                     style={styles.orderIcon}
                                                 />
-                                            </TouchableOpacity>
+                                            </View>
                                             <View>
                                                 <Text>{dispatcher.name}</Text>
                                                 <Text>{dispatcher.phone}</Text>
@@ -62,14 +62,14 @@ class OrderDetailScreen extends React.Component {
                                     <View>
                                         <Text style={styles.executorText}>Водитель:</Text>
                                         <View style={styles.orderRow}>
-                                            <TouchableOpacity>
+                                            <View>
                                                 <IconCam
                                                     name={'camera'}
                                                     color={'#FFC234'}
                                                     size={50}
                                                     style={styles.orderIcon}
                                                 />
-                                            </TouchableOpacity>
+                                            </View>
                                             <View>
                                                 <Text>{driver.name}</Text>
                                                 <Text>{driver.phone}</Text>
@@ -77,17 +77,17 @@ class OrderDetailScreen extends React.Component {
                                         </View>
                                     </View>
                                     <View>
-                                        <Text style={styles.executorText}>Грузчик:</Text>
+                                        <Text style={styles.executorText}>{(movers.length > 1) ? 'Грузчики:' : 'Грузчик'}</Text>
                                         {movers.map(mover => (
                                             <View key={mover._id} style={styles.orderRow}>
-                                                <TouchableOpacity>
+                                                <View>
                                                     <IconCam
                                                         name={'camera'}
                                                         color={'#FFC234'}
                                                         size={50}
                                                         style={styles.orderIcon}
                                                     />
-                                                </TouchableOpacity>
+                                                </View>
                                                 <View>
                                                     <Text>{mover.name}</Text>
                                                     <Text>{mover.phone}</Text>
