@@ -6,7 +6,6 @@ import OrderCard from '../components/OrderCard';
 import SwitchToggle from '../components/SwitchToggle';
 import axios from 'axios';
 
-
 class MainScreen extends React.Component {
     componentDidMount = async () => {
         this.fetchData();
@@ -118,12 +117,22 @@ class MainScreen extends React.Component {
         this.props.navigation.navigate('OrderDetail');
     };
 
-    _onRefresh = () => {
-        this.fetchData();
+    _onRefresh = async () => {
+        //  this.fetchData();
         this.setState({ refreshing: true });
         setTimeout(() => {
             this.setState({ refreshing: false });
         }, 1000);
+        this.setState({
+            applications: [
+                {
+                    _id: 3,
+                    time: '13:30',
+                    location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                    comment: 'Коммент арий'
+                }
+            ]
+        });
     };
 
     _renderItem = ({ item }) => (

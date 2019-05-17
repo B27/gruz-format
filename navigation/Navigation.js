@@ -60,26 +60,26 @@ const MainStack = createStackNavigator(
 
 const MyCarStack = createStackNavigator(
     {
-        Main: {
+        MyCar: {
             screen: EditCarScreen,
             navigationOptions: yellowHeaderWithHamburger
         }
     },
     {
         defaultNavigationOptions: {
-            headerTitle: <Text style={{ fontSize: 26 }}>Съешь же ещё этих мягких французских грузчиков да выпей чаю.</Text>,
+            headerTitle: (
+                <Text style={{ fontSize: 26 }}>Съешь же ещё этих мягких французских грузчиков да выпей чаю.</Text>
+            )
         }
     }
 );
 
-const SettingsStack = createStackNavigator(
-    {
-        Main: {
-            screen: RepoDetailScreen,
-            navigationOptions: yellowHeaderWithHamburger
-        }       
+const SettingsStack = createStackNavigator({
+    Settings: {
+        screen: RepoDetailScreen,
+        navigationOptions: yellowHeaderWithHamburger
     }
-)
+});
 
 const InstructionsStack = createStackNavigator({
     Instructions: {
@@ -93,7 +93,7 @@ const AppStack = createDrawerNavigator(
         //основной стек авторизованного пользователя
         //   Home: AppLoadingScreen,  // эта штука сломала навигацию, раcкомментировать ЗАПРЕЩЕНО
 
-        Main: {
+        Page1: {
             screen: MainStack,
             navigationOptions: {
                 drawerLabel: () => null //'Заявки',
@@ -109,7 +109,7 @@ const AppStack = createDrawerNavigator(
         //     }
         // },
 
-        Page4: {
+        Page2: {
             screen: MyCarStack,
             navigationOptions: {
                 drawerLabel: 'Моё авто',
@@ -117,7 +117,7 @@ const AppStack = createDrawerNavigator(
             }
         },
 
-        Page5: {
+        Page3: {
             screen: SettingsStack,
             navigationOptions: {
                 drawerLabel: 'Настройки',
@@ -125,7 +125,7 @@ const AppStack = createDrawerNavigator(
             }
         },
 
-        Page6: {
+        Page4: {
             screen: InstructionsStack,
             navigationOptions: {
                 drawerLabel: 'Инструкции',
