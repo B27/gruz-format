@@ -6,7 +6,6 @@ import { username } from '../constants';
 
 class RepoDetailScreen extends Component {
   static navigationOptions = {
-    drawerLabel: 'RepoDetail',
     title: 'RepoDetail'
   };
 

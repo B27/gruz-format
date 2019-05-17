@@ -19,8 +19,9 @@ import BalanceScreen from '../screens/BalanceScreen';
 import RobokassaScreen from '../screens/RobokassaScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import AppDrawer from './AppDrawer';
-import { Dimensions } from 'react-native';
+import { Dimensions, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MenuIcon } from '../components/MenuIcon';
 
 const { height, width } = Dimensions.get('window');
 
@@ -28,21 +29,64 @@ function IconMenuItem({ tintColor, name }) {
     return <Icon name={name} size={24} style={{ color: tintColor }} />;
 }
 
-const InstructionsStack = createStackNavigator(
+const yellowHeader = {
+    headerStyle: {
+        backgroundColor: '#FFC234'
+    }
+};
+
+const yellowHeaderWithHamburger = ({ navigation, ...others }) => {
+    console.log('yellowHeaderWithHamburger', others);
+    return Object.assign({}, yellowHeader, {
+        headerLeft: <MenuIcon navigationProps={navigation} />,
+        headerLeftContainerStyle: { paddingLeft: 8 }
+    });
+};
+
+// const yellowHeaderWithHamburger = Object.assign({}, yellowHeader, {
+//     headerLeft: <MenuIcon />,
+//     headerLeftContainerStyle: { paddingLeft: 8 }
+// });
+
+const MainStack = createStackNavigator(
     {
-        Instructions: InstructionScreen
+        Main: { screen: MainScreen, navigationOptions: yellowHeaderWithHamburger },
+        Balance: BalanceScreen,
+        Robokassa: RobokassaScreen,
+        OrderDetail: OrderDetailScreen
+    },
+    { defaultNavigationOptions: yellowHeader }
+);
+
+const MyCarStack = createStackNavigator(
+    {
+        Main: {
+            screen: EditCarScreen,
+            navigationOptions: yellowHeaderWithHamburger
+        }
     },
     {
         defaultNavigationOptions: {
-            headerStyle: {
-                backgroundColor: '#FFC234',
-                textAlign: 'center',
-                height: 0.1 * height,
-                textAlign: 'center'
-            }
+            headerTitle: <Text style={{ fontSize: 26 }}>Съешь же ещё этих мягких французских грузчиков да выпей чаю.</Text>,
         }
     }
 );
+
+const SettingsStack = createStackNavigator(
+    {
+        Main: {
+            screen: RepoDetailScreen,
+            navigationOptions: yellowHeaderWithHamburger
+        }       
+    }
+)
+
+const InstructionsStack = createStackNavigator({
+    Instructions: {
+        screen: InstructionScreen,
+        navigationOptions: yellowHeaderWithHamburger
+    }
+});
 
 const AppStack = createDrawerNavigator(
     {
@@ -50,25 +94,10 @@ const AppStack = createDrawerNavigator(
         //   Home: AppLoadingScreen,  // эта штука сломала навигацию, раcкомментировать ЗАПРЕЩЕНО
 
         Main: {
-            screen: createStackNavigator(
-                {
-                    Main: MainScreen,
-                    Balance: BalanceScreen,
-                    Robokassa: RobokassaScreen,
-                    OrderDetail: OrderDetailScreen
-                },
-                {
-                    defaultNavigationOptions: {
-                        headerStyle: {
-                            backgroundColor: '#FFC234',
-                            textAlign: 'center'
-                        }
-                    }
-                }
-            ),
+            screen: MainStack,
             navigationOptions: {
-                drawerLabel: () => null, //'Заявки',
-            //    drawerIcon: <IconMenuItem name='inbox' />
+                drawerLabel: () => null //'Заявки',
+                //    drawerIcon: <IconMenuItem name='inbox' />
             }
         },
 
@@ -81,7 +110,7 @@ const AppStack = createDrawerNavigator(
         // },
 
         Page4: {
-            screen: MainScreen,
+            screen: MyCarStack,
             navigationOptions: {
                 drawerLabel: 'Моё авто',
                 drawerIcon: <IconMenuItem name='wrench' />
@@ -89,7 +118,7 @@ const AppStack = createDrawerNavigator(
         },
 
         Page5: {
-            screen: RepoDetailScreen,
+            screen: SettingsStack,
             navigationOptions: {
                 drawerLabel: 'Настройки',
                 drawerIcon: <IconMenuItem name='gear' />
@@ -107,17 +136,7 @@ const AppStack = createDrawerNavigator(
     {
         drawerWidth: width * 0.8,
         contentComponent: AppDrawer,
-    //    order: ['Page5', 'Page6', 'Page4', 'Page2'],
         contentOptions: {
-            items: [
-                {
-                    screen: MainScreen,
-                    navigationOptions: {
-                        drawerLabel: 'Моё авто',
-                        drawerIcon: <IconMenuItem name='wrench' />
-                    }
-                }
-            ],
             activeBackgroundColor: 'transparent',
             activeTintColor: 'black'
             /*       iconContainerStyle: {

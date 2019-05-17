@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, AsyncStorage, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, AsyncStorage, FlatList } from 'react-native';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Ionicons';
 import OrderCard from '../components/OrderCard';
 import SwitchToggle from '../components/SwitchToggle';
 import axios from 'axios';
+
 
 class MainScreen extends React.Component {
     componentDidMount = async () => {
@@ -63,10 +63,10 @@ class MainScreen extends React.Component {
         ] // заявки
     };
 
-    static navigationOptions = ({ navigation }) => ({
-        headerLeft: <MenuIcon navigationProps={navigation} />,
-        headerLeftContainerStyle: { paddingLeft: 8 }
-    });
+    // static navigationOptions = ({ navigation }) => ({
+    //     headerLeft: <MenuIcon navigationProps={navigation} />,
+    //     headerLeftContainerStyle: { paddingLeft: 8 }
+    // });
 
     render() {
         return (
@@ -137,20 +137,6 @@ class MainScreen extends React.Component {
             buttonName='ПРИНЯТЬ'
         />
     );
-}
-
-class MenuIcon extends React.Component {
-    _menuPress = () => {
-        this.props.navigationProps.toggleDrawer();
-    };
-
-    render() {
-        return (
-            <TouchableOpacity style={{ padding: 8 }} onPress={this._menuPress}>
-                <Icon2 name='md-menu' size={24} />
-            </TouchableOpacity>
-        );
-    }
 }
 
 export default MainScreen;
