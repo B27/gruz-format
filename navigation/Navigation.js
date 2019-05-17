@@ -70,17 +70,19 @@ const AppStack = createDrawerNavigator(
                 }
             ),
             navigationOptions: {
-                drawerLabel: 'Заявки',
-                drawerIcon: <IconMenuItem name='inbox' />
+                drawerLabel: () => null, //'Заявки',
+            //    drawerIcon: <IconMenuItem name='inbox' />
             }
         },
-        Page2: {
-            screen: OrderListScreen,
-            navigationOptions: {
-                drawerLabel: 'Мои заказы',
-                drawerIcon: <IconMenuItem name='truck' />
-            }
-        },
+
+        // Page2: {
+        //     screen: OrderListScreen,
+        //     navigationOptions: {
+        //         drawerLabel: 'Мои заказы',
+        //         drawerIcon: <IconMenuItem name='truck' />
+        //     }
+        // },
+
         Page4: {
             screen: MainScreen,
             navigationOptions: {
@@ -88,6 +90,7 @@ const AppStack = createDrawerNavigator(
                 drawerIcon: <IconMenuItem name='wrench' />
             }
         },
+
         Page5: {
             screen: RepoDetailScreen,
             navigationOptions: {
@@ -95,6 +98,7 @@ const AppStack = createDrawerNavigator(
                 drawerIcon: <IconMenuItem name='gear' />
             }
         },
+
         Page6: {
             screen: InstructionsStack,
             navigationOptions: {
@@ -106,7 +110,17 @@ const AppStack = createDrawerNavigator(
     {
         drawerWidth: width * 0.8,
         contentComponent: AppDrawer,
+    //    order: ['Page5', 'Page6', 'Page4', 'Page2'],
         contentOptions: {
+            items: [
+                {
+                    screen: MainScreen,
+                    navigationOptions: {
+                        drawerLabel: 'Моё авто',
+                        drawerIcon: <IconMenuItem name='wrench' />
+                    }
+                }
+            ],
             activeBackgroundColor: 'transparent',
             activeTintColor: 'black'
             /*       iconContainerStyle: {
