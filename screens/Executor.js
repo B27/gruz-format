@@ -40,7 +40,7 @@ class Executor extends React.Component {
                 </TouchableOpacity>
             { orderV && ( 
                 <Fragment >
-                        <View style={ styles.executorDescription }>
+                        <View style={ styles.cardDescription }>
                             <View>
                                 <Text style={ styles.executorTextDisp }>Диспетчер:</Text>
                                 <View style={ styles.orderRow }>

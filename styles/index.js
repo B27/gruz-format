@@ -327,9 +327,9 @@ const styles = StyleSheet.create({
     },
 
     instructionText: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        padding: 5
+        // flex: 1,
+        // justifyContent: 'flex-start',
+        // padding: 5
     },
 
     orderRow: {
@@ -481,10 +481,11 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
 
-    executorDescription: {
+    cardDescription: {
         flex: 1,
         justifyContent: 'flex-start',
-        paddingLeft: 20
+        paddingVertical: 5,
+        paddingHorizontal: 20
     },
 
     executorText: {

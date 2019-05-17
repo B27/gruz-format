@@ -4,7 +4,7 @@ import styles from '../styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import OrderCard from '../components/OrderCard';
-import ExpandCard from '../components/ExpandCardBase';
+import ExpandCardBase from '../components/ExpandCardBase';
 import Executor from '../screens/Executor';
 import Chat from '../screens/Chat';
 
@@ -37,11 +37,11 @@ class OrderDetailScreen extends React.Component {
                         description={order.description}
                         cardStyle={styles.cardMargins}
                     />
-                    <ExpandCard
+                    <ExpandCardBase
                         OpenComponent={<Text style={styles.cardH2}>Исполнители</Text>}
                         HiddenComponent={
                             <Fragment>
-                                <View style={styles.executorDescription}>
+                                <View style={styles.cardDescription}>
                                     <View>
                                         <Text style={styles.executorTextDisp}>Диспетчер:</Text>
                                         <View style={styles.orderRow}>
