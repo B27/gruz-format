@@ -6,8 +6,11 @@ import styles from '../styles';
 import { privacyPolicyURL } from '../constants';
 import SwitchToggle from '../components/SwitchToggle';
 import BalanceScreen from '../screens/BalanceScreen';
-import MyContext from '../Context';
 
+import { inject, observer } from 'mobx-react/native';
+
+@inject('store')
+@observer
 class CustomDrawerContentComponent extends React.Component {
 	constructor(props) {
 		super(props);
@@ -15,7 +18,6 @@ class CustomDrawerContentComponent extends React.Component {
 
 	state = {
 		workingStatus: false,
-		balance: 345,
 		userName: 'Иванов И.И.'
 	};
 
@@ -47,22 +49,18 @@ class CustomDrawerContentComponent extends React.Component {
 					<View>
 						<TouchableOpacity style={styles.drawerUserContainer} onPress={this._userContainerPress}>
 							<Icon name='user-circle-o' size={64} />
-							<Text style={styles.drawerUserName}>{this.state.userName}</Text>
+							<Text style={styles.drawerUserName}>{this.props.store.name}</Text>
 						</TouchableOpacity>
 						<View style={styles.drawerTopItem}>
 							<Text style={styles.drawerFontTopItem}>Работаю</Text>
 							<View>
-								<SwitchToggle switchOn={this.state.workingStatus} onPress={this._onChangeSwitchValue} />
+								<SwitchToggle switchOn={this.props.store.onWork} onPress={this._onChangeSwitchValue} />
 							</View>
 						</View>
 						<TouchableOpacity style={styles.drawerTopItem} onPress={this._balancePress}>
 							<Text style={styles.drawerFontTopItem}>Баланс</Text>
-							<MyContext.Consumer>
-                                {value => 
-        
-                                    <Text style={styles.drawerFontTopItem}>{`${value.balance} руб.`}</Text>
-                                }
-							</MyContext.Consumer>
+
+							<Text style={styles.drawerFontTopItem}>{`${this.props.store.balance} руб.`}</Text>
 						</TouchableOpacity>
 						<DrawerItems {...this.props} />
 					</View>

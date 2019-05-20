@@ -1,7 +1,10 @@
 import React from 'react';
 import { TouchableOpacity, TextInput, Text, View, ScrollView, AsyncStorage } from 'react-native';
 import styles from '../styles';
+import { inject, observer } from 'mobx-react/native';
 
+@inject('store')
+@observer
 class BalanceScreen extends React.Component {
 	state = {
 		sum: null,
@@ -13,16 +16,22 @@ class BalanceScreen extends React.Component {
 	};
 
 	render() {
+		this.props.navigation.addListener('willFocus', () => {
+			this.props.store.setBalance();
+            this.setState({ sum: '' });
+            this.textInputRef.clear();
+		});
 		return (
 			<ScrollView contentContainerStyle={styles.registrationScreen}>
 				<View style={styles.inputContainer} behavior='padding' enabled>
 					<Text style={{ marginBottom: 15, fontSize: 16 }}>
-						Ваш баланс: <Text style={{ marginBottom: 10, fontSize: 16 }}>200 р.</Text>
+						Ваш баланс: <Text style={{ marginBottom: 10, fontSize: 16 }}>{this.props.store.balance}</Text> р.
 					</Text>
 					<Text style={{ marginBottom: 15, fontSize: 16 }}>
 						Введите сумму на которую хотите пополнить счет:
 					</Text>
 					<TextInput
+						ref={ref => (this.textInputRef = ref)}
 						style={styles.input}
 						placeholder='Сумма'
 						placeholderTextColor='grey'
@@ -31,7 +40,7 @@ class BalanceScreen extends React.Component {
 					/>
 				</View>
 				<Text style={{ color: 'red' }}>{this.state.message}</Text>
-				<TouchableOpacity style={{ ...styles.buttonBottom,  marginTop: 0 }} onPress={this._goToRobokassa}>
+				<TouchableOpacity style={{ ...styles.buttonBottom, marginTop: 0 }} onPress={this._goToRobokassa}>
 					<Text style={styles.text}>ПЕРЕЙТИ К ОПЛАТЕ</Text>
 				</TouchableOpacity>
 			</ScrollView>

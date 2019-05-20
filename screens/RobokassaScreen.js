@@ -1,5 +1,5 @@
 import React from "react";
-import { WebView } from "react-native";
+import { WebView, BackHandler } from "react-native";
 import md5 from 'md5';
 
 class RobokassaScreen extends React.Component {
@@ -12,9 +12,7 @@ class RobokassaScreen extends React.Component {
 		title: 'Баланс',
     };
     
-
-	render() {
-
+	render() {          
         const pass2 = 'z5pg0ih2E6y8qruYMPZo';
         const outSum = this.props.navigation.getParam('sum');
         const userId = this.props.navigation.getParam('userId');
