@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { action, observable, runInAction } from 'mobx';
 import { AsyncStorage } from 'react-native';
+import { URL } from '../constants'
 
 class ObservableStore {
 	@observable balance = '';
 	@observable name = '';
 	@observable isDriver = false;
-	@observable onWork = false;
+    @observable onWork = false;
+    @observable avatar = '';
 
 	@action async updateUserInfo() {
 		const userId = await AsyncStorage.getItem('userId');
@@ -19,9 +21,11 @@ class ObservableStore {
 				this.balance = result.data.balance;
 				this.name = result.data.name;
 				this.isDriver = result.data.isDriver;
-				this.onWork = result.data.onWork;
-			});
-		}
+                this.onWork = result.data.onWork;
+                this.avatar = URL + result.data.photos.user;
+            });
+            console.log(this.avatar)
+        }
 	}
 
 	@action async setOnWork(value) {

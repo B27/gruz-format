@@ -119,7 +119,7 @@ class MainScreen extends React.Component {
 
 	_keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой струки нужен key типа String
 
-	_onChangeSwitchValue = (value) => {
+	_onChangeSwitchValue = () => {
         this.props.store.setOnWork(!this.props.store.onWork);
         
         //this.setState({ workingStatus: !this.state.workingStatus });
