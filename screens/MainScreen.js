@@ -12,40 +12,60 @@ class MainScreen extends React.Component {
         this.props.store.updateUserInfo();
 	};
 
-	state = {
-		userName: '',
-		isDriver: '',
-		workingStatus: false,
-		refreshing: false,
-		applications: [
-			{
-				_id: 1,
-				time: '13:30',
-				location: 'г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.56',
-				comment: 'Коммент арий'
-			},
-			{
-				_id: 2,
-				time: '13:30',
-				location: `г.Хабаровск, большая длина текста должна правильно переноситься, иначе это приведёт к сложным последствиям ул. Краснофлотская, д.34, кв.56`,
-				comment:
-					'Коммент г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5арий'
-			},
-			{
-				_id: 3,
-				time: '13:30',
-				location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
-				comment: 'Коммент арий'
-			},
-			{
-				_id: 4,
-				time: '13:30',
-				location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
-				comment: 'Коммент арий'
-			},
-			{ _id: 5, time: '13:30', location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56', comment: 'Коммент арий' }
-		] // заявки
-	};
+    _getApplications = async () => {
+        try {
+            const result = await axios.get(`order/open/60/1`);
+            if (result) {
+                console.log('get order/open/60/1 result.data: ', result.data);
+                this.setState({
+                    applications: result.data
+                });
+            }
+        } catch (err) {
+            console.log('getorder/open/60/1 error ', err);
+        }
+    };
+
+    state = {
+        userName: '',
+        isDriver: '',
+        balance: '',
+        workingStatus: false,
+        refreshing: false,
+        applications: [
+            {
+                _id: 1,
+                start_time: '13:30',
+                location: 'г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            },
+            {
+                _id: 2,
+                start_time: '13:30',
+                location: `г.Хабаровск, большая длина текста должна правильно переноситься, иначе это приведёт к сложным последствиям ул. Краснофлотская, д.34, кв.56`,
+                comment:
+                    'Коммент г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5г.Хабаровск,  а длина может быть и больше ул. Краснофлотская, д.34, кв.5арий'
+            },
+            {
+                _id: 3,
+                start_time: '13:30',
+                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            },
+            {
+                _id: 4,
+                start_time: '13:30',
+                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            },
+            {
+                _id: 5,
+                start_time: '13:30',
+                location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
+                comment: 'Коммент арий'
+            }
+        ] // заявки
+    };
 
 	// static navigationOptions = ({ navigation }) => ({
 	//     headerLeft: <MenuIcon navigationProps={navigation} />,
@@ -128,17 +148,17 @@ class MainScreen extends React.Component {
 		});
 	};
 
-	_renderItem = ({ item }) => (
-		<OrderCard
-			id={item._id}
-			time={item.time}
-			address={item.location}
-			description={item.comment}
-			cardStyle={styles.cardMargins}
-			onPressButton={this._onPressOrderItemButton}
-			buttonName='ПРИНЯТЬ'
-		/>
-	);
+    _renderItem = ({ item }) => (
+        <OrderCard
+            id={item._id}
+            time={item.start_time}
+            address={item.location}
+            description={item.comment}
+            cardStyle={styles.cardMargins}
+            onPressButton={this._onPressOrderItemButton}
+            buttonName='ПРИНЯТЬ'
+        />
+    );
 }
 
 export default MainScreen;

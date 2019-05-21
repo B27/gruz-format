@@ -5,7 +5,6 @@ import {
     createDrawerNavigator
 } from 'react-navigation';
 import RepoDetailScreen from '../screens/RepoDetailScreen';
-import OrderListScreen from '../screens/OrderList';
 import SignInScreen from '../screens/SignInScreen';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
 import SmsScreen from '../screens/SmsScreen';
@@ -36,7 +35,6 @@ const yellowHeader = {
 };
 
 const yellowHeaderWithHamburger = ({ navigation, ...others }) => {
-    console.log('yellowHeaderWithHamburger', others);
     return Object.assign({}, yellowHeader, {
         headerLeft: <MenuIcon navigationProps={navigation} />,
         headerLeftContainerStyle: { paddingLeft: 8 }

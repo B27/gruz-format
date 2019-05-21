@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
-import styles from '../styles';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { ScrollView, Text, View } from 'react-native';
 import ExpandCardBase from '../components/ExpandCardBase';
+import styles from '../styles';
 
 class InstructionScreen extends React.Component {
     state = {
