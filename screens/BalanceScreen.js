@@ -17,7 +17,7 @@ class BalanceScreen extends React.Component {
 
 	render() {
 		this.props.navigation.addListener('willFocus', () => {
-			this.props.store.setBalance();
+			this.props.store.updateUserInfo();
             this.setState({ sum: '' });
             this.textInputRef.clear();
 		});

@@ -4,10 +4,6 @@ import ExpandCardBase from '../components/ExpandCardBase';
 import styles from '../styles';
 
 class InstructionScreen extends React.Component {
-    state = {
-        moverView: false,
-        driverView: false
-    };
 
     static navigationOptions = {
         title: 'Информация'
@@ -25,7 +21,6 @@ class InstructionScreen extends React.Component {
     };
 
     render() {
-        const { moverView, driverView } = this.state;
         return (
             <ScrollView>
                 <ExpandCardBase
