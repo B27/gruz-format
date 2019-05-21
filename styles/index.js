@@ -495,6 +495,17 @@ const styles = StyleSheet.create({
 
     executorTextDisp: {
         marginBottom: 10
-    }
+    },
+
+    orderAccept: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end'
+    },
+
+    orderh2: {
+        fontSize: 18,
+        marginBottom: 10
+    },
 });
 export default styles;
