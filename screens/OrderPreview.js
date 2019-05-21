@@ -8,7 +8,7 @@ import ExpandCardBase from '../components/ExpandCardBase';
 class OrderPreview extends React.Component {
     state = {
         order: { id: '0', time: '13:23', address: 'Chertenkova 2', description: 'test 1' },
-        gruzilinet: true,
+        gruzilinet: false,
     };
 
     static navigationOptions = {
@@ -35,14 +35,7 @@ class OrderPreview extends React.Component {
                         HiddenComponent={
                             <Fragment>
                                 <View style={ styles.cardH2 }>
-                                    { gruzilinet ? <View>
-                                                        <Text style={ styles.orderh2 }>Грузчик</Text>
-                                                        <Text>Грузчик Комментарии</Text>
-                                                    </View> : 
-                                                    <View>
-                                                        <Text style={ styles.orderh2 }>Водитель</Text>
-                                                        <Text>Водитель Комментарии</Text>
-                                                    </View>  }
+                                    { gruzilinet ? <Text>Грузчик Комментарии</Text> : <Text>Водитель Комментарии</Text> }
                                 </View>
                             </Fragment>
                         }

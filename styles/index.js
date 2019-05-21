@@ -503,9 +503,5 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
 
-    orderh2: {
-        fontSize: 18,
-        marginBottom: 10
-    },
 });
 export default styles;
