@@ -48,6 +48,25 @@ class EditUserScreen extends React.Component {
 		}
 	};
 
+	// choiceModalVisible: false,
+	// 	pictureUri: require('../images/unknown.png'),
+	// 	lastname: 'Устьянцев',
+	// 	firstname: 'Роман',
+	// 	patronimyc: 'Николаевич',
+	// 	phone: '89834323022',
+	// 	password: '123',
+	// 	birthDate: 'Дата рождения',
+	// 	city: '',
+	// 	cityId: null,
+	// 	street: 'Октябрьская',
+	// 	house: '2',
+	// 	flat: '45',
+	// 	height: '190',
+	// 	weight: '80',
+	// 	message: '',
+	// 	cities: [],
+	// 	list: [],
+	// 	userId: null
 	componentDidMount() {
 		(async () => {
 			try {
@@ -132,13 +151,15 @@ class EditUserScreen extends React.Component {
 									cityId: itemValue
 								})
 							}
-							placeholder='Тип кузова'
+							placeholder='Город'
 							style={{ color: 'grey' }}
 						>
 							{this.state.cities.map(({ name: city, id: id }, index) => {
 								console.log(city, id);
 
-								return <Picker.Item color={!index ? 'grey' : 'black'} key={city} label={city} value={id} />;
+								return (
+									<Picker.Item color={!index ? 'grey' : 'black'} key={city} label={city} value={id} />
+								);
 							})}
 						</Picker>
 					</View>
@@ -197,6 +218,7 @@ class EditUserScreen extends React.Component {
 		);
 	}
 	_nextScreen = async () => {
+		const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
 		if (
 			typeof this.state.pictureUri === 'number' ||
 			this.state.lastname === '' ||
@@ -206,8 +228,8 @@ class EditUserScreen extends React.Component {
 			this.state.password === '' ||
 			this.state.birthDate === 'Дата рождения' ||
 			this.state.height === '' ||
-            this.state.weight === '' ||
-            this.state.city === '' ||
+			this.state.weight === '' ||
+			city === '' ||
 			this.state.cityId === '' ||
 			this.state.street === '' ||
 			this.state.house === '' ||
@@ -215,27 +237,30 @@ class EditUserScreen extends React.Component {
 		) {
 			this.setState({ message: 'Все поля должны быть заполнены' });
 		} else {
-			await axios
-				.post('/worker', {
-					name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
-					login: this.state.phone,
-					phoneNum: this.state.phone,
-					password: this.state.password,
-					birthDate: this.state.birthDate,
-					address: `${this.state.city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
-					city: this.state.cityId,
-					height: this.state.height,
-					weight: this.state.weight
-				})
-				.catch(err => {
-					console.log(err);
-				})
-				.then(res => {
-					console.log(res.data);
-					//await AsyncStorage.setItem("phoneNum", this.state.phone);
-					this.setState({ userId: res.data._id });
-					this.props.navigation.navigate('Documents');
-				});
+			const query = {
+				name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
+				login: this.state.phone,
+				phoneNum: this.state.phone,
+				password: this.state.password,
+				birthDate: this.state.birthDate,
+				address: `${city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
+				city: this.state.cityId,
+				height: this.state.height,
+				weight: this.state.weight
+			};
+			console.log(query);
+
+			try {
+				const res = await axios.post('/worker', query);
+
+				console.log(res);
+				//await AsyncStorage.setItem("phoneNum", this.state.phone);
+				this.setState({ userId: res.data._id });
+				this.props.navigation.navigate('Documents');
+			} catch (error) {
+				console.log(error);
+			}
+
 			const response = await axios
 				.post('/login', {
 					login: this.state.phone,
