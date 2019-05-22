@@ -3,12 +3,13 @@ import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import styles from '../styles';
 import OrderCard from '../components/OrderCard';
 import ExpandCardBase from '../components/ExpandCardBase';
+import { inject } from 'mobx-react/native';
 
-
+@inject('store')
 class OrderPreview extends React.Component {
     state = {
         order: { id: '0', time: '13:23', address: 'Chertenkova 2', description: 'test 1' },
-        gruzilinet: false,
+        gruzilinet: false
     };
 
     static navigationOptions = {
@@ -16,32 +17,39 @@ class OrderPreview extends React.Component {
     };
     acceptOrder = () => {
         console.log('принимаю заказ');
-    }
+    };
 
     render() {
-        const { order, gruzilinet } = this.state;
+        const { navigation } = this.props;
+        const { isDriver } = this.props.store;
+
+        const order = navigation.getParam('order');
+
         return (
             <Fragment>
                 <ScrollView>
                     <OrderCard
                         expandAlways
-                        time={order.time}
-                        address={order.address}
+                        time={order.start_time}
+                        addresses={order.locations}
                         description={order.description}
                         cardStyle={styles.cardMargins}
                     />
                     <ExpandCardBase
-                        OpenComponent={ <Text style={styles.cardH2}>Комментарии</Text> } 
+                        OpenComponent={<Text style={styles.cardH2}>Комментарий к заказу</Text>}
                         HiddenComponent={
                             <Fragment>
-                                <View style={ styles.cardH2 }>
-                                    { gruzilinet ? <Text>Грузчик Комментарии</Text> : <Text>Водитель Комментарии</Text> }
+                                <View style={styles.cardDescription}>
+                                    {isDriver ? (
+                                        <Text style={styles.instructionText}>{order.driver_comment}</Text>
+                                    ) : (
+                                        <Text style={styles.instructionText}>{order.loader_comment}</Text>
+                                    )}
                                 </View>
                             </Fragment>
                         }
                         cardStyle={styles.cardMargins}
                     />
-                    
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
                     <View style={styles.orderAccept}>
@@ -53,10 +61,6 @@ class OrderPreview extends React.Component {
             </Fragment>
         );
     }
-
-    _chatPress = () => {
-        this.props.navigation.navigate('');
-    };
 }
 
 export default OrderPreview;

@@ -1,26 +1,22 @@
-import {
-    createSwitchNavigator,
-    createStackNavigator,
-    createAppContainer,
-    createDrawerNavigator
-} from 'react-navigation';
-import RepoDetailScreen from '../screens/RepoDetailScreen';
-import SignInScreen from '../screens/SignInScreen';
-import AuthLoadingScreen from '../screens/AuthLoadingScreen';
-import SmsScreen from '../screens/SmsScreen';
 import React from 'react';
-import DocumentsScreen from '../screens/DocumentsScreen';
-import EditUserScreen from '../screens/EditUserScreen';
-import EditCarScreen from '../screens/EditCarScreen';
-import MainScreen from '../screens/MainScreen';
-import InstructionScreen from '../screens/InstructionScreen';
-import BalanceScreen from '../screens/BalanceScreen';
-import RobokassaScreen from '../screens/RobokassaScreen';
-import OrderDetailScreen from '../screens/OrderDetailScreen';
-import AppDrawer from './AppDrawer';
 import { Dimensions, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { createAppContainer, createDrawerNavigator, createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import { MenuIcon } from '../components/MenuIcon';
+import AuthLoadingScreen from '../screens/AuthLoadingScreen';
+import BalanceScreen from '../screens/BalanceScreen';
+import DocumentsScreen from '../screens/DocumentsScreen';
+import EditCarScreen from '../screens/EditCarScreen';
+import EditUserScreen from '../screens/EditUserScreen';
+import InstructionScreen from '../screens/InstructionScreen';
+import MainScreen from '../screens/MainScreen';
+import OrderDetailScreen from '../screens/OrderDetailScreen';
+import OrderPreviewScreen from '../screens/OrderPreviewScreen';
+import RepoDetailScreen from '../screens/RepoDetailScreen';
+import RobokassaScreen from '../screens/RobokassaScreen';
+import SignInScreen from '../screens/SignInScreen';
+import SmsScreen from '../screens/SmsScreen';
+import AppDrawer from './AppDrawer';
 
 const { height, width } = Dimensions.get('window');
 
@@ -51,6 +47,7 @@ const MainStack = createStackNavigator(
         Main: { screen: MainScreen, navigationOptions: yellowHeaderWithHamburger },
         Balance: BalanceScreen,
         Robokassa: RobokassaScreen,
+        OrderPreview: OrderPreviewScreen,
         OrderDetail: OrderDetailScreen
     },
     { defaultNavigationOptions: yellowHeader }
