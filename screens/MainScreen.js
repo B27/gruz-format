@@ -53,7 +53,7 @@ class MainScreen extends React.Component {
                         </View>
                     }
                     keyExtractor={this._keyExtractor}
-                    data={store.applications.slice()}
+                    data={store.orders.slice()}
                     renderItem={this._renderItem}
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}
@@ -78,23 +78,23 @@ class MainScreen extends React.Component {
     };
 
     _onPressOrderItemButton = id => {
-        const order = this.props.store.applications.find(order => order._id == id);
+        const order = this.props.store.orders.find(order => order._id == id);
         this.props.navigation.navigate('OrderPreview', { order });
     };
 
     _onRefresh = async () => {
-      //  const {updateUserInfo, getApplications} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+      //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
         const { store } = this.props;
         //  this.fetchData();
         this.setState({ refreshing: true });
 
         await store.updateUserInfo();
-        await store.getApplications();
+        await store.getOrders();
 
         this.setState({ refreshing: false });
 
         // this.setState({
-        //     applications: [
+        //     orders: [
         //         {
         //             _id: 3,
         //             time: '13:30',
