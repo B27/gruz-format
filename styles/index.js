@@ -413,6 +413,11 @@ const styles = StyleSheet.create({
     },
 
     locationText: {
+        marginLeft: 8,
+        marginRight: 12
+    },
+
+    locationPointNameText: {
         marginRight: 12
     },
 

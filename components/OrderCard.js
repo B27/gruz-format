@@ -9,11 +9,6 @@ class OrderCard extends React.Component {
         this.props.onPressButton(this.props.id);
     };
 
-    // судя по ТЗ переход в подробную информация на кнопку Принять
-    // _onPressCard = () => {
-    //     this.props.onPressCard(this.props.id);
-    // };
-
     render() {
         const { cardStyle, buttonName, description, addresses, time, id, expandAlways } = this.props;
 
@@ -35,7 +30,7 @@ class OrderCard extends React.Component {
                                 {addresses.map((location, index) => {
                                     return (
                                         <Fragment key={index+'a'}>
-                                            <Text key={index+'b'}>{`Пункт ${String.fromCharCode(
+                                            <Text style={styles.locationPointNameText} key={index+'b'}>{`Пункт ${String.fromCharCode(
                                                 0x0410 + index // 0x0410 - код русской буквы А в Unicode
                                             )}: `}</Text>
                                             <Text style={styles.locationText} key={index+'c'}>
