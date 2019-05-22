@@ -15,8 +15,11 @@ import { Permissions, ImagePicker } from 'expo';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 import axios from 'axios';
 import { maxFromBits } from 'uuid-js';
+import { inject, observer } from 'mobx-react/native';
 
-class EditUserScreen extends React.Component {
+@inject('store')
+@observer
+class MyInfoScreen extends React.Component {
 	state = {
 		choiceModalVisible: false,
 		pictureUri: require('../images/unknown.png'),
@@ -39,34 +42,10 @@ class EditUserScreen extends React.Component {
 		userId: null
 	};
 	static navigationOptions = {
-		title: 'Регистрация',
-		headerLeft: null,
-		headerTitleStyle: {
-			textAlign: 'center',
-			flexGrow: 1,
-			alignSelf: 'center'
-		}
+		title: 'Моя информация',
+		headerLeft: null
 	};
 
-	// choiceModalVisible: false,
-	// 	pictureUri: require('../images/unknown.png'),
-	// 	lastname: 'Устьянцев',
-	// 	firstname: 'Роман',
-	// 	patronimyc: 'Николаевич',
-	// 	phone: '89834323022',
-	// 	password: '123',
-	// 	birthDate: 'Дата рождения',
-	// 	city: '',
-	// 	cityId: null,
-	// 	street: 'Октябрьская',
-	// 	house: '2',
-	// 	flat: '45',
-	// 	height: '190',
-	// 	weight: '80',
-	// 	message: '',
-	// 	cities: [],
-	// 	list: [],
-	// 	userId: null
 	componentDidMount() {
 		(async () => {
 			try {
@@ -84,6 +63,7 @@ class EditUserScreen extends React.Component {
 				console.log(err);
 			}
 		})();
+		this.props.store.getUserInfo();
 	}
 	render() {
 		return (
@@ -95,7 +75,7 @@ class EditUserScreen extends React.Component {
 					closeModal={this.closeModals}
 				/>
 				<TouchableOpacity onPress={() => this.openCameraRoll()}>
-					<LocalImage source={this.state.pictureUri} originalWidth={909} originalHeight={465} />
+					<LocalImage source={this.props.store.avatar} originalWidth={909} originalHeight={465} />
 				</TouchableOpacity>
 
 				<View style={styles.inputContainer} behavior='padding' enabled>
@@ -104,6 +84,7 @@ class EditUserScreen extends React.Component {
 						placeholder='Номер телефона'
 						placeholderTextColor='grey'
 						onChangeText={phone => this.setState({ phone })}
+						value={this.props.store.phone}
 					/>
 
 					{/* [var_name]: "phone" */}
@@ -120,18 +101,21 @@ class EditUserScreen extends React.Component {
 						placeholder='Имя'
 						placeholderTextColor='grey'
 						onChangeText={firstname => this.setState({ firstname })}
+						value={this.props.store.firstName}
 					/>
 					<TextInput
 						style={styles.input}
 						placeholder='Фамилия'
 						placeholderTextColor='grey'
 						onChangeText={lastname => this.setState({ lastname })}
+						value={this.props.store.lastName}
 					/>
 					<TextInput
 						style={styles.input}
 						placeholder='Отчество'
 						placeholderTextColor='grey'
 						onChangeText={patronimyc => this.setState({ patronimyc })}
+						value={this.props.store.patronymic}
 					/>
 
 					<View
@@ -151,7 +135,7 @@ class EditUserScreen extends React.Component {
 									cityId: itemValue
 								})
 							}
-							placeholder='Город'
+							placeholder='Тип кузова'
 							style={{ color: 'grey' }}
 						>
 							{this.state.cities.map(({ name: city, id: id }, index) => {
@@ -168,6 +152,7 @@ class EditUserScreen extends React.Component {
 						placeholder='Улица'
 						placeholderTextColor='grey'
 						onChangeText={street => this.setState({ street })}
+						value={this.props.store.street}
 					/>
 					<View style={{ flex: 1, flexDirection: 'row' }}>
 						<TextInput
@@ -175,6 +160,7 @@ class EditUserScreen extends React.Component {
 							placeholder='Дом'
 							placeholderTextColor='grey'
 							onChangeText={house => this.setState({ house })}
+							value={this.props.store.house}
 						/>
 						<View style={{ width: 15 }} />
 						<TextInput
@@ -182,14 +168,11 @@ class EditUserScreen extends React.Component {
 							placeholder='Квартира'
 							placeholderTextColor='grey'
 							onChangeText={flat => this.setState({ flat })}
+							value={this.props.store.flat}
 						/>
 					</View>
 					<TouchableOpacity style={styles.input} onPress={() => this.openDatePicker()}>
-						<Text style={styles.datePickerText}>
-							{this.state.birthDate != 'Дата рождения'
-								? `${this.state.birthDate.getDate()}.${this.state.birthDate.getMonth()}.${this.state.birthDate.getFullYear()}`
-								: this.state.birthDate}
-						</Text>
+						<Text style={styles.datePickerText}>{this.getBirthDate()}</Text>
 					</TouchableOpacity>
 
 					<View style={{ flex: 1, flexDirection: 'row' }}>
@@ -198,7 +181,8 @@ class EditUserScreen extends React.Component {
 							placeholder='Рост'
 							placeholderTextColor='grey'
 							keyboardType='numeric'
-							onChangeText={height => this.setState({ height })}
+                            onChangeText={height => this.setState({ height })}
+                            value={this.props.store.height.toString()}
 						/>
 						<View style={{ width: 15 }} />
 						<TextInput
@@ -206,19 +190,31 @@ class EditUserScreen extends React.Component {
 							placeholder='Вес'
 							placeholderTextColor='grey'
 							keyboardType='numeric'
-							onChangeText={weight => this.setState({ weight })}
+                            onChangeText={weight => this.setState({ weight })}
+                            value={this.props.store.weight.toString()}
 						/>
 					</View>
 				</View>
 				<Text style={{ color: 'red' }}>{this.state.message}</Text>
 				<TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
-					<Text style={styles.text}>ПРОДОЛЖИТЬ</Text>
+					<Text style={styles.text}>СОХРАНИТЬ</Text>
 				</TouchableOpacity>
 			</ScrollView>
 		);
 	}
+	getBirthDate = () => {
+        
+		if (this.props.store.birthDate !== undefined && this.props.store.birthDate !== 'Дата рождения') {
+            const date = this.props.store.birthDate;
+            console.log(date + ' ----------------------');
+			return `${this.props.store.birthDate.getDate()}.${this.props.store.birthDate.getMonth()}.${this.props.store.birthDate.getFullYear()}`;
+		} else {
+			return ;
+		}
+
+		
+	};
 	_nextScreen = async () => {
-		const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
 		if (
 			typeof this.state.pictureUri === 'number' ||
 			this.state.lastname === '' ||
@@ -229,7 +225,6 @@ class EditUserScreen extends React.Component {
 			this.state.birthDate === 'Дата рождения' ||
 			this.state.height === '' ||
 			this.state.weight === '' ||
-			city === '' ||
 			this.state.cityId === '' ||
 			this.state.street === '' ||
 			this.state.house === '' ||
@@ -237,30 +232,28 @@ class EditUserScreen extends React.Component {
 		) {
 			this.setState({ message: 'Все поля должны быть заполнены' });
 		} else {
-			const query = {
-				name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
-				login: this.state.phone,
-				phoneNum: this.state.phone,
-				password: this.state.password,
-				birthDate: this.state.birthDate,
-				address: `${city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
-				city: this.state.cityId,
-				height: this.state.height,
-				weight: this.state.weight
-			};
-			console.log(query);
-
-			try {
-				const res = await axios.post('/worker', query);
-
-				console.log(res);
-				//await AsyncStorage.setItem("phoneNum", this.state.phone);
-				this.setState({ userId: res.data._id });
-				this.props.navigation.navigate('Documents');
-			} catch (error) {
-				console.log(error);
-			}
-
+            const id = await AsyncStorage.getItem('userId');
+			await axios
+				.patch('/worker/' + id, {
+					name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
+					login: this.state.phone,
+					phoneNum: this.state.phone,
+					password: this.state.password,
+					birthDate: this.state.birthDate,
+					address: `${this.state.city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
+					city: this.state.cityId,
+					height: this.state.height,
+					weight: this.state.weight
+				})
+				.catch(err => {
+					console.log(err);
+				})
+				.then(res => {
+					console.log(res.data);
+					//await AsyncStorage.setItem("phoneNum", this.state.phone);
+					this.setState({ userId: res.data._id });
+					this.props.navigation.navigate('Documents');
+				});
 			const response = await axios
 				.post('/login', {
 					login: this.state.phone,
@@ -293,7 +286,7 @@ class EditUserScreen extends React.Component {
 	openDatePicker = async () => {
 		try {
 			const { action, year, month, day } = await DatePickerAndroid.open({
-				date: new Date()
+				date: this.props.store.birthDate
 			});
 			if (action !== DatePickerAndroid.dismissedAction) {
 				console.log(year, month, day);
@@ -341,4 +334,4 @@ class EditUserScreen extends React.Component {
 	};
 }
 
-export default EditUserScreen;
+export default MyInfoScreen;

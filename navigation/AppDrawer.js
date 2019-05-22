@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, Image } from 'react-native';
 import { DrawerItems, SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../styles';
@@ -22,7 +22,7 @@ class CustomDrawerContentComponent extends React.Component {
 	};
 
 	_onChangeSwitchValue = () => {
-		this.setState({ workingStatus: !this.state.workingStatus });
+		this.props.store.setOnWork(!this.props.store.onWork);
 	};
 
 	_licenseAgreementPress = () => {
@@ -38,6 +38,17 @@ class CustomDrawerContentComponent extends React.Component {
 		this.props.navigation.navigate('Balance');
 		this.props.navigation.closeDrawer();
 	};
+	showName = () => {
+		console.log('avatar' + this.props.store.avatar);
+
+		const arr = this.props.store.name.split(' ');
+		let str = '';
+		str += arr[0];
+		for (let i = 1; i < arr.length; i++) {
+			str += ` ${arr[i][0]}.`;
+		}
+		return str;
+	};
 
 	render() {
 		return (
@@ -48,8 +59,15 @@ class CustomDrawerContentComponent extends React.Component {
 				>
 					<View>
 						<TouchableOpacity style={styles.drawerUserContainer} onPress={this._userContainerPress}>
-							<Icon name='user-circle-o' size={64} />
-							<Text style={styles.drawerUserName}>{this.props.store.name}</Text>
+							{this.props.store.avatar === '' ? (
+								<Icon name='user-circle-o' size={64} />
+							) : (
+								<View>
+									<Image style={{ width: 64, height: 64, borderRadius: 45 }} source={{ uri: this.props.store.avatar }} />
+								</View>
+							)}
+
+							<Text style={styles.drawerUserName}>{this.showName()}</Text>
 						</TouchableOpacity>
 						<View style={styles.drawerTopItem}>
 							<Text style={styles.drawerFontTopItem}>Работаю</Text>

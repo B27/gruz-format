@@ -106,7 +106,6 @@ class MainScreen extends React.Component {
     };
 
     _renderItem = ({ item }) => (
-    //    <Observer>
             <OrderCard
                 id={item._id}
                 time={item.start_time}
@@ -116,7 +115,6 @@ class MainScreen extends React.Component {
                 onPressButton={this._onPressOrderItemButton}
                 buttonName='ПРИНЯТЬ'
             />
-     //   </Observer>
     );
 }
 
