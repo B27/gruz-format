@@ -4,7 +4,7 @@ import { AsyncStorage } from 'react-native';
 import { URL } from '../constants';
 
 class ObservableStore {
-    @observable.shallow applications = [];
+    @observable.shallow orders = [];
 
     @observable balance = '';
     @observable name = '';
@@ -25,10 +25,6 @@ class ObservableStore {
     @observable birthDate = 'Дата рождения';
     @observable height = '';
     @observable weight = '';
-
-    @computed get report() {
-        return `Next ${this.balance} ${this.applications}`;
-    }
 
     @action async updateUserInfo() {
         const userId = await AsyncStorage.getItem('userId');
@@ -103,17 +99,17 @@ class ObservableStore {
         }
     }
 
-    @action async getApplications() {
+    @action async getOrders() {
         try {
             const response = await axios.get(`order/open/60/1`);
-            this.applications = response.data;
+            this.orders = response.data;
 
             runInAction(() => {
                 //     console.log('get order/open/60/1 response.data >>>> ', response.data);
-                //  console.log('this.applications', this.applications);
+                //  console.log('this.orders', this.orders);
                 //  console.log('this.balance', this.balance);
 
-                this.applications = response.data;
+                this.orders = response.data;
             });
         } catch (error) {
             console.log('get order/open/60/1 error >>>> ', error);
@@ -123,7 +119,6 @@ class ObservableStore {
 
 const Store = new ObservableStore();
 
-autorun(() => console.log(Store.report));
 export default Store;
 //userName: response.data.name,
 //userType: response.data.isDriver,
