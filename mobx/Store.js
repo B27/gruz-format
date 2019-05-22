@@ -18,6 +18,7 @@ class ObservableStore {
     @observable lastName = '';
     @observable patronymic = '';
     @observable city = '';
+    @observable cityId = '';
     @observable street = '';
     @observable house = '';
     @observable flat = '';
@@ -69,6 +70,7 @@ class ObservableStore {
                 this.lastName = response.data.name.split(' ')[1];
                 this.patronymic = response.data.name.split(' ')[2];
                 this.city = response.data.address.split(' ')[0];
+                this.cityId = response.data.city;
                 this.street = response.data.address.split(' ')[1];
                 this.house = response.data.address.split(' ')[2];
                 this.flat = response.data.address.split(' ')[3];

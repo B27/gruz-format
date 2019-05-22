@@ -36,7 +36,7 @@ class EditUserScreen extends React.Component {
 		message: '',
 		cities: [],
 		list: [],
-		userId: null
+    	userId: null
 	};
 	static navigationOptions = {
 		title: 'Регистрация',
@@ -48,7 +48,7 @@ class EditUserScreen extends React.Component {
 		}
 	};
 
-	// choiceModalVisible: false,
+    // choiceModalVisible: false,
 	// 	pictureUri: require('../images/unknown.png'),
 	// 	lastname: 'Устьянцев',
 	// 	firstname: 'Роман',
