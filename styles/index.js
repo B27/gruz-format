@@ -500,6 +500,13 @@ const styles = StyleSheet.create({
 
     executorTextDisp: {
         marginBottom: 10
-    }
+    },
+
+    orderAccept: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end'
+    },
+
 });
 export default styles;
