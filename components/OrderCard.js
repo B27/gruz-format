@@ -15,7 +15,8 @@ class OrderCard extends React.Component {
     // };
 
     render() {
-        const { cardStyle, buttonName, description, address, time, id, expandAlways } = this.props;
+        const { cardStyle, buttonName, description, addresses, time, id, expandAlways } = this.props;
+
         return (
             <ExpandCardBase
                 expandAlways={expandAlways}
@@ -26,11 +27,25 @@ class OrderCard extends React.Component {
                     <Fragment>
                         <View style={styles.orderRow}>
                             <Icon name='clock-outline' color='#FFC234' size={20} style={styles.orderIcon} />
-                            <Text style={styles.clockText}>{time}</Text>
+                            <Text style={styles.clockText}>{formatDate(time)}</Text>
                         </View>
                         <View style={styles.orderRow}>
                             <Icon name='map-marker' color='#FFC234' size={20} style={styles.orderIcon} />
-                            <Text style={styles.locationText}>{address}</Text>
+                            <View>
+                                {addresses.map((location, index) => {
+                                    return (
+                                        <Fragment key={index+'a'}>
+                                            <Text key={index+'b'}>{`Пункт ${String.fromCharCode(
+                                                0x0410 + index // 0x0410 - код русской буквы А в Unicode
+                                            )}: `}</Text>
+                                            <Text style={styles.locationText} key={index+'c'}>
+                                                {location.address}
+                                            </Text>
+                                            <Text key={index+'d'} />
+                                        </Fragment>
+                                    );
+                                })}
+                            </View>
                         </View>
                     </Fragment>
                 }
@@ -52,6 +67,12 @@ class OrderCard extends React.Component {
             />
         );
     }
+}
+
+const regExp = /^(\d{4}?)-(\d{2}?)-(\d{2}?)T(\d{2}?):(\d{2}?)(?:.+)$/;
+
+function formatDate(date) {
+    return date.replace(regExp, '$3.$2.$1 $4:$5');
 }
 
 export default OrderCard;

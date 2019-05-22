@@ -9,17 +9,6 @@ class InstructionScreen extends React.Component {
         title: 'Информация'
     };
 
-    pressMover = () => {
-        this.setState({
-            moverView: !this.state.moverView
-        });
-    };
-    pressDriver = () => {
-        this.setState({
-            driverView: !this.state.driverView
-        });
-    };
-
     render() {
         return (
             <ScrollView>
