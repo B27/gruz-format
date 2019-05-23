@@ -4,8 +4,6 @@ import { FlatList, Text, View } from 'react-native';
 import OrderCard from '../components/OrderCard';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
-import io from 'socket.io-client';
-import { URL } from '../constants'
 
 @inject('store')
 @observer
@@ -77,7 +75,7 @@ class MainScreen extends React.Component {
 
     _onChangeSwitchValue = () => {
         
-        const socket = io(URL + '/socket', {query: { token: await AsyncStorage.getItem('token')}});
+    //    const socket = io(URL + '/socket', {query: { token: await AsyncStorage.getItem('token')}});
 
         this.props.store.setOnWork(!this.props.store.onWork);
     };

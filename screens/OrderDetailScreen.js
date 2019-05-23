@@ -26,11 +26,12 @@ class OrderDetailScreen extends React.Component {
 
     render() {
         const { dispatcher, driver, movers } = this.state;
-        const order = this.props.navigation.getParam('order');
-        return (
+        let order = this.props.navigation.getParam('order');
+         return (
             <Fragment>
                 <ScrollView>
                     <OrderCard
+                        fullAddress
                         expandAlways
                         time={order.start_time}
                         addresses={order.locations}
