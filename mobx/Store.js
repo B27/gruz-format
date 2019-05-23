@@ -62,8 +62,8 @@ class ObservableStore {
                 this.onWork = response.data.onWork;
                 this.avatar = URL + response.data.photos.user;
                 this.phone = response.data.phoneNum;
-                this.firstName = response.data.name.split(' ')[0];
-                this.lastName = response.data.name.split(' ')[1];
+                this.firstName = response.data.name.split(' ')[1];
+                this.lastName = response.data.name.split(' ')[0];
                 this.patronymic = response.data.name.split(' ')[2];
                 this.city = response.data.address.split(' ')[0];
                 this.cityId = response.data.city;

@@ -22,7 +22,6 @@ class MyInfoScreen extends React.Component {
 	state = {
 		choiceModalVisible: false,
 		avatar: require('../images/unknown.png'),
-		
 		message: '',
 		cities: [],
 		list: [],
@@ -46,28 +45,32 @@ class MyInfoScreen extends React.Component {
     // height: '',
     // weight: '',
 	componentDidMount() {
-		(async () => {
-			try {
-				(async () =>
-					this.setState({
-						cities: [
-							{ name: 'Город', id: 1 },
-							...(await axios.get('/cities/1000/1')).data.map(({ name, id }) => ({
-								name,
-								id
-							}))
-						]
-					}))();
-			} catch (err) {
-				console.log(err);
-			}
-		})();
-		(async () => {
-            await this.props.store.getUserInfo();
-            this.setState(this.props.store);
-        })();
-	}
+
+    }
+
 	render() {
+        this.props.navigation.addListener('willFocus', () => {
+            (async () => {
+                try {
+                    (async () =>
+                        this.setState({
+                            cities: [
+                                { name: 'Город', id: 1 },
+                                ...(await axios.get('/cities/1000/1')).data.map(({ name, id }) => ({
+                                    name,
+                                    id
+                                }))
+                            ]
+                        }))();
+                } catch (err) {
+                    console.log(err);
+                }
+            })();
+            (async () => {
+                await this.props.store.getUserInfo();
+                this.setState(this.props.store);
+            })();
+        });
 		return (
 			<ScrollView contentContainerStyle={styles.registrationScreen}>
 				<ChoiceCameraRoll
@@ -138,7 +141,7 @@ class MyInfoScreen extends React.Component {
 								})
 							}
 							placeholder='Город'
-							style={{ color: 'grey' }}
+							
 						>
 							{this.state.cities.map(({ name: city, id: id }, index) => {
 								console.log(city, id);
@@ -197,10 +200,11 @@ class MyInfoScreen extends React.Component {
 						/>
 					</View>
 				</View>
-				<Text style={{ color: 'red' }}>{this.state.message}</Text>
+                <Text style={{ color: 'green' }}>{this.state.message}</Text>
 				<TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
 					<Text style={styles.text}>СОХРАНИТЬ</Text>
 				</TouchableOpacity>
+                
 			</ScrollView>
 		);
 	}
