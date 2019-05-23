@@ -204,37 +204,7 @@ class MyInfoScreen extends React.Component {
 				<TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
 					<Text style={styles.text}>СОХРАНИТЬ</Text>
 				</TouchableOpacity>
-                <Text style={{ fontSize: 18, marginBottom: 10, }}>Изменение пароля</Text>
-                <View style={styles.inputContainer} behavior='padding' enabled>
-                    
-					<TextInput
-						style={styles.input}
-						placeholder='Текущий пароль'
-						placeholderTextColor='grey'
-						onChangeText={currentPassword => this.setState({ currentPassword })}
-					/>
-
-					<TextInput
-						style={styles.input}
-						placeholder='Новый пароль'
-						secureTextEntry={true}
-						placeholderTextColor='grey'
-						onChangeText={password => this.setState({ password })}
-					/>
-
-                    <TextInput
-						style={styles.input}
-						placeholder='Повторите пароль'
-						secureTextEntry={true}
-						placeholderTextColor='grey'
-						onChangeText={password => this.setState({ password })}
-					/>
-
-				</View>
-                <Text style={{ color: 'green' }}>{this.state.message}</Text>
-				<TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
-					<Text style={styles.text}>СОХРАНИТЬ</Text>
-				</TouchableOpacity>
+                
 			</ScrollView>
 		);
 	}

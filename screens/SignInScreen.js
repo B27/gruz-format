@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import styles from '../styles';
+import md5 from 'md5';
 
 class SignInScreen extends React.Component {
 	state = {
@@ -88,6 +89,7 @@ class SignInScreen extends React.Component {
 		console.log(response.data);
 
 		if (response.data.token) {
+            await AsyncStorage.setItem('password', md5(this.state.password));
             await AsyncStorage.setItem('token', response.data.token);
             await AsyncStorage.setItem('userId', response.data._id);
 			axios.defaults.headers = {

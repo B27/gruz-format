@@ -19,6 +19,7 @@ import RobokassaScreen from '../screens/RobokassaScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SmsScreen from '../screens/SmsScreen';
 import AppDrawer from './AppDrawer';
+import SettingsScreen from '../screens/SettingsScreen'
 
 const { height, width } = Dimensions.get('window');
 
@@ -78,7 +79,7 @@ const MyCarStack = createStackNavigator(
 
 const SettingsStack = createStackNavigator({
 	Settings: {
-		screen: RepoDetailScreen,
+		screen: SettingsScreen,
 		navigationOptions: yellowHeaderWithHamburger
 	}
 });
