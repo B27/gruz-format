@@ -3,6 +3,11 @@ import { StyleSheet, Dimensions } from 'react-native';
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+
+    flex1: {
+        flex: 1
+    },
+
     backgroundContainer: {
         flex: 1,
         width: null,

@@ -1,13 +1,11 @@
+import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
-import styles from '../styles';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
-import OrderCard from '../components/OrderCard';
 import ExpandCardBase from '../components/ExpandCardBase';
-import Executor from '../screens/Executor';
-import Chat from '../screens/Chat';
-import { inject } from 'mobx-react/native';
+import OrderCard from '../components/OrderCard';
+import styles from '../styles';
 
 @inject('store')
 class OrderDetailScreen extends React.Component {
@@ -32,7 +30,7 @@ class OrderDetailScreen extends React.Component {
         return (
             <Fragment>
                 <ScrollView>
-                <OrderCard
+                    <OrderCard
                         expandAlways
                         time={order.start_time}
                         addresses={order.locations}
@@ -79,7 +77,9 @@ class OrderDetailScreen extends React.Component {
                                         </View>
                                     </View>
                                     <View>
-                                        <Text style={styles.executorText}>{(movers.length > 1) ? 'Грузчики:' : 'Грузчик'}</Text>
+                                        <Text style={styles.executorText}>
+                                            {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
+                                        </Text>
                                         {movers.map(mover => (
                                             <View key={mover._id} style={styles.executorsRow}>
                                                 <View>
