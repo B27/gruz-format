@@ -22,7 +22,7 @@ class MyInfoScreen extends React.Component {
         currentPassword: '',
         newPassword: '',
         confirmPassword: '',
-        colorMessage: ''
+        colorMessage: 'red'
     };
     static navigationOptions = {
         title: 'Моя информация',

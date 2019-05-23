@@ -3,6 +3,7 @@ import { action, observable, runInAction, computed, autorun } from 'mobx';
 import { AsyncStorage } from 'react-native';
 import { URL } from '../constants';
 
+
 class ObservableStore {
     @observable.shallow orders = [];
 
@@ -78,25 +79,13 @@ class ObservableStore {
             });
         } catch (error) {
             console.log(`get /worker/${userId} error >>>> `, error);
+
+
         }
     }
 
     @action async setOnWork(value) {
-        const userId = await AsyncStorage.getItem('userId');
-        console.log(`>>>> call store.setOnWork(${value})`);
-
-        try {
-            const response = await axios.patch(`/worker/${userId}`, {
-                onWork: value
-            });
-
-            runInAction(() => {
-                //console.log(response.data.onWork);
-                this.onWork = value;
-            });
-        } catch (error) {
-            console.log(`patch /worker/${userId} { onWork: ${value} } error >>>> `, error);
-        }
+        this.onWork = value;
     }
 
     @action async getOrders() {

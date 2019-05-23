@@ -1,22 +1,32 @@
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Text, View, AsyncStorage, YellowBox } from 'react-native';
 import OrderCard from '../components/OrderCard';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
-import io from 'socket.io-client';
-import { URL } from '../constants'
-
+import { URL } from '../constants';
+import { getSocket } from '../components/Socket'
+YellowBox.ignoreWarnings([
+    'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
+]);
 @inject('store')
 @observer
 class MainScreen extends React.Component {
     componentDidMount = async () => {
-        this.props.store.updateUserInfo();
+        await this.props.store.updateUserInfo()
+           
+        
+        const socket = await getSocket();
+        // if (!socket || !socket.connected) {
+        //     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
+        // } else this.setState({message: ''})
     };
 
     state = {
+
         workingStatus: false,
-        refreshing: false
+        refreshing: false,
+        message: '',
     };
 
     // static navigationOptions = ({ navigation }) => ({
@@ -31,6 +41,7 @@ class MainScreen extends React.Component {
                     ListHeaderComponent={
                         <View>
                             <View style={styles.mainTopBackground}>
+                            <Text style = {{color: 'red', alignSelf: 'center', fontSize: 16}}>{this.state.message}</Text>
                                 <Text style={styles.mainFontUserName}>{store.name}</Text>
                                 <Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
                                 {/* <Context.Consumer>
@@ -52,6 +63,7 @@ class MainScreen extends React.Component {
                                     />
                                 </View>
                             </View>
+                            
                         </View>
                     }
                     keyExtractor={this._keyExtractor}
@@ -75,11 +87,26 @@ class MainScreen extends React.Component {
 
     _keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой струки нужен key типа String
 
-    _onChangeSwitchValue = () => {
+    _onChangeSwitchValue = async () => {
+        console.log('1');
         
-        const socket = io(URL + '/socket', {query: { token: await AsyncStorage.getItem('token')}});
+        
+        console.log(URL);
+        
+        
 
-        this.props.store.setOnWork(!this.props.store.onWork);
+        const socket = await getSocket();
+
+        console.log(socket.connected);
+        
+        if (socket && socket.connected) {
+            socket.emit('set work', !this.props.store.onWork);
+            this.props.store.setOnWork(!this.props.store.onWork);
+        } else {
+            this.setState({ message: 'Нет соединения с сервером' })
+        }
+        
+        
     };
 
     _onPressOrderItemButton = id => {
