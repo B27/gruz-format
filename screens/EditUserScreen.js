@@ -152,7 +152,7 @@ class EditUserScreen extends React.Component {
 								})
 							}
 							placeholder='Город'
-							style={{ color: 'grey' }}
+							
 						>
 							{this.state.cities.map(({ name: city, id: id }, index) => {
 								console.log(city, id);
