@@ -114,6 +114,15 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
 
+    buttonConfirmAlone : {
+        width: WIDTH / 2,
+        height: 45,
+        borderRadius: 25,
+        backgroundColor: '#FFC234',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+
     buttonConfirm: {
         width: WIDTH / 3,
         height: 45,
@@ -342,6 +351,16 @@ const styles = StyleSheet.create({
         // borderWidth: 1, borderColor: 'green'
     },
 
+    executorsRow: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginHorizontal: 12,
+        paddingVertical: 4
+        // borderWidth: 1, borderColor: 'green'
+    },
+
     cardH2: {
         color: 'black',
         fontSize: 16,
@@ -474,6 +493,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
+    buttonContainerAlone: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
     absoluteButtonContainer: {
         position: 'absolute',
         left: 25,
@@ -500,13 +525,6 @@ const styles = StyleSheet.create({
 
     executorTextDisp: {
         marginBottom: 10
-    },
-
-    orderAccept: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end'
-    },
-
+    }
 });
 export default styles;

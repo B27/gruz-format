@@ -39,7 +39,7 @@ class CustomDrawerContentComponent extends React.Component {
 		this.props.navigation.closeDrawer();
 	};
 	showName = () => {
-		console.log('avatar' + this.props.store.avatar);
+	//	console.log('avatar' + this.props.store.avatar);
 
 		const arr = this.props.store.name.split(' ');
 		let str = '';

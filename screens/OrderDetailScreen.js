@@ -7,7 +7,9 @@ import OrderCard from '../components/OrderCard';
 import ExpandCardBase from '../components/ExpandCardBase';
 import Executor from '../screens/Executor';
 import Chat from '../screens/Chat';
+import { inject } from 'mobx-react/native';
 
+@inject('store')
 class OrderDetailScreen extends React.Component {
     state = {
         order: { id: '0', time: '13:23', address: 'Chertenkova 2', description: 'test 1' },
@@ -26,15 +28,15 @@ class OrderDetailScreen extends React.Component {
 
     render() {
         const { dispatcher, driver, movers } = this.state;
-        const { order } = this.state;
+        const order = this.props.navigation.getParam('order');
         return (
             <Fragment>
                 <ScrollView>
-                    <OrderCard
+                <OrderCard
                         expandAlways
-                        time={order.time}
-                        address={order.address}
-                        description={order.description}
+                        time={order.start_time}
+                        addresses={order.locations}
+                        description={order.comment}
                         cardStyle={styles.cardMargins}
                     />
                     <ExpandCardBase
@@ -44,7 +46,7 @@ class OrderDetailScreen extends React.Component {
                                 <View style={styles.cardDescription}>
                                     <View>
                                         <Text style={styles.executorTextDisp}>Диспетчер:</Text>
-                                        <View style={styles.orderRow}>
+                                        <View style={styles.executorsRow}>
                                             <View>
                                                 <IconCam
                                                     name={'camera'}
@@ -61,7 +63,7 @@ class OrderDetailScreen extends React.Component {
                                     </View>
                                     <View>
                                         <Text style={styles.executorText}>Водитель:</Text>
-                                        <View style={styles.orderRow}>
+                                        <View style={styles.executorsRow}>
                                             <View>
                                                 <IconCam
                                                     name={'camera'}
@@ -79,7 +81,7 @@ class OrderDetailScreen extends React.Component {
                                     <View>
                                         <Text style={styles.executorText}>{(movers.length > 1) ? 'Грузчики:' : 'Грузчик'}</Text>
                                         {movers.map(mover => (
-                                            <View key={mover._id} style={styles.orderRow}>
+                                            <View key={mover._id} style={styles.executorsRow}>
                                                 <View>
                                                     <IconCam
                                                         name={'camera'}

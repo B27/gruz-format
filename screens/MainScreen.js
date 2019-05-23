@@ -92,17 +92,6 @@ class MainScreen extends React.Component {
         await store.getOrders();
 
         this.setState({ refreshing: false });
-
-        // this.setState({
-        //     orders: [
-        //         {
-        //             _id: 3,
-        //             time: '13:30',
-        //             location: 'г.Хабаровск, ул. Краснофлотская, д.34, кв.56',
-        //             comment: 'Коммент арий'
-        //         }
-        //     ]
-        // });
     };
 
     _renderItem = ({ item }) => (

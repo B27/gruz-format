@@ -15,15 +15,16 @@ class OrderPreview extends React.Component {
     static navigationOptions = {
         title: 'Заказы'
     };
-    acceptOrder = () => {
+    _acceptOrder = () => {
         console.log('принимаю заказ');
+        const order = this.props.navigation.getParam('order');
+        this.props.navigation.navigate('OrderDetail', { order });
     };
 
     render() {
-        const { navigation } = this.props;
         const { isDriver } = this.props.store;
 
-        const order = navigation.getParam('order');
+        const order = this.props.navigation.getParam('order');
 
         return (
             <Fragment>
@@ -32,7 +33,7 @@ class OrderPreview extends React.Component {
                         expandAlways
                         time={order.start_time}
                         addresses={order.locations}
-                        description={order.description}
+                        description={order.comment}
                         cardStyle={styles.cardMargins}
                     />
                     <ExpandCardBase
@@ -52,8 +53,8 @@ class OrderPreview extends React.Component {
                     />
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
-                    <View style={styles.orderAccept}>
-                        <TouchableOpacity style={styles.buttonConfirm} onPress={this.acceptOrder}>
+                    <View style={styles.buttonContainerAlone}>
+                        <TouchableOpacity style={styles.buttonConfirmAlone} onPress={this._acceptOrder}>
                             <Text style={styles.buttonText}>ПРИНЯТЬ</Text>
                         </TouchableOpacity>
                     </View>
