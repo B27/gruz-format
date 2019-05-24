@@ -10,6 +10,7 @@ import {
 import { MenuIcon } from '../components/MenuIcon';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
 import BalanceScreen from '../screens/BalanceScreen';
+import ChatScreen from '../screens/Chat';
 import DocumentsScreen from '../screens/DocumentsScreen';
 import EditCarScreen from '../screens/EditCarScreen';
 import EditUserScreen from '../screens/EditUserScreen';
@@ -43,18 +44,20 @@ const yellowHeaderWithHamburger = ({ navigation, ...others }) => {
     });
 };
 
-// const yellowHeaderWithHamburger = Object.assign({}, yellowHeader, {
-//     headerLeft: <MenuIcon />,
-//     headerLeftContainerStyle: { paddingLeft: 8 }
-// });
+const FulfillingOrderStack = createStackNavigator(
+    {
+        OrderDetail: OrderDetailScreen,
+        OrderChat: ChatScreen
+    },
+    { defaultNavigationOptions: yellowHeader }
+);
 
 const MainStack = createStackNavigator(
     {
         Main: { screen: MainScreen, navigationOptions: yellowHeaderWithHamburger },
         Balance: BalanceScreen,
         Robokassa: RobokassaScreen,
-        OrderPreview: OrderPreviewScreen,
-        OrderDetail: OrderDetailScreen
+        OrderPreview: OrderPreviewScreen
     },
     { defaultNavigationOptions: yellowHeader }
 );
@@ -186,7 +189,8 @@ export default createAppContainer(
         {
             AuthLoading: AuthLoadingScreen,
             App: AppStack,
-            Auth: AuthStack
+            Auth: AuthStack,
+            FulfillingOrder: FulfillingOrderStack
         },
         {
             initialRouteName: 'AuthLoading'
