@@ -15,6 +15,7 @@ class MainScreen extends React.Component {
     componentDidMount = async () => {
         await this.props.store.updateUserInfo()
            
+
         
         const socket = await getSocket();
         // if (!socket || !socket.connected) {
