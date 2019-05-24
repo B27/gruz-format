@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Provider } from 'mobx-react/native';
 import React from 'react';
-import { AsyncStorage, StyleSheet, View } from 'react-native';
+import { AsyncStorage, StyleSheet, View, StatusBar } from 'react-native';
 import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
 import { getSocket } from './components/Socket'
@@ -25,17 +25,8 @@ export default class App extends React.Component {
     render() {
         return (
             <Provider store={Store}>
-                <View style={styles.container}>
                     <AppContainer />
-                </View>
             </Provider>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff'
-    }
-});

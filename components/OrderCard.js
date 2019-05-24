@@ -10,7 +10,7 @@ class OrderCard extends React.Component {
     };
 
     render() {
-        const { cardStyle, buttonName, description, addresses, time, id, expandAlways } = this.props;
+        const { cardStyle, buttonName, description, addresses, time, id, expandAlways, fullAddress } = this.props;
 
         return (
             <ExpandCardBase
@@ -29,14 +29,17 @@ class OrderCard extends React.Component {
                             <View>
                                 {addresses.map((location, index) => {
                                     return (
-                                        <Fragment key={index+'a'}>
-                                            <Text style={styles.locationPointNameText} key={index+'b'}>{`Пункт ${String.fromCharCode(
+                                        <Fragment key={index + 'a'}>
+                                            <Text
+                                                style={styles.locationPointNameText}
+                                                key={index + 'b'}
+                                            >{`Пункт ${String.fromCharCode(
                                                 0x0410 + index // 0x0410 - код русской буквы А в Unicode
                                             )}: `}</Text>
-                                            <Text style={styles.locationText} key={index+'c'}>
-                                                {location.address}
+                                            <Text style={styles.locationText} key={index + 'c'}>
+                                                {generateAddress(location, fullAddress)}
                                             </Text>
-                                            <Text key={index+'d'} />
+                                            <Text key={index + 'd'} />
                                         </Fragment>
                                     );
                                 })}
@@ -62,6 +65,15 @@ class OrderCard extends React.Component {
             />
         );
     }
+}
+
+function generateAddress(location, fullAddress) {
+    let address = location.address;
+    if (fullAddress) {
+        if (location.entrance) address += `, подъезд ${location.entrance}`;
+        if (location.apartment) address += `, кв. ${location.apartment}`;
+    }
+    return address;
 }
 
 const regExp = /^(\d{4}?)-(\d{2}?)-(\d{2}?)T(\d{2}?):(\d{2}?)(?:.+)$/;

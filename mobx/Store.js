@@ -34,7 +34,7 @@ class ObservableStore {
             const response = await axios.get(`/worker/${userId}`);
 
             runInAction(() => {
-                console.log(`get /worker/${userId} response.data >>>>`, response.data);
+                //     console.log(`get /worker/${userId} response.data >>>>`, response.data);
                 this.balance = response.data.balance;
                 this.name = response.data.name;
                 this.isDriver = response.data.isDriver;
@@ -94,7 +94,7 @@ class ObservableStore {
             this.orders = response.data;
 
             runInAction(() => {
-                //     console.log('get order/open/60/1 response.data >>>> ', response.data);
+                console.log('get order/open/60/1 response.data >>>> ', response.data);
                 //  console.log('this.orders', this.orders);
                 //  console.log('this.balance', this.balance);
 

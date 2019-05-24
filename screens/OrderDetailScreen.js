@@ -1,6 +1,6 @@
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -17,20 +17,22 @@ class OrderDetailScreen extends React.Component {
             { _id: 1, name: 'Петя', phone: '333333' },
             { _id: 2, name: 'Петя', phone: '333333' },
             { _id: 3, name: 'Петя', phone: '333333' }
-        ]
+        ],
+        modalVisible: false
     };
 
     static navigationOptions = {
-        title: 'Заказы'
+        title: 'Выполнение заказа'
     };
 
     render() {
-        const { dispatcher, driver, movers } = this.state;
-        const order = this.props.navigation.getParam('order');
+        const { dispatcher, driver, movers, modalVisible } = this.state;
+        let order = this.props.navigation.getParam('order');
         return (
             <Fragment>
                 <ScrollView>
                     <OrderCard
+                        fullAddress
                         expandAlways
                         time={order.start_time}
                         addresses={order.locations}
@@ -108,15 +110,13 @@ class OrderDetailScreen extends React.Component {
                             <Icon name='chevron-right' size={42} color='#c4c4c4' />
                         </View>
                     </TouchableOpacity>
-                    {/* <Executor />
-                    <Chat /> */}
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.buttonCancel} onPress={this._signInAsync}>
+                        <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelOrderPress}>
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonConfirm} onPress={this._signInAsync}>
+                        <TouchableOpacity style={styles.buttonConfirm} onPress={this._completeOrderPress}>
                             <Text style={styles.buttonText}>ГОТОВО</Text>
                         </TouchableOpacity>
                     </View>
@@ -125,8 +125,34 @@ class OrderDetailScreen extends React.Component {
         );
     }
 
+    _cancelOrderPress = () => {
+        Alert.alert(
+            'Вы уверены, что хотите отменить заказ ?',
+            'За отказ вам будет выставлена минимальная оценка.',
+            [
+                {
+                    text: 'ОТМЕНА',
+                    style: 'cancel'
+                },
+                {
+                    text: 'ОК',
+                    onPress: this._cancelOrder
+                }
+            ],
+            { cancelable: true }
+        );
+    };
+
+    _cancelOrder = () => {
+        this.props.navigation.navigate('Main');
+    };
+
+    _completeOrderPress = () => {
+        this.props.navigation.navigate('Main');
+    };
+
     _chatPress = () => {
-        this.props.navigation.navigate('');
+        this.props.navigation.navigate('OrderChat');
     };
 }
 
