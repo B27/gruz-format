@@ -1,30 +1,50 @@
+import Axios from 'axios';
+import { Notifications } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { FlatList, Text, View, AsyncStorage, YellowBox } from 'react-native';
+import { FlatList, Text, View, YellowBox } from 'react-native';
 import OrderCard from '../components/OrderCard';
-import SwitchToggle from '../components/SwitchToggle';
-import styles from '../styles';
-import { URL } from '../constants';
+import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import { getSocket } from '../components/Socket';
+import SwitchToggle from '../components/SwitchToggle';
+import { URL } from '../constants';
+import styles from '../styles';
+
 YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
 ]);
+
 @inject('store')
 @observer
 class MainScreen extends React.Component {
+    state = {
+        notification: {},
+        workingStatus: false,
+        refreshing: false,
+        message: ''
+    };
+
     componentDidMount = async () => {
-        await this.props.store.updateUserInfo();
+        registerForPushNotificationsAsync();
+        this._notificationSubscription = Notifications.addListener(this._handleNotification);
+        // await this.props.store.updateUserInfo()
+        // await store.getOrders();
+        this._onRefresh();
 
         const socket = await getSocket();
         // if (!socket || !socket.connected) {
         //     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
         // } else this.setState({message: ''})
     };
-
-    state = {
-        workingStatus: false,
-        refreshing: false,
-        message: ''
+    _handleNotification = async notification => {
+        if (notification.origin === 'selected') {
+            const res = await Axios.get(`/order/${notification.data.order_id}`);
+            //this.setState({ notification: notification, order: res.data });
+            //const data = this.state.notification.data;
+            // console.log('origin: ' + this.state.notification.origin);
+            // console.log('data: ' + (data && data.order_id));
+            this.props.navigation.navigate('OrderPreview', { order: res.data });
+        }
     };
 
     // static navigationOptions = ({ navigation }) => ({
@@ -85,7 +105,6 @@ class MainScreen extends React.Component {
 
     _onChangeSwitchValue = async () => {
         console.log('1');
-
         console.log(URL);
 
         const socket = await getSocket();

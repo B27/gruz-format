@@ -1,4 +1,4 @@
-import { inject } from 'mobx-react/native';
+import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
 import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,6 +8,7 @@ import OrderCard from '../components/OrderCard';
 import styles from '../styles';
 
 @inject('store')
+@observer
 class OrderDetailScreen extends React.Component {
     state = {
         order: { id: '0', time: '13:23', address: 'Chertenkova 2', description: 'test 1' },
@@ -23,7 +24,9 @@ class OrderDetailScreen extends React.Component {
     static navigationOptions = {
         title: 'Выполнение заказа'
     };
+    componentDidMount = async () => {
 
+    }
     render() {
         const { dispatcher, driver, movers } = this.state;
         const { store } = this.props;
