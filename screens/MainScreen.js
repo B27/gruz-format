@@ -5,139 +5,148 @@ import OrderCard from '../components/OrderCard';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
 import { URL } from '../constants';
-import { getSocket } from '../components/Socket'
+import { getSocket } from '../components/Socket';
+import { Notifications } from 'expo';
+import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
+import Axios from 'axios';
 YellowBox.ignoreWarnings([
-    'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
+	'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
 ]);
 @inject('store')
 @observer
 class MainScreen extends React.Component {
-    componentDidMount = async () => {
-        await this.props.store.updateUserInfo()
-           
+	state = {
+		notification: {},
+		workingStatus: false,
+		refreshing: false,
+		message: ''
+	};
 
-        
-        const socket = await getSocket();
-        // if (!socket || !socket.connected) {
-        //     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
-        // } else this.setState({message: ''})
-    };
+	componentDidMount = async () => {
+		registerForPushNotificationsAsync();
+		this._notificationSubscription = Notifications.addListener(this._handleNotification);
+		// await this.props.store.updateUserInfo()
+		// await store.getOrders();
+		this._onRefresh();
 
-    state = {
+		const socket = await getSocket();
+		// if (!socket || !socket.connected) {
+		//     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
+		// } else this.setState({message: ''})
+	};
+	_handleNotification = async notification => {
+		
+		if (notification.origin === 'selected') {
+			const res = await Axios.get(`/order/${notification.data.order_id}`);
+            //this.setState({ notification: notification, order: res.data });
+            //const data = this.state.notification.data;
+           // console.log('origin: ' + this.state.notification.origin);
+           // console.log('data: ' + (data && data.order_id));
+			this.props.navigation.navigate('OrderPreview', { order: res.data });
+		}
+	};
 
-        workingStatus: false,
-        refreshing: false,
-        message: '',
-    };
+	// static navigationOptions = ({ navigation }) => ({
+	//     headerLeft: <MenuIcon navigationProps={navigation} />,
+	//     headerLeftContainerStyle: { paddingLeft: 8 }
+	// });
 
-    // static navigationOptions = ({ navigation }) => ({
-    //     headerLeft: <MenuIcon navigationProps={navigation} />,
-    //     headerLeftContainerStyle: { paddingLeft: 8 }
-    // });
-
-    render() {
-        const { store } = this.props;
-        return (
-                <FlatList
-                    ListHeaderComponent={
-                        <View>
-                            <View style={styles.mainTopBackground}>
-                            <Text style = {{color: 'red', alignSelf: 'center', fontSize: 16}}>{this.state.message}</Text>
-                                <Text style={styles.mainFontUserName}>{store.name}</Text>
-                                <Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
-                                {/* <Context.Consumer>
+	render() {
+		
+		const { store } = this.props;
+		return (
+			<FlatList
+				ListHeaderComponent={
+					<View>
+						<View style={styles.mainTopBackground}>
+							<Text style={{ color: 'red', alignSelf: 'center', fontSize: 16 }}>
+								{this.state.message}
+							</Text>
+							<Text style={styles.mainFontUserName}>{store.name}</Text>
+							<Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
+							{/* <Context.Consumer>
 								{value => <Text style={styles.mainFontBalance}>{`${value.balance} руб.`}</Text>}
 							</Context.Consumer> */}
 
-                                <Text style={styles.mainFontBalance}>{`${store.balance} руб.`}</Text>
+							<Text style={styles.mainFontBalance}>{`${store.balance} руб.`}</Text>
 
-                                <Text style={styles.mainFontTopUpBalance} onPress={this._topUpBalance}>
-                                    Пополнить баланс
-                                </Text>
-                            </View>
-                            <View style={styles.mainWorkingItem}>
-                                <Text style={styles.drawerFontTopItem}>Работаю</Text>
-                                <View>
-                                    <SwitchToggle
-                                        switchOn={store.onWork}
-                                        onPress={this._onChangeSwitchValue}
-                                    />
-                                </View>
-                            </View>
-                            
-                        </View>
-                    }
-                    keyExtractor={this._keyExtractor}
-                    data={store.orders.slice()}
-                    renderItem={this._renderItem}
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh}
-                    ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
-                />
-        );
-    }
+							<Text style={styles.mainFontTopUpBalance} onPress={this._topUpBalance}>
+								Пополнить баланс
+							</Text>
+						</View>
+						<View style={styles.mainWorkingItem}>
+							<Text style={styles.drawerFontTopItem}>Работаю</Text>
+							<View>
+								<SwitchToggle switchOn={store.onWork} onPress={this._onChangeSwitchValue} />
+							</View>
+						</View>
+					</View>
+				}
+				keyExtractor={this._keyExtractor}
+				data={store.orders.slice()}
+				renderItem={this._renderItem}
+				refreshing={this.state.refreshing}
+				onRefresh={this._onRefresh}
+				ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
+			/>
+		);
+	}
 
-    _nextScreen = event => {
-        console.log(event);
-        console.log('MainScreen log');
-    };
+	_nextScreen = event => {
+		console.log(event);
+		console.log('MainScreen log');
+	};
 
-    _topUpBalance = () => {
-        this.props.navigation.navigate('Balance');
-    };
+	_topUpBalance = () => {
+		this.props.navigation.navigate('Balance');
+	};
 
-    _keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой струки нужен key типа String
+	_keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой струки нужен key типа String
 
-    _onChangeSwitchValue = async () => {
-        console.log('1');
-        
-        
-        console.log(URL);
-        
-        
+	_onChangeSwitchValue = async () => {
+		console.log('1');
+		console.log(URL);
 
-        const socket = await getSocket();
+		const socket = await getSocket();
 
-        console.log(socket.connected);
-        
-        if (socket && socket.connected) {
-            socket.emit('set work', !this.props.store.onWork);
-            this.props.store.setOnWork(!this.props.store.onWork);
-        } else {
-            this.setState({ message: 'Нет соединения с сервером' })
-        }
-        
-        
-    };
+		console.log(socket.connected);
 
-    _onPressOrderItemButton = id => {
-        const order = this.props.store.orders.find(order => order._id == id);
-        this.props.navigation.navigate('OrderPreview', { order });
-    };
+		if (socket && socket.connected) {
+			socket.emit('set work', !this.props.store.onWork);
+			this.props.store.setOnWork(!this.props.store.onWork);
+		} else {
+			this.setState({ message: 'Нет соединения с сервером' });
+		}
+	};
 
-    _onRefresh = async () => {
-      //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
-        const { store } = this.props;
-        //  this.fetchData();
-        this.setState({ refreshing: true });
+	_onPressOrderItemButton = id => {
+		const order = this.props.store.orders.find(order => order._id == id);
+		this.props.navigation.navigate('OrderPreview', { order });
+	};
 
-        await store.updateUserInfo();
-        await store.getOrders();
+	_onRefresh = async () => {
+		//  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+		const { store } = this.props;
+		//  this.fetchData();
+		this.setState({ refreshing: true });
 
-        this.setState({ refreshing: false });
-    };
+		await store.updateUserInfo();
+		await store.getOrders();
 
-    _renderItem = ({ item }) => (
-            <OrderCard
-                id={item._id}
-                time={item.start_time}
-                addresses={item.locations}
-                description={item.comment}
-                cardStyle={styles.cardMargins}
-                onPressButton={this._onPressOrderItemButton}
-                buttonName='ПРИНЯТЬ'
-            />
-    );
+		this.setState({ refreshing: false });
+	};
+
+	_renderItem = ({ item }) => (
+		<OrderCard
+			id={item._id}
+			time={item.start_time}
+			addresses={item.locations}
+			description={item.comment}
+			cardStyle={styles.cardMargins}
+			onPressButton={this._onPressOrderItemButton}
+			buttonName='ПРИНЯТЬ'
+		/>
+	);
 }
 
 export default MainScreen;

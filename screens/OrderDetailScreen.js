@@ -26,7 +26,7 @@ class OrderDetailScreen extends React.Component {
         title: 'Выполнение заказа'
     };
     componentDidMount = async () => {
-        await this.props.store.startChatSocket('5ce66399dcc0097d8b95dc17');
+
     }
     render() {
         const { dispatcher, driver, movers, modalVisible } = this.state;

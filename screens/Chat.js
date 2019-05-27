@@ -18,15 +18,16 @@ class Chat extends React.Component {
 		return {
 			_id: id,
 			text: text,
-			createdAt: new Date(),
+
 			user: {
-				_id: sender,
+				_id: sender, 
 				name: 'React Native',
 				avatar: 'https://pp.userapi.com/c851020/v851020958/124b79/hm1z7MpbpAk.jpg'
 			}
 		};
 	}
-	componentDidMount() {
+	componentWillMount = async () => {
+        await this.props.store.startChatSocket('5ce66399dcc0097d8b95dc17');
 		console.log('-----' + this.props.store.socketChat.connected);
         
 		this.props.store.socketChat.on('history', (result) => {
@@ -42,12 +43,17 @@ class Chat extends React.Component {
 		});
 		this.props.store.socketChat.on('user', msg => {
             //this.setState({ idUser: msg._id });
+            
             console.log(msg);
             
 		});
 		
 		this.props.store.socketChat.on('chat message', result => {
 			//this.setState({ message: [...this.state.message, result] });
+            const { sender, text } = result;
+            this.setState(previousState => ({
+                messages: GiftedChat.append(previousState.messages, this.setMessage(new Date(), text, sender))
+            }))
             console.log(result);
             
 		});
@@ -77,11 +83,16 @@ class Chat extends React.Component {
 		);
 	}
 	onSend(messages = []) {
-        this.props.store.socketChat.emit('chat message', messages);
-		this.setState(previousState => ({
+        messages.forEach(message => {
+            console.log(message);
             
-			messages: GiftedChat.append(previousState.messages, messages)
-		}));
+            this.props.store.socketChat.emit('chat message', message.text);
+        })
+        this.setState(previousState => ({
+            messages: GiftedChat.append(previousState.messages, messages)
+        }));
+        
+		
 	}
 }
 

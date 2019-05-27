@@ -42,10 +42,10 @@ class ObservableStore {
 				this.isDriver = response.data.isDriver;
 				this.onWork = response.data.onWork;
 				this.avatar = URL + response.data.photos.user;
-				console.log('avatar ', this.avatar);
+				//console.log('avatar ', this.avatar);
 			});
 		} catch (error) {
-			console.log(`get /worker/${userId} error >>>> `, error);
+			//console.log(`get /worker/${userId} error >>>> `, error);
 		}
 	}
 
@@ -56,7 +56,7 @@ class ObservableStore {
 			const response = await axios.get(`/worker/${userId}`);
 
 			runInAction(() => {
-				console.log(`get /worker/${userId} response.data >>>>`, response.data);
+				//console.log(`get /worker/${userId} response.data >>>>`, response.data);
 				const date = new Date(response.data.birthDate);
 
 				this.balance = response.data.balance;
@@ -77,10 +77,10 @@ class ObservableStore {
 				this.height = response.data.height;
 				this.weight = response.data.weight;
 
-				console.log('date in store >>>> ', date);
+				//console.log('date in store >>>> ', date);
 			});
 		} catch (error) {
-			console.log(`get /worker/${userId} error >>>> `, error);
+			//console.log(`get /worker/${userId} error >>>> `, error);
 		}
 	}
 
@@ -94,14 +94,14 @@ class ObservableStore {
 			this.orders = response.data;
 
 			runInAction(() => {
-				console.log('get order/open/60/1 response.data >>>> ', response.data);
+				//console.log('get order/open/60/1 response.data >>>> ', response.data);
 				//  console.log('this.orders', this.orders);
 				//  console.log('this.balance', this.balance);
 
 				this.orders = response.data;
 			});
 		} catch (error) {
-			console.log('get order/open/60/1 error >>>> ', error);
+			//console.log('get order/open/60/1 error >>>> ', error);
 		}
 	}
 
