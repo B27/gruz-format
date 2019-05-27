@@ -5,7 +5,7 @@ import OrderCard from '../components/OrderCard';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
 import { URL } from '../constants';
-import { getSocket } from '../components/Socket'
+import { getSocket } from '../components/Socket';
 YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
 ]);
@@ -13,9 +13,8 @@ YellowBox.ignoreWarnings([
 @observer
 class MainScreen extends React.Component {
     componentDidMount = async () => {
-        await this.props.store.updateUserInfo()
-           
-        
+        await this.props.store.updateUserInfo();
+
         const socket = await getSocket();
         // if (!socket || !socket.connected) {
         //     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
@@ -23,10 +22,9 @@ class MainScreen extends React.Component {
     };
 
     state = {
-
         workingStatus: false,
         refreshing: false,
-        message: '',
+        message: ''
     };
 
     // static navigationOptions = ({ navigation }) => ({
@@ -37,42 +35,40 @@ class MainScreen extends React.Component {
     render() {
         const { store } = this.props;
         return (
-                <FlatList
-                    ListHeaderComponent={
-                        <View>
-                            <View style={styles.mainTopBackground}>
-                            <Text style = {{color: 'red', alignSelf: 'center', fontSize: 16}}>{this.state.message}</Text>
-                                <Text style={styles.mainFontUserName}>{store.name}</Text>
-                                <Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
-                                {/* <Context.Consumer>
+            <FlatList
+                ListHeaderComponent={
+                    <View>
+                        <View style={styles.mainTopBackground}>
+                            <Text style={{ color: 'red', alignSelf: 'center', fontSize: 16 }}>
+                                {this.state.message}
+                            </Text>
+                            <Text style={styles.mainFontUserName}>{store.name}</Text>
+                            <Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
+                            {/* <Context.Consumer>
 								{value => <Text style={styles.mainFontBalance}>{`${value.balance} руб.`}</Text>}
 							</Context.Consumer> */}
 
-                                <Text style={styles.mainFontBalance}>{`${store.balance} руб.`}</Text>
+                            <Text style={styles.mainFontBalance}>{`${store.balance} руб.`}</Text>
 
-                                <Text style={styles.mainFontTopUpBalance} onPress={this._topUpBalance}>
-                                    Пополнить баланс
-                                </Text>
-                            </View>
-                            <View style={styles.mainWorkingItem}>
-                                <Text style={styles.drawerFontTopItem}>Работаю</Text>
-                                <View>
-                                    <SwitchToggle
-                                        switchOn={store.onWork}
-                                        onPress={this._onChangeSwitchValue}
-                                    />
-                                </View>
-                            </View>
-                            
+                            <Text style={styles.mainFontTopUpBalance} onPress={this._topUpBalance}>
+                                Пополнить баланс
+                            </Text>
                         </View>
-                    }
-                    keyExtractor={this._keyExtractor}
-                    data={store.orders.slice()}
-                    renderItem={this._renderItem}
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh}
-                    ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
-                />
+                        <View style={styles.mainWorkingItem}>
+                            <Text style={styles.drawerFontTopItem}>Работаю</Text>
+                            <View>
+                                <SwitchToggle switchOn={store.onWork} onPress={this._onChangeSwitchValue} />
+                            </View>
+                        </View>
+                    </View>
+                }
+                keyExtractor={this._keyExtractor}
+                data={store.orders.slice()}
+                renderItem={this._renderItem}
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+                ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
+            />
         );
     }
 
@@ -89,24 +85,19 @@ class MainScreen extends React.Component {
 
     _onChangeSwitchValue = async () => {
         console.log('1');
-        
-        
+
         console.log(URL);
-        
-        
 
         const socket = await getSocket();
 
         console.log(socket.connected);
-        
+
         if (socket && socket.connected) {
             socket.emit('set work', !this.props.store.onWork);
             this.props.store.setOnWork(!this.props.store.onWork);
         } else {
-            this.setState({ message: 'Нет соединения с сервером' })
+            this.setState({ message: 'Нет соединения с сервером' });
         }
-        
-        
     };
 
     _onPressOrderItemButton = id => {
@@ -115,27 +106,29 @@ class MainScreen extends React.Component {
     };
 
     _onRefresh = async () => {
-      //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+        //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
         const { store } = this.props;
         //  this.fetchData();
         this.setState({ refreshing: true });
 
-        await store.updateUserInfo();
-        await store.getOrders();
+        const UserInfoPromise = store.updateUserInfo();
+        const OrdersPromise = store.getOrders();
+
+        await UserInfoPromise, await OrdersPromise;
 
         this.setState({ refreshing: false });
     };
 
     _renderItem = ({ item }) => (
-            <OrderCard
-                id={item._id}
-                time={item.start_time}
-                addresses={item.locations}
-                description={item.comment}
-                cardStyle={styles.cardMargins}
-                onPressButton={this._onPressOrderItemButton}
-                buttonName='ПРИНЯТЬ'
-            />
+        <OrderCard
+            id={item._id}
+            time={item.start_time}
+            addresses={item.locations}
+            description={item.comment}
+            cardStyle={styles.cardMargins}
+            onPressButton={this._onPressOrderItemButton}
+            buttonName='ПРИНЯТЬ'
+        />
     );
 }
 

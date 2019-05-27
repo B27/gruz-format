@@ -15,10 +15,19 @@ class OrderPreview extends React.Component {
     static navigationOptions = {
         title: 'Заказы'
     };
-    _acceptOrder = () => {
+
+    _acceptOrder = async () => {
+        const { store, navigation } = this.props;
         console.log('принимаю заказ');
-        const order = this.props.navigation.getParam('order');
-        this.props.navigation.navigate('OrderDetail', { order });
+        const order = navigation.getParam('order');
+
+        try {
+            store.setOrder(order);
+            await store.startFulfillingOrder();         
+            navigation.navigate('OrderDetail');
+        } catch (error) {
+            console.log('error in OrderPreviewScreen acceptOrder', error);
+        }
     };
 
     render() {

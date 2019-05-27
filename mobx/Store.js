@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { action, observable, runInAction, computed, autorun } from 'mobx';
+import { action, observable, runInAction, computed } from 'mobx';
 import { AsyncStorage } from 'react-native';
 import { URL } from '../constants';
 
-
 class ObservableStore {
     @observable.shallow orders = [];
+    @observable order = null;
+    @observable dispatcher = null;
 
     @observable balance = '';
     @observable name = '';
@@ -79,8 +80,6 @@ class ObservableStore {
             });
         } catch (error) {
             console.log(`get /worker/${userId} error >>>> `, error);
-
-
         }
     }
 
@@ -104,6 +103,49 @@ class ObservableStore {
             console.log('get order/open/60/1 error >>>> ', error);
         }
     }
+
+    @action async startFulfillingOrder() {
+        const PromiseStartOrder = startOrder(this.order);
+        const PromiseGetDispatcher = getDispatcher(this.order);
+
+        await PromiseStartOrder;
+        const response = await PromiseGetDispatcher;
+        
+        runInAction(() => {
+            this.dispatcher = response.data;
+        });
+    }
+
+    @action async cancelFulfillingOrder() {
+        await cancelOrder(this.order);
+        runInAction(() => {
+            this.order = null;
+        });
+    }
+
+    @action setOrder(order) {
+        this.order = order;
+    }
+}
+
+async function getDispatcher(order) {
+    console.log('dispatherId: ', order.creating_dispatcher);
+    let response = await axios.get(`/dispatcher/${order.creating_dispatcher}`);
+    console.log('getDispatcher >>>', response.data);
+
+    return response;
+}
+
+async function startOrder(order) {
+    const userId = await AsyncStorage.getItem('userId');
+    let response = await axios.patch(`/order/workers/${order._id}/${userId}`);
+    console.log('start order  >>>', response.status);
+}
+
+async function cancelOrder(order) {
+    const userId = await AsyncStorage.getItem('userId');
+    let response = await axios.delete(`/order/workers/${order._id}/${userId}`);
+    console.log('cancel order  >>>', response.status);
 }
 
 const Store = new ObservableStore();

@@ -17,8 +17,7 @@ class OrderDetailScreen extends React.Component {
             { _id: 1, name: 'Петя', phone: '333333' },
             { _id: 2, name: 'Петя', phone: '333333' },
             { _id: 3, name: 'Петя', phone: '333333' }
-        ],
-        modalVisible: false
+        ]
     };
 
     static navigationOptions = {
@@ -26,17 +25,17 @@ class OrderDetailScreen extends React.Component {
     };
 
     render() {
-        const { dispatcher, driver, movers, modalVisible } = this.state;
-        let order = this.props.navigation.getParam('order');
+        const { dispatcher, driver, movers } = this.state;
+        const { store } = this.props;
         return (
             <Fragment>
                 <ScrollView>
                     <OrderCard
                         fullAddress
                         expandAlways
-                        time={order.start_time}
-                        addresses={order.locations}
-                        description={order.comment}
+                        time={store.order.start_time}
+                        addresses={store.order.locations}
+                        description={store.order.comment}
                         cardStyle={styles.cardMargins}
                     />
                     <ExpandCardBase
@@ -44,23 +43,25 @@ class OrderDetailScreen extends React.Component {
                         HiddenComponent={
                             <Fragment>
                                 <View style={styles.cardDescription}>
-                                    <View>
-                                        <Text style={styles.executorTextDisp}>Диспетчер:</Text>
-                                        <View style={styles.executorsRow}>
-                                            <View>
-                                                <IconCam
-                                                    name={'camera'}
-                                                    color={'#FFC234'}
-                                                    size={50}
-                                                    style={styles.orderIcon}
-                                                />
-                                            </View>
-                                            <View>
-                                                <Text>{dispatcher.name}</Text>
-                                                <Text>{dispatcher.phone}</Text>
+                                    {store.dispatcher && (
+                                        <View>
+                                            <Text style={styles.executorTextDisp}>Диспетчер:</Text>
+                                            <View style={styles.executorsRow}>
+                                                <View>
+                                                    <IconCam
+                                                        name={'camera'}
+                                                        color={'#FFC234'}
+                                                        size={50}
+                                                        style={styles.orderIcon}
+                                                    />
+                                                </View>
+                                                <View>
+                                                    <Text>{store.dispatcher.name}</Text>
+                                                    <Text>{store.dispatcher.phoneNum}</Text>
+                                                </View>
                                             </View>
                                         </View>
-                                    </View>
+                                    )}
                                     <View>
                                         <Text style={styles.executorText}>Водитель:</Text>
                                         <View style={styles.executorsRow}>
@@ -143,8 +144,14 @@ class OrderDetailScreen extends React.Component {
         );
     };
 
-    _cancelOrder = () => {
-        this.props.navigation.navigate('Main');
+    _cancelOrder = async () => {
+        try {
+            await this.props.store.cancelFulfillingOrder();
+            this.props.navigation.navigate('Main');
+        } catch (error) {
+            console.log('error in OrderDetailScreen cancelOrder', error);
+        }
+   
     };
 
     _completeOrderPress = () => {
