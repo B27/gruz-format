@@ -132,11 +132,9 @@ class ObservableStore {
         });
     }
 
-    @action async cancelFulfillingOrder() {
+    async cancelFulfillingOrder() {
         await cancelOrder(this.order);
-        runInAction(() => {
-            this.order = null;
-        });
+        
     }
 
     @action setOrder(order) {
