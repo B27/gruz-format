@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React from 'react';
 import { ActivityIndicator, AsyncStorage, StatusBar, View } from 'react-native';
+import { inject } from 'mobx-react/native';
 
+@inject('store')
 class AuthLoadingScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -19,12 +21,23 @@ class AuthLoadingScreen extends React.Component {
         axios.defaults.headers = {
             Authorization: 'Bearer ' + userToken
         };
-        const filledProfile = await AsyncStorage.getItem('filledProphile'); //заполнен ли профиль
-        const fulfillingOrder = false;// await AsyncStorage.getItem('fulfillingOrder');
-        console.log('fulfOrder', fulfillingOrder);
-        this.props.navigation.navigate(
-            userToken ? (filledProfile ? 'App' : fulfillingOrder ? 'OrderDetail' : 'Main') : 'Auth'
-        );
+        const filledProfile = await AsyncStorage.getItem('filledProphile');
+        //заполнен ли профиль
+
+        try {
+            const fulfillingOrderId = await AsyncStorage.getItem('fulfillingOrder');
+            console.log('fulfilingOrder id in AsyncStorage:', fulfillingOrderId);
+            if (fulfillingOrderId) {
+                await this.props.store.pullOrderById(fulfillingOrderId);
+                await this.props.store.pullFulfilingOrderInformation();
+                this.props.navigation.navigate('OrderDetail');
+                return;
+            }
+        } catch (error) {
+            console.log('Error in AuthLoadingScreen:', error);
+        }
+
+        this.props.navigation.navigate(userToken ? (filledProfile ? 'App' : 'Main') : 'Auth');
     };
 
     render() {

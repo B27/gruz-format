@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { action, observable, runInAction, autorun } from 'mobx';
+import { action, observable, runInAction, autorun, toJS } from 'mobx';
 import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
@@ -7,6 +7,7 @@ import NetworkRequests from './NetworkRequests';
 
 class ObservableStore {
     @observable.shallow orders = [];
+    @observable.shallow workers = [];
     @observable order = null;
     @observable dispatcher = null;
 
@@ -121,15 +122,20 @@ class ObservableStore {
         }
     }
 
-    @action async startFulfillingOrder(id) {
+    async pullFulfilingOrderInformation() {
+        const PromisePullDispatcher = this.pullDispatcherById(this.order.creating_dispatcher);
+        const PromisePullWorkers = this.setWorkersByArray(this.order.workers.data);
+
+        await Promise.all([PromisePullDispatcher, PromisePullWorkers]);
+    }
+
+    async startFulfillingOrder(id) {
         await this.pullOrderById(id);
-        const PromiseStartOrder = NetworkRequests.startOrder(this.order._id);
-        const PromiseReceiveDispatcher = this.pullDispatcherById(this.order.creating_dispatcher);
+        await NetworkRequests.startOrder(this.order._id);
 
-        await PromiseStartOrder;
-        await PromiseReceiveDispatcher;
+        await this.pullFulfilingOrderInformation();
 
-        await AsyncStorage.setItem('fulfillingOrder', 'true');
+        await AsyncStorage.setItem('fulfillingOrder', this.order._id);
     }
 
     async cancelFulfillingOrder() {
@@ -148,6 +154,16 @@ class ObservableStore {
         const response = await NetworkRequests.getOrder(id);
         runInAction(() => {
             this.order = response.data;
+        });
+    }
+
+    @action async setWorkersByArray(workers) {
+        let workersData = toJS(workers).map(worker => {
+            console.log('setWorkerByArray: worker in map', worker);
+            return { id: worker._id, phoneNum: worker.phoneNum, avatar: `${URL}${worker.id.photos.user}` };
+        });
+        runInAction(() => {
+            this.workers = workersData;
         });
     }
 }
