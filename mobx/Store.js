@@ -15,6 +15,7 @@ class ObservableStore {
     @observable name = '';
     @observable isDriver = false;
     @observable onWork = false;
+    @observable orderIdOnWork = '';
 
     @observable avatar = '';
 
@@ -66,7 +67,8 @@ class ObservableStore {
                 this.balance = response.data.balance;
                 this.name = response.data.name;
                 this.isDriver = response.data.isDriver;
-                this.onWork = response.data.onWork;
+                this.onWork = response.data.onWork; // на данный момент всегда false, необходимо смотреть response.data.order
+                this.orderIdOnWork = response.data.order; // null когда рузчиком не выполняется заказ
                 this.avatar = URL + response.data.photos.user;
                 this.phone = response.data.phoneNum;
                 this.firstName = response.data.name.split(' ')[1];
@@ -81,10 +83,11 @@ class ObservableStore {
                 this.height = response.data.height;
                 this.weight = response.data.weight;
 
-                //console.log('date in store >>>> ', date);
+                // console.log('User Info >>>> ', response.data);
             });
         } catch (error) {
             console.log(`get /worker/${userId} error: `, error);
+            throw new Error(error);
         }
     }
 
@@ -123,24 +126,27 @@ class ObservableStore {
     }
 
     async pullFulfilingOrderInformation() {
-        const PromisePullDispatcher = this.pullDispatcherById(this.order.creating_dispatcher);
-        const PromisePullWorkers = this.setWorkersByArray(this.order.workers.data);
+        const {
+             data: order 
+        } = await NetworkRequests.getOrder(this.orderIdOnWork);
+        runInAction(() => {
+            this.order = order;
+        });
+
+        const PromisePullDispatcher = this.pullDispatcherById(order.creating_dispatcher);
+        const PromisePullWorkers = this.setWorkersByArray(order.workers.data);
 
         await Promise.all([PromisePullDispatcher, PromisePullWorkers]);
     }
 
     async startFulfillingOrder(id) {
-        await this.pullOrderById(id);
-        await NetworkRequests.startOrder(this.order._id);
+        await NetworkRequests.startOrder(id);
 
         await this.pullFulfilingOrderInformation();
-
-        await AsyncStorage.setItem('fulfillingOrder', this.order._id);
     }
 
     async cancelFulfillingOrder() {
         await NetworkRequests.cancelOrder();
-        await AsyncStorage.removeItem('fulfillingOrder');
     }
 
     @action async pullDispatcherById(id) {
@@ -150,16 +156,8 @@ class ObservableStore {
         });
     }
 
-    @action async pullOrderById(id) {
-        const response = await NetworkRequests.getOrder(id);
-        runInAction(() => {
-            this.order = response.data;
-        });
-    }
-
     @action async setWorkersByArray(workers) {
         let workersData = toJS(workers).map(worker => {
-            console.log('setWorkerByArray: worker in map', worker);
             return { id: worker._id, phoneNum: worker.phoneNum, avatar: `${URL}${worker.id.photos.user}` };
         });
         runInAction(() => {

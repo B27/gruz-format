@@ -39,7 +39,7 @@ async function getOrder(id) {
     let response;
     try {
         response = await axios.get(`/order/${id}`);
-        console.log('getOrder response.data:', response.data);
+        //console.log('getOrder response.data:', response.data);
     } catch (error) {
         console.log('Error in getOrder:', error);
         throw Error(error.message);

@@ -14,30 +14,50 @@ class AuthLoadingScreen extends React.Component {
     }
 
     _bootstrapAsync = async () => {
+        const { store, navigation } = this.props;
+
         console.log('AuthLoadingScreen bootstrapAsync');
         const userToken = await AsyncStorage.getItem('token');
-        console.log(userToken);
+        console.log('user token: ', userToken);
 
-        axios.defaults.headers = {
-            Authorization: 'Bearer ' + userToken
-        };
         const filledProfile = await AsyncStorage.getItem('filledProphile');
         //заполнен ли профиль
 
-        try {
-            const fulfillingOrderId = await AsyncStorage.getItem('fulfillingOrder');
-            console.log('fulfilingOrder id in AsyncStorage:', fulfillingOrderId);
-            if (fulfillingOrderId) {
-                await this.props.store.pullOrderById(fulfillingOrderId);
-                await this.props.store.pullFulfilingOrderInformation();
-                this.props.navigation.navigate('OrderDetail');
+        let screenNeedToGo = 'Auth';
+
+        if (userToken) {
+            axios.defaults.headers = {
+                Authorization: 'Bearer ' + userToken
+            };
+
+            try {
+                await store.getUserInfo();
+            } catch (error) {
+                // TODO добавить вывод ошибки пользователю
+                console.log('Ошибка при получении данных, проверьте подключение к сети');
                 return;
             }
-        } catch (error) {
-            console.log('Error in AuthLoadingScreen:', error);
+
+            if (store.orderIdOnWork) {
+                console.log('User on work, order id:', store.orderIdOnWork);
+
+                try {
+                    await store.pullFulfilingOrderInformation();
+                } catch (error) {
+                    // TODO добавить вывод ошибки пользователю
+                    console.log('Ошибка при получении данных о выполняемом заказе, проверьте подключение к сети');
+                    return;
+                }
+
+                screenNeedToGo = 'OrderDetail';
+            } else if (filledProfile) {
+                screenNeedToGo = 'App';
+            } else {
+                screenNeedToGo = 'Main';
+            }
         }
 
-        this.props.navigation.navigate(userToken ? (filledProfile ? 'App' : 'Main') : 'Auth');
+        navigation.navigate(screenNeedToGo);
     };
 
     render() {

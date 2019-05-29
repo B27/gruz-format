@@ -150,7 +150,6 @@ class OrderDetailScreen extends React.Component {
     _cancelOrder = async () => {
         try {
             await this.props.store.cancelFulfillingOrder();
-            await AsyncStorage.removeItem('fulfillingOrder');
             this.props.navigation.navigate('Main');
         } catch (error) {
             console.log('error in OrderDetailScreen cancelOrder', error);
