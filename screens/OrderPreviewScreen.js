@@ -20,9 +20,9 @@ class OrderPreview extends React.Component {
         try {           
             await store.startFulfillingOrder(order._id);                
             navigation.navigate('OrderDetail');
-            console.log('Accept order');
+            console.log('Accept order successful');
         } catch (error) {
-            console.log('error in OrderPreviewScreen acceptOrder', error);
+            console.log('error in OrderPreviewScreen acceptOrder:', error);
         }
     };
 

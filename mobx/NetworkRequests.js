@@ -2,27 +2,49 @@ import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 
 async function getDispatcher(id) {
-    console.log('dispatherId: ', id);
-    let response = await axios.get(`/dispatcher/${id}`);
-    console.log('getDispatcher >>>', response.data);
+    let response;
+    try {
+        response = await axios.get(`/dispatcher/${id}`);
+        console.log('getDispatcher response.data: ', response.data);
+    } catch (error) {
+        console.log('Error in getDispatcher:', error);
+        throw Error(error.message);
+    }
 
     return response;
 }
 
 async function startOrder(id) {
-    const userId = await AsyncStorage.getItem('userId');
-    let response = await axios.patch(`/order/workers/${id}/${userId}`);
-    console.log('start order  >>>', response.status);
+    try {
+        const userId = await AsyncStorage.getItem('userId');
+        let response = await axios.patch(`/order/workers/${id}/${userId}`);
+        console.log('startOrder response.status:', response.status);
+    } catch (error) {
+        console.log('Error in startOrder:', error);
+        throw Error(error.message);
+    }
 }
 
 async function cancelOrder() {
-    let response = await axios.post(`/order/cancel_work`);
-    console.log('cancel order  >>>', response.status);
+    try {
+        let response = await axios.post(`/order/cancel_work`);
+        console.log('cancelOrder response.status:', response.status);
+    } catch (error) {
+        console.log('Error in cancelOrder:', error);
+        throw Error(error.message);
+    }
 }
 
 async function getOrder(id) {
-    let response = await axios.get(`/order/${id}`);
-    console.log('get order  >>>', response.data);
+    let response;
+    try {
+        response = await axios.get(`/order/${id}`);
+        console.log('getOrder response.data:', response.data);
+    } catch (error) {
+        console.log('Error in getOrder:', error);
+        throw Error(error.message);
+    }
+
     return response;
 }
 
