@@ -127,7 +127,7 @@ class MainScreen extends React.Component {
         const UserInfoPromise = store.updateUserInfo();
         const OrdersPromise = store.getOrders();
 
-        await UserInfoPromise, await OrdersPromise;
+        await Promise.all([UserInfoPromise, OrdersPromise]);
 
         this.setState({ refreshing: false });
     };

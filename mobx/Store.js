@@ -49,7 +49,7 @@ class ObservableStore {
                 //console.log('avatar ', this.avatar);
             });
         } catch (error) {
-            //console.log(`get /worker/${userId} error >>>> `, error);
+            console.log(`get /worker/${userId} error: `, error);
         }
     }
 
@@ -84,7 +84,7 @@ class ObservableStore {
                 //console.log('date in store >>>> ', date);
             });
         } catch (error) {
-            //console.log(`get /worker/${userId} error >>>> `, error);
+            console.log(`get /worker/${userId} error: `, error);
         }
     }
 
@@ -105,7 +105,7 @@ class ObservableStore {
                 this.orders = response.data;
             });
         } catch (error) {
-            //console.log('get order/open/60/1 error >>>> ', error);
+            console.log('get order/open/60/1 error: ', error);
         }
     }
 
