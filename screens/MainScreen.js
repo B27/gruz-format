@@ -9,6 +9,7 @@ import registerForPushNotificationsAsync from '../components/registerForPushNoti
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
+import { TaskManager } from 'expo';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -25,13 +26,7 @@ class MainScreen extends React.Component {
 		refreshing: false,
 		message: ''
 	};
-	componentWillMount() {
-		if (Platform.OS === 'android' && !Constants.isDevice) {
-			console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
-		} else {
-			this._getLocationAsync();
-		}
-	}
+	componentWillMount() {}
 
 	componentDidMount = async () => {
 		registerForPushNotificationsAsync();
@@ -53,8 +48,8 @@ class MainScreen extends React.Component {
 			});
 		}
 		let location = await Location.getCurrentPositionAsync({});
-        console.log(location);
-        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+		console.log(location);
+		await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
 			accuracy: Location.Accuracy.BestForNavigation
 		});
 	};
@@ -127,7 +122,15 @@ class MainScreen extends React.Component {
 	_keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой строки нужен key типа String
 
 	_onChangeSwitchValue = async () => {
-		
+		if (!this.props.store.onWork) {
+			if (Platform.OS === 'android' && !Constants.isDevice) {
+				console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
+			} else {
+				this._getLocationAsync();
+			}
+		} else {
+			TaskManager.unregisterAllTasksAsync();
+		}
 
 		console.log('1');
 		//	console.log(URL);
