@@ -1,7 +1,8 @@
+import axios from 'axios';
 import { ImagePicker, Permissions } from 'expo';
 import { Picker } from 'native-base';
 import React from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
@@ -38,7 +39,7 @@ class EditCarScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
+            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
                     <ChoiceCameraRoll
                         pickFromCamera={this.pickFromCamera}
@@ -47,7 +48,7 @@ class EditCarScreen extends React.Component {
                         closeModal={this.closeModals}
                     />
                     <Text>{this.state.message}</Text>
-                    <View style={styles.inputContainer} behavior='padding' enabled>
+                    <View style={styles.inputContainer}>
                         <View
                             style={{
                                 height: 45,

@@ -71,7 +71,7 @@ class MyInfoScreen extends React.Component {
             })();
         });
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
+            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
                     <ChoiceCameraRoll
                         pickFromCamera={this.pickFromCamera}
@@ -83,7 +83,7 @@ class MyInfoScreen extends React.Component {
                         <LocalImage source={this.state.avatar} originalWidth={909} originalHeight={465} />
                     </TouchableOpacity>
 
-                    <View style={styles.inputContainer} behavior='padding' enabled>
+                    <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
                             placeholder='Номер телефона'

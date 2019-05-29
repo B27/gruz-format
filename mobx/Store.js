@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { action, observable, runInAction, computed } from 'mobx';
+import { action, observable, runInAction, autorun } from 'mobx';
 import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
+import NetworkRequests from './NetworkRequests';
 
 class ObservableStore {
     @observable.shallow orders = [];
@@ -120,51 +121,45 @@ class ObservableStore {
         }
     }
 
-    @action async startFulfillingOrder() {
-        const PromiseStartOrder = startOrder(this.order);
-        const PromiseGetDispatcher = getDispatcher(this.order);
+    @action async startFulfillingOrder(id) {
+        await this.pullOrderById(id);
+        const PromiseStartOrder = NetworkRequests.startOrder(this.order._id);
+        const PromiseReceiveDispatcher = this.pullDispatcherById(this.order.creating_dispatcher);
 
         await PromiseStartOrder;
-        const response = await PromiseGetDispatcher;
+        await PromiseReceiveDispatcher;
 
+        await AsyncStorage.setItem('fulfillingOrder', 'true');
+    }
+
+    async cancelFulfillingOrder() {
+        await NetworkRequests.cancelOrder();
+        await AsyncStorage.removeItem('fulfillingOrder');
+    }
+
+    @action async pullDispatcherById(id) {
+        const response = await NetworkRequests.getDispatcher(id);
         runInAction(() => {
             this.dispatcher = response.data;
         });
     }
 
-    @action async cancelFulfillingOrder() {
-        await cancelOrder(this.order);
+    @action async pullOrderById(id) {
+        const response = await NetworkRequests.getOrder(id);
         runInAction(() => {
-            this.order = null;
+            this.order = response.data;
         });
     }
-
-    @action setOrder(order) {
-        this.order = order;
-    }
-}
-
-async function getDispatcher(order) {
-    console.log('dispatherId: ', order.creating_dispatcher);
-    let response = await axios.get(`/dispatcher/${order.creating_dispatcher}`);
-    console.log('getDispatcher >>>', response.data);
-
-    return response;
-}
-
-async function startOrder(order) {
-    const userId = await AsyncStorage.getItem('userId');
-    let response = await axios.patch(`/order/workers/${order._id}/${userId}`);
-    console.log('start order  >>>', response.status);
-}
-
-async function cancelOrder(order) {
-    const userId = await AsyncStorage.getItem('userId');
-    let response = await axios.delete(`/order/workers/${order._id}/${userId}`);
-    console.log('cancel order  >>>', response.status);
 }
 
 const Store = new ObservableStore();
+
+let order = 0;
+
+autorun(() => {
+    Store.order;
+    console.log('store order ', order++);
+});
 
 export default Store;
 //userName: response.data.name,

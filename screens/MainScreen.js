@@ -92,11 +92,6 @@ class MainScreen extends React.Component {
         );
     }
 
-    _nextScreen = event => {
-        console.log(event);
-        console.log('MainScreen log');
-    };
-
     _topUpBalance = () => {
         this.props.navigation.navigate('Balance');
     };
@@ -119,8 +114,7 @@ class MainScreen extends React.Component {
         }
     };
 
-    _onPressOrderItemButton = id => {
-        const order = this.props.store.orders.find(order => order._id == id);
+    _onPressOrderItemButton = order => {
         this.props.navigation.navigate('OrderPreview', { order });
     };
 
@@ -140,7 +134,7 @@ class MainScreen extends React.Component {
 
     _renderItem = ({ item }) => (
         <OrderCard
-            id={item._id}
+            order={item}
             time={item.start_time}
             addresses={item.locations}
             description={item.comment}

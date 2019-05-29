@@ -33,7 +33,7 @@ class MyAutoScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
+            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
                     <ChoiceCameraRoll
                         pickFromCamera={this.pickFromCamera}
@@ -42,7 +42,7 @@ class MyAutoScreen extends React.Component {
                         closeModal={this.closeModals}
                     />
                     <Text>{this.state.message}</Text>
-                    <View style={styles.inputContainer} behavior='padding' enabled>
+                    <View style={styles.inputContainer}>
                         <View
                             style={{
                                 height: 45,

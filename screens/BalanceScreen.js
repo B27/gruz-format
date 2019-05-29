@@ -23,8 +23,8 @@ class BalanceScreen extends React.Component {
         });
         return (
             <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
-                <ScrollView contentContainerStyle={styles.registrationScreen}>
-                    <View style={styles.inputContainer} behavior='padding' enabled>
+                <View contentContainerStyle={styles.registrationScreen}>
+                    <View style={styles.inputContainer}>
                         <Text style={{ marginBottom: 15, fontSize: 16 }}>
                             Ваш баланс:{' '}
                             <Text style={{ marginBottom: 10, fontSize: 16 }}>{this.props.store.balance}</Text> р.
@@ -42,10 +42,10 @@ class BalanceScreen extends React.Component {
                         />
                     </View>
                     <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                    <TouchableOpacity style={{ ...styles.buttonBottom, marginTop: 0 }} onPress={this._goToRobokassa}>
+                    <TouchableOpacity style={[styles.buttonBottom, { marginTop: 0, alignSelf: 'center' }]} onPress={this._goToRobokassa}>
                         <Text style={styles.text}>ПЕРЕЙТИ К ОПЛАТЕ</Text>
                     </TouchableOpacity>
-                </ScrollView>
+                </View>
             </KeyboardAvoidingView>
         );
     }

@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -11,8 +11,6 @@ import styles from '../styles';
 @observer
 class OrderDetailScreen extends React.Component {
     state = {
-        order: { id: '0', time: '13:23', address: 'Chertenkova 2', description: 'test 1' },
-        dispatcher: { name: 'Ваня', phone: '111111' },
         driver: { name: 'Вова', phone: '222222' },
         movers: [
             { _id: 1, name: 'Петя', phone: '333333' },
@@ -24,11 +22,13 @@ class OrderDetailScreen extends React.Component {
     static navigationOptions = {
         title: 'Выполнение заказа'
     };
+
     componentDidMount = async () => {
 
     }
+
     render() {
-        const { dispatcher, driver, movers } = this.state;
+        const { driver, movers } = this.state;
         const { store } = this.props;
         return (
             <Fragment>
@@ -150,6 +150,7 @@ class OrderDetailScreen extends React.Component {
     _cancelOrder = async () => {
         try {
             await this.props.store.cancelFulfillingOrder();
+            await AsyncStorage.removeItem('fulfillingOrder');
             this.props.navigation.navigate('Main');
         } catch (error) {
             console.log('error in OrderDetailScreen cancelOrder', error);

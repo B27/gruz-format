@@ -193,7 +193,8 @@ export default createAppContainer(
             FulfillingOrder: FulfillingOrderStack
         },
         {
-            initialRouteName: 'AuthLoading'
+            initialRouteName: 'AuthLoading',
+            resetOnBlur: false
         }
     )
 );

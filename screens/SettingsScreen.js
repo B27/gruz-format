@@ -37,10 +37,10 @@ class MyInfoScreen extends React.Component {
             })();
         });
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
+            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
                     <Text style={{ fontSize: 18, marginBottom: 10 }}>Изменение пароля</Text>
-                    <View style={styles.inputContainer} behavior='padding' enabled>
+                    <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
                             placeholder='Текущий пароль'

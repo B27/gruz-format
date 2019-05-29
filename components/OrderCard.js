@@ -6,18 +6,19 @@ import styles from '../styles';
 
 class OrderCard extends React.Component {
     _onPressButton = () => {
-        this.props.onPressButton(this.props.id);
+        this.props.onPressButton(this.props.order);
     };
 
     render() {
-        const { cardStyle, buttonName, description, addresses, time, id, expandAlways, fullAddress } = this.props;
+        const { cardStyle, buttonName, description, addresses, time, order, expandAlways, fullAddress } = this.props;
+        let orderId = order ? order._id : 'id';
 
         return (
             <ExpandCardBase
                 expandAlways={expandAlways}
                 buttonName={buttonName}
                 cardStyle={[styles.cardBase, cardStyle]}
-                id={id}
+                id={orderId}
                 OpenComponent={
                     <Fragment>
                         <View style={styles.orderRow}>

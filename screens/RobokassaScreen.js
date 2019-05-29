@@ -1,6 +1,7 @@
 import md5 from 'md5';
 import React from 'react';
 import { KeyboardAvoidingView, WebView } from 'react-native';
+import styles from '../styles';
 
 class RobokassaScreen extends React.Component {
     state = {
@@ -25,7 +26,7 @@ class RobokassaScreen extends React.Component {
         console.log(hash);
 
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
+            <KeyboardAvoidingView style={styles.flex1} behavior='padding'>
                 <WebView
                     source={{
                         uri: `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=baikalweb&InvId=${invId}&Culture=ru&Encoding=utf-8&OutSum=${outSum}&IsTest=1&Shp_UserID=${userId}&SignatureValue=${hash}`

@@ -43,7 +43,7 @@ class DocumentsScreen extends React.Component {
     }
     render() {
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
+            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
                     <ChoiceCameraRoll
                         pickFromCamera={this.pickFromCamera}
@@ -51,7 +51,7 @@ class DocumentsScreen extends React.Component {
                         visible={this.state.choiceModalVisible}
                         closeModal={this.closeModals}
                     />
-                    <View style={styles.inputContainer} behavior='padding' enabled>
+                    <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
                             placeholder='Номер паспорта'

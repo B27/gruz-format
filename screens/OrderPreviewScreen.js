@@ -1,30 +1,26 @@
-import React, { Fragment } from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
-import styles from '../styles';
-import OrderCard from '../components/OrderCard';
-import ExpandCardBase from '../components/ExpandCardBase';
 import { inject } from 'mobx-react/native';
+import React, { Fragment } from 'react';
+import { ScrollView, Text, TouchableOpacity, View, AsyncStorage } from 'react-native';
+import ExpandCardBase from '../components/ExpandCardBase';
+import OrderCard from '../components/OrderCard';
+import styles from '../styles';
 
 @inject('store')
 class OrderPreview extends React.Component {
-    state = {
-        order: { id: '0', time: '13:23', address: 'Chertenkova 2', description: 'test 1' },
-        gruzilinet: false
-    };
 
     static navigationOptions = {
-        title: 'Заказы'
+        title: 'Заказ'
     };
 
     _acceptOrder = async () => {
         const { store, navigation } = this.props;
-        console.log('принимаю заказ');
+        
         const order = navigation.getParam('order');
 
-        try {
-            store.setOrder(order);
-            await store.startFulfillingOrder();         
+        try {           
+            await store.startFulfillingOrder(order._id);                
             navigation.navigate('OrderDetail');
+            console.log('Accept order');
         } catch (error) {
             console.log('error in OrderPreviewScreen acceptOrder', error);
         }

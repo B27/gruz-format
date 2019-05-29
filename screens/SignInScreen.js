@@ -30,7 +30,7 @@ class SignInScreen extends React.Component {
                         <Icon name={'fiber-manual-record'} size={42} color={'white'} style={styles.logoIcon} />
                     </View>
                     <View style={styles.inputBlock}>
-                        <View style={styles.inputContainer} behavior='padding' enabled>
+                        <View style={styles.inputContainer}>
                             <Icon name={'person'} size={28} color='#FFC234' style={styles.inputIcon} />
                             <TextInput
                                 style={styles.inputWithIcon}
