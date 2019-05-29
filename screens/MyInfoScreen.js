@@ -66,7 +66,13 @@ class MyInfoScreen extends React.Component {
                 }
             })();
             (async () => {
-                await this.props.store.getUserInfo();
+                try {
+                    await this.props.store.getUserInfo();
+                } catch (error) {
+                    // TODO добавить вывод ошибки пользователю
+                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');
+                    return;
+                }
                 this.setState(this.props.store);
             })();
         });

@@ -32,7 +32,12 @@ class MyInfoScreen extends React.Component {
     render() {
         this.props.navigation.addListener('willFocus', () => {
             (async () => {
-                await this.props.store.getUserInfo();
+                try {
+                    await store.getUserInfo();
+                } catch (error) {
+                    // TODO добавить вывод ошибки пользователю
+                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');                   
+                }
                 this.setState(this.props.store);
             })();
         });
