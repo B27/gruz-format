@@ -119,7 +119,7 @@ class OrderDetailScreen extends React.Component {
                         }
                         cardStyle={styles.cardMargins}
                     />
-                    <TouchableOpacity style={styles.cardChat} onPress={this._chatPress}>
+                    <TouchableOpacity style={[styles.cardChat, styles.spaceBottom]} onPress={this._chatPress}>
                         <View style={styles.cardRowTopContainer}>
                             <Text style={styles.cardH2}>Чат</Text>
                             <Icon name='chevron-right' size={42} color='#c4c4c4' />
@@ -168,7 +168,7 @@ class OrderDetailScreen extends React.Component {
     };
 
     _completeOrderPress = () => {
-        this.props.navigation.navigate('Main');
+        this.props.navigation.navigate('OrderComplete');
     };
 
     _chatPress = () => {

@@ -160,7 +160,13 @@ class ObservableStore {
 
     @action async setWorkersByArray(workers) {
         let workersData = workers.map(worker => {
-            return { id: worker.id._id, name: worker.id.name, phoneNum: worker.id.phoneNum, avatar: URL + worker.id.photos.user };
+            return {
+                id: worker.id._id,
+                name: worker.id.name,
+                phoneNum: worker.id.phoneNum,
+                avatar: URL + worker.id.photos.user,
+                isDriver: worker.id.isDriver
+            };
         });
         runInAction(() => {
             this.workers = workersData;
