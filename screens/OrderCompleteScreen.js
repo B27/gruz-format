@@ -9,12 +9,10 @@ import styles from '../styles';
 
 @inject('store')
 @observer
-class OrderDetailScreen extends React.Component {
+class OrderCompleteScreen extends React.Component {
     static navigationOptions = {
-        title: 'Выполнение заказа'
+        title: 'Завершение заказа'
     };
-
-    componentDidMount = async () => {};
 
     render() {
         const { workers: workersObservable, order, dispatcher } = this.props.store;
@@ -35,7 +33,8 @@ class OrderDetailScreen extends React.Component {
                         cardStyle={styles.cardMargins}
                     />
                     <ExpandCardBase
-                        OpenComponent={<Text style={styles.cardH2}>Исполнители</Text>}
+                        expandAlways
+                        OpenComponent={<Text style={styles.cardExecutorH2}>Исполнители</Text>}
                         HiddenComponent={
                             <Fragment>
                                 <View style={styles.cardDescription}>
@@ -117,21 +116,15 @@ class OrderDetailScreen extends React.Component {
                                 </View>
                             </Fragment>
                         }
-                        cardStyle={styles.cardMargins}
+                        cardStyle={[styles.cardMargins, styles.spaceBottom]}
                     />
-                    <TouchableOpacity style={[styles.cardChat, styles.spaceBottom]} onPress={this._chatPress}>
-                        <View style={styles.cardRowTopContainer}>
-                            <Text style={styles.cardH2}>Чат</Text>
-                            <Icon name='chevron-right' size={42} color='#c4c4c4' />
-                        </View>
-                    </TouchableOpacity>
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelOrderPress}>
+                        <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelPress}>
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonConfirm} onPress={this._completeOrderPress}>
+                        <TouchableOpacity style={styles.buttonConfirm} onPress={this._confirmPress}>
                             <Text style={styles.buttonText}>ГОТОВО</Text>
                         </TouchableOpacity>
                     </View>
@@ -140,35 +133,12 @@ class OrderDetailScreen extends React.Component {
         );
     }
 
-    _cancelOrderPress = () => {
-        Alert.alert(
-            'Вы уверены, что хотите отменить заказ ?',
-            'За отказ вам будет выставлена минимальная оценка.',
-            [
-                {
-                    text: 'ОТМЕНА',
-                    style: 'cancel'
-                },
-                {
-                    text: 'ОК',
-                    onPress: this._cancelOrder
-                }
-            ],
-            { cancelable: true }
-        );
+    _cancelPress = () => {
+        this.props.navigation.goBack();
     };
 
-    _cancelOrder = async () => {
-        try {
-            await this.props.store.cancelFulfillingOrder();
-            this.props.navigation.navigate('Main');
-        } catch (error) {
-            console.log('error in OrderDetailScreen cancelOrder', error);
-        }
-    };
-
-    _completeOrderPress = () => {
-        this.props.navigation.navigate('OrderComplete');
+    _confirmPress = () => {
+        this.props.navigation.navigate('Main');
     };
 
     _chatPress = () => {
@@ -176,4 +146,4 @@ class OrderDetailScreen extends React.Component {
     };
 }
 
-export default OrderDetailScreen;
+export default OrderCompleteScreen;

@@ -3,7 +3,6 @@ import { StyleSheet, Dimensions } from 'react-native';
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-
     flex1: {
         flex: 1
     },
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
 
-    buttonConfirmAlone : {
+    buttonConfirmAlone: {
         width: WIDTH / 2,
         height: 45,
         borderRadius: 25,
@@ -366,6 +365,13 @@ const styles = StyleSheet.create({
         // borderWidth: 1, borderColor: 'green'
     },
 
+    cardExecutorH2: {
+        color: 'black',
+        fontSize: 16,
+        marginLeft: 16,
+        marginVertical: 12
+    },
+
     cardH2: {
         color: 'black',
         fontSize: 16,
@@ -420,8 +426,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
         borderRadius: 10,
         marginHorizontal: 12,
-        marginTop: 6,
-        marginBottom: 16 + 45 + 16
+        marginTop: 6
     },
 
     cardButtonText: {
@@ -516,6 +521,10 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
 
+    spaceBottom: {
+        marginBottom: 16 + 45 + 16
+    },
+
     cardDescription: {
         flex: 1,
         justifyContent: 'flex-start',
@@ -530,6 +539,13 @@ const styles = StyleSheet.create({
 
     executorTextDisp: {
         marginBottom: 10
+    },
+
+    executorImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginRight: 12
     }
 });
 export default styles;

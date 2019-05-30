@@ -18,6 +18,7 @@ import InstructionScreen from '../screens/InstructionScreen';
 import MainScreen from '../screens/MainScreen';
 import MyAutoScreen from '../screens/MyAutoScreen';
 import MyInfoScreen from '../screens/MyInfoScreen';
+import OrderCompleteScreen from '../screens/OrderCompleteScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import OrderPreviewScreen from '../screens/OrderPreviewScreen';
 import RobokassaScreen from '../screens/RobokassaScreen';
@@ -47,7 +48,8 @@ const yellowHeaderWithHamburger = ({ navigation, ...others }) => {
 const FulfillingOrderStack = createStackNavigator(
     {
         OrderDetail: OrderDetailScreen,
-        OrderChat: ChatScreen
+        OrderChat: ChatScreen,
+        OrderComplete: OrderCompleteScreen
     },
     { defaultNavigationOptions: yellowHeader }
 );
