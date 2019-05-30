@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { action, observable, runInAction, autorun, toJS } from 'mobx';
+import { action, observable, runInAction, toJS } from 'mobx';
 import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
@@ -165,13 +165,6 @@ class ObservableStore {
 }
 
 const Store = new ObservableStore();
-
-let order = 0;
-
-autorun(() => {
-    Store.order;
-    console.log('store order ', order++);
-});
 
 export default Store;
 //userName: response.data.name,

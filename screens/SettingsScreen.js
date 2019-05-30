@@ -13,6 +13,7 @@ import {
     View
 } from 'react-native';
 import styles from '../styles';
+import { TaskManager } from 'expo'
 
 @inject('store')
 @observer
@@ -82,7 +83,8 @@ class MyInfoScreen extends React.Component {
     }
     _signOutAsync = async () => {
         await AsyncStorage.clear();
-        this.props.navigation.navigate('Auth');
+        TaskManager.unregisterAllTasksAsync();
+        this.props.navigation.navigate('SignIn');
     };
     _submitPassword = async () => {
         const id = await AsyncStorage.getItem('userId');

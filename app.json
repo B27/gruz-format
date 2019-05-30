@@ -26,7 +26,8 @@
       "bundleIdentifier": "ru.baikalweb.gruz"
     },
     "android": {
-      "permissions": ["CAMERA"],
+      "permissions": ["CAMERA", "MANAGE_DOCUMENTS", "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION", "com.google.android.c2dm.permission.RECEIVE", "WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"],
       "package": "ru.baikalweb.gruz"
     }
   }
