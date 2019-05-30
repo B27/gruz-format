@@ -126,9 +126,7 @@ class ObservableStore {
     }
 
     async pullFulfilingOrderInformation() {
-        const {
-             data: order 
-        } = await NetworkRequests.getOrder(this.orderIdOnWork);
+        const { data: order } = await NetworkRequests.getOrder(this.orderIdOnWork);
         runInAction(() => {
             this.order = order;
         });
@@ -158,7 +156,7 @@ class ObservableStore {
 
     @action async setWorkersByArray(workers) {
         let workersData = toJS(workers).map(worker => {
-            return { id: worker._id, phoneNum: worker.phoneNum, avatar: `${URL}${worker.id.photos.user}` };
+            return { id: worker._id, phoneNum: worker.phoneNum, avatar: URL + worker.id.photos.user };
         });
         runInAction(() => {
             this.workers = workersData;

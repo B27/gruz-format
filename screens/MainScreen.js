@@ -83,7 +83,7 @@ class MainScreen extends React.Component {
                     </View>
                 }
                 keyExtractor={this._keyExtractor}
-                data={store.orders.slice()}
+                data={store.orders.slice().sort((a, b) => a.start_time < b.start_time)} // возможно, эта сортировка когда-то будет работать неправильно
                 renderItem={this._renderItem}
                 refreshing={this.state.refreshing}
                 onRefresh={this._onRefresh}
