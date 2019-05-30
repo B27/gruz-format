@@ -530,6 +530,13 @@ const styles = StyleSheet.create({
 
     executorTextDisp: {
         marginBottom: 10
+    },
+
+    executorImage: { 
+        width: 50, 
+        height: 50, 
+        borderRadius: 25,
+        marginRight: 12 
     }
 });
 export default styles;

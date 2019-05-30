@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { action, observable, runInAction, toJS } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
@@ -125,8 +125,12 @@ class ObservableStore {
         }
     }
 
-    async pullFulfilingOrderInformation() {
-        const { data: order } = await NetworkRequests.getOrder(this.orderIdOnWork);
+    @action async pullFulfilingOrderInformation(id) {
+        if (!id) {
+            id = this.orderIdOnWork;
+        }
+        const { data: order } = await NetworkRequests.getOrder(id);
+
         runInAction(() => {
             this.order = order;
         });
@@ -140,7 +144,7 @@ class ObservableStore {
     async startFulfillingOrder(id) {
         await NetworkRequests.startOrder(id);
 
-        await this.pullFulfilingOrderInformation();
+        await this.pullFulfilingOrderInformation(id);
     }
 
     async cancelFulfillingOrder() {
@@ -155,8 +159,8 @@ class ObservableStore {
     }
 
     @action async setWorkersByArray(workers) {
-        let workersData = toJS(workers).map(worker => {
-            return { id: worker._id, phoneNum: worker.phoneNum, avatar: URL + worker.id.photos.user };
+        let workersData = workers.map(worker => {
+            return { id: worker.id._id, name: worker.id.name, phoneNum: worker.id.phoneNum, avatar: URL + worker.id.photos.user };
         });
         runInAction(() => {
             this.workers = workersData;

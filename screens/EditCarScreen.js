@@ -6,7 +6,6 @@ import { AsyncStorage, KeyboardAvoidingView, ScrollView, Text, TextInput, Toucha
 import ImageChooser from '../components/ImageChooser';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
-import axios from 'axios';
 
 class EditCarScreen extends React.Component {
 	state = {
