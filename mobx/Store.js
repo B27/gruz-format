@@ -32,6 +32,16 @@ class ObservableStore {
     @observable height = '';
     @observable weight = '';
 
+    @observable veh_is_open = false;
+	@observable veh_height = '';
+	@observable veh_width = '';
+	@observable veh_length = '';
+	@observable veh_loadingCap = '';
+    @observable veh_frameType = '';
+    @observable vehicle0 = '';
+    @observable vehicle1 = '';
+    @observable vehicle2 = '';
+
     @observable socketChat = undefined;
 
     @action async updateUserInfo() {
@@ -41,7 +51,7 @@ class ObservableStore {
             const response = await axios.get(`/worker/${userId}`);
 
             runInAction(() => {
-                //     console.log(`get /worker/${userId} response.data >>>>`, response.data);
+                //console.log(`get /worker/${userId} response.data >>>>`, response.data);
                 this.balance = response.data.balance;
                 this.name = response.data.name;
                 this.isDriver = response.data.isDriver;
@@ -63,25 +73,33 @@ class ObservableStore {
             runInAction(() => {
                 //console.log(`get /worker/${userId} response.data >>>>`, response.data);
                 const date = new Date(response.data.birthDate);
+                
+                for(let key in response.data)
+                    this[key] = response.data[key];
 
-                this.balance = response.data.balance;
-                this.name = response.data.name;
-                this.isDriver = response.data.isDriver;
-                this.onWork = response.data.onWork; // на данный момент всегда false, необходимо смотреть response.data.order
+                // this.balance = response.data.balance;
+                // this.name = response.data.name;
+                // this.isDriver = response.data.isDriver;
+                // this.onWork = response.data.onWork; // на данный момент всегда false, необходимо смотреть response.data.order
                 this.orderIdOnWork = response.data.order; // null когда рузчиком не выполняется заказ
                 this.avatar = URL + response.data.photos.user;
                 this.phone = response.data.phoneNum;
-                this.firstName = response.data.name.split(' ')[1];
-                this.lastName = response.data.name.split(' ')[0];
-                this.patronymic = response.data.name.split(' ')[2];
-                this.city = response.data.address.split(' ')[0];
+                [this.lastName, this.firstName, this.patronymic] = response.data.name.split(' ');
+                [this.city, this.street, this.house, this.flat ] = response.data.address.split(' ');
                 this.cityId = response.data.city;
-                this.street = response.data.address.split(' ')[1];
-                this.house = response.data.address.split(' ')[2];
-                this.flat = response.data.address.split(' ')[3];
                 this.birthDate = date;
-                this.height = response.data.height;
-                this.weight = response.data.weight;
+                this.vehicle0 = URL + response.data.photos.vehicle0;
+                this.vehicle1 = URL + response.data.photos.vehicle1;
+                this.vehicle2 = URL + response.data.photos.vehicle2;
+                // this.height = response.data.height;
+                // this.weight = response.data.weight;
+
+                // this.veh_is_open = response.data.veh_is_open;
+                // this.veh_height = response.data.veh_height;
+                // this.veh_width = response.data.veh_width;
+                // this.veh_length = response.data.veh_length;
+                // this.veh_loadingCap = response.data.veh_loadingCap;
+                // this.veh_frameType = response.data.veh_frameType;
 
                 // console.log('User Info >>>> ', response.data);
             });
@@ -125,8 +143,11 @@ class ObservableStore {
         }
     }
 
-    async pullFulfilingOrderInformation() {
-        const { data: order } = await NetworkRequests.getOrder(this.orderIdOnWork);
+    async pullFulfilingOrderInformation(id) {
+        if (!id) {
+            id = this.orderIdOnWork
+        }
+        const { data: order } = await NetworkRequests.getOrder(id);
         runInAction(() => {
             this.order = order;
         });
@@ -140,7 +161,7 @@ class ObservableStore {
     async startFulfillingOrder(id) {
         await NetworkRequests.startOrder(id);
 
-        await this.pullFulfilingOrderInformation();
+        await this.pullFulfilingOrderInformation(id);
     }
 
     async cancelFulfillingOrder() {

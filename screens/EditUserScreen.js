@@ -49,7 +49,7 @@ class EditUserScreen extends React.Component {
 		}
 	};
 
-	//     choiceModalVisible: false,
+	// choiceModalVisible: false,
 	// pictureUri: require('../images/unknown.png'),
 	// lastname: '',
 	// firstname: '',
