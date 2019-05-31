@@ -64,11 +64,11 @@ class MainScreen extends React.Component {
 		} else if (notification.origin === 'received' && notification.data.type === 'reject') {
 			console.log('Заказ отменен');
 
-			this.props.navigation.navigate('Main');
+			this.props.navigation.navigate('AuthLoading');
 		} else if (notification.origin === 'received' && notification.data.type === 'kicked') {
 			console.log('Вас выпилили из заказа');
 
-			this.props.navigation.navigate('Main');
+			this.props.navigation.navigate('AuthLoading');
 		}
 		//console.log(notification.origin, notification.data.type);
 	};
