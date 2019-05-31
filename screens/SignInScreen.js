@@ -1,7 +1,15 @@
 import axios from 'axios';
 import md5 from 'md5';
 import React from 'react';
-import { AsyncStorage, ImageBackground, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
+import {
+    AsyncStorage,
+    ImageBackground,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+    KeyboardAvoidingView
+} from 'react-native';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import bgImage from '../images/background.png';
@@ -13,7 +21,8 @@ class SignInScreen extends React.Component {
         password: '',
         showPass: true,
         press: false,
-        message: null
+        message: null,
+        buttonDisabled: false
     };
 
     static navigationOptions = {
@@ -22,7 +31,12 @@ class SignInScreen extends React.Component {
     //flow
     render() {
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='position' keyboardVerticalOffset={-50}>
+            <KeyboardAvoidingView
+                style={styles.flex1}
+                contentContainerStyle={styles.flex1}
+                behavior='position'
+                keyboardVerticalOffset={-50}
+            >
                 <ImageBackground source={bgImage} style={styles.backgroundContainer}>
                     <View style={styles.logoContainer}>
                         <Text style={styles.logoText}>ДОБРО {'\n'}ПОЖАЛОВАТЬ</Text>
@@ -58,7 +72,11 @@ class SignInScreen extends React.Component {
                             </TouchableOpacity>
                         </View>
                         <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                        <TouchableOpacity style={styles.button} onPress={this._signInAsync}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={this._signInAsync}
+                            disabled={this.state.buttonDisabled}
+                        >
                             <Text style={styles.text}>ВОЙТИ</Text>
                         </TouchableOpacity>
                         <Text style={styles.registrationQuestion}>
@@ -83,26 +101,38 @@ class SignInScreen extends React.Component {
         if (!this.state.phone || !this.state.password) {
             return this.setState({ message: 'Введенные данные некорректны' });
         } else {
-            const response = await axios
-                .post('/login', {
+            try {
+                this.setState({ buttonDisabled: true });
+
+                const response = await axios.post('/login', {
                     login: this.state.phone,
                     password: this.state.password
-                })
-                .catch(err => {
-                    console.log(err);
                 });
+                console.log(response.data);
 
-            console.log(response.data);
+                let promiseArr = [];
+                promiseArr.push(AsyncStorage.setItem('password', md5(this.state.password)));
+                promiseArr.push(AsyncStorage.setItem('token', response.data.token));
+                promiseArr.push(AsyncStorage.setItem('userId', response.data._id));
 
-            if (response.data.token) {
-                await AsyncStorage.setItem('password', md5(this.state.password));
-                await AsyncStorage.setItem('token', response.data.token);
-                await AsyncStorage.setItem('userId', response.data._id);
+                await Promise.all(promiseArr);
+
                 axios.defaults.headers = {
                     Authorization: 'Bearer ' + response.data.token
                 };
-                console.log('SignInScreen navigate to Main', this.props.navigation.state);
-                this.props.navigation.navigate('Main');
+
+                this.props.navigation.navigate('AuthLoading');
+            } catch (error) {
+                this.setState({ buttonDisabled: false });
+                if (error.response) {
+                    console.log(
+                        'Error axios in SignInScreen post /login',
+                        error.response.status,
+                        error.response.data.message
+                    );
+                } else {
+                    console.log('Error in SignInScreen');
+                }
             }
         }
     };
