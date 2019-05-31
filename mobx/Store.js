@@ -4,6 +4,7 @@ import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 class ObservableStore {
     @observable.shallow orders = [];
@@ -16,6 +17,7 @@ class ObservableStore {
     @observable isDriver = false;
     @observable onWork = false;
     @observable orderIdOnWork = '';
+    @observable userId = '';
 
     @observable avatar = '';
 
@@ -41,8 +43,10 @@ class ObservableStore {
     @observable vehicle0 = '';
     @observable vehicle1 = '';
     @observable vehicle2 = '';
+    @observable refreshImage = Number(new Date());
 
     @observable socketChat = undefined;
+    @observable chatHistory = [];
 
     @action async updateUserInfo() {
         const userId = await AsyncStorage.getItem('userId');
@@ -62,6 +66,11 @@ class ObservableStore {
         } catch (error) {
             console.log(`get /worker/${userId} error: `, error);
         }
+    }
+    @action async setUserId(userId) {
+        runInAction(() => {
+            this.userId = userId
+        });
     }
 
     @action async getUserInfo() {
@@ -133,6 +142,11 @@ class ObservableStore {
             throw error;
         }
     }
+    @action async clearOrders() {
+        runInAction(() => {
+            this.orders = []
+        })
+    }
 
     @action async startChatSocket(order_id) {
         if (this.socketChat === undefined) {
@@ -145,6 +159,13 @@ class ObservableStore {
                 });
             }
         }
+    }
+
+    @action async addChatMessage(message) {
+        runInAction(() => {
+            console.log("[MESASAGE]",message);
+            this.chatHistory = [message,...this.chatHistory];
+        })
     }
 
     @action async pullFulfilingOrderInformation(id) {
@@ -193,6 +214,16 @@ class ObservableStore {
         runInAction(() => {
             this.workers = workersData;
         });
+    }
+
+
+
+    @action async refreshImages() {
+        runInAction(() => {
+            this.refreshImage = this.refreshImage + 1;
+        });
+        console.log('refresh Image: ' + this.refreshImage);
+        
     }
 }
 

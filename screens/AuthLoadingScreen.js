@@ -18,8 +18,10 @@ class AuthLoadingScreen extends React.Component {
 
         console.log('AuthLoadingScreen bootstrapAsync');
         const userToken = await AsyncStorage.getItem('token');
+        
         console.log('user token: ', userToken);
-
+        const userId = await AsyncStorage.getItem('userId');
+        this.props.store.setUserId(userId);
         const filledProfile = await AsyncStorage.getItem('filledProphile');
         //заполнен ли профиль
 

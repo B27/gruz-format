@@ -1,7 +1,9 @@
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { View } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { View, KeyboardAvoidingView, Platform, Text } from 'react-native';
+import { GiftedChat, Send } from 'react-native-gifted-chat';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import styles from '../styles';
 //const socket = (async()=>{await getChatSocket('5ce66399dcc0097d8b95dc17')})();
 @inject('store')
 @observer
@@ -29,16 +31,18 @@ class Chat extends React.Component {
 	componentWillMount = async () => {
         await this.props.store.startChatSocket('5ce66399dcc0097d8b95dc17');
 		console.log('-----' + this.props.store.socketChat.connected);
-        
+        //GiftedChat.append(previousState.messages, this.setMessage(_id, text, sender))
 		this.props.store.socketChat.on('history', (result) => {
             console.log(666666666);
             
-			console.log(result);
+            console.log(result);
+            this.props.store.chatHistory = [];
 			result.forEach(item => {
-				const { _id, text, sender } = item;
-				this.setState(previousState => ({
-					messages: GiftedChat.append(previousState.messages, this.setMessage(_id, text, sender))
-				}));
+				const { text, sender } = item;
+				// this.setState(previousState => ({
+				// 	messages: GiftedChat.append(previousState.messages, this.setMessage(_id, text, sender))
+                // }));
+                this.props.store.addChatMessage(this.setMessage(Math.random(), text, sender));
 			});
 		});
 		this.props.store.socketChat.on('user', msg => {
@@ -49,18 +53,22 @@ class Chat extends React.Component {
 		});
 		
 		this.props.store.socketChat.on('chat message', result => {
-			//this.setState({ message: [...this.state.message, result] });
+            //this.setState({ message: [...this.state.message, result] });
+            
             const { sender, text } = result;
-            this.setState(previousState => ({
-                messages: GiftedChat.append(previousState.messages, this.setMessage(new Date(), text, sender))
-            }))
+            // this.setState(previousState => ({
+            //     messages: GiftedChat.append(previousState.messages, this.setMessage(random(), text, sender))
+            // }))
+            this.props.store.addChatMessage(this.setMessage(Math.random(), text, sender));
             console.log(result);
             
 		});
 	};
 
 	render() {
+        const arr = [...this.props.store.chatHistory];
 		return (
+
 			<View
 				style={{
 					flex: 1,
@@ -73,25 +81,43 @@ class Chat extends React.Component {
 				key={this.props.id}
 			>
 				<GiftedChat
-					messages={this.state.messages}
-					onSend={messages => this.onSend(messages)}
+					messages={arr}
+                    onSend={messages => this.onSend(messages)}
 					user={{
-						_id: 1
-					}}
+						_id: this.props.store.userId
+                    }}
+                    alwaysShowSend = {true}
+                    renderSend = {this.renderSend}
+                    placeholder = 'Введите сообщение...'
 				/>
+                { Platform.OS === 'android' ? <KeyboardSpacer /> : null }
 			</View>
+            
 		);
-	}
+    }
+    
+    renderSend(props) {
+        return (
+            <Send
+                {...props}
+            >
+                
+                    <Text style = {{marginBottom: 10, fontSize: 16}}>Отправить</Text>
+                
+            </Send>
+        );
+    }
+
 	onSend(messages = []) {
         messages.forEach(message => {
             console.log(message);
             
             this.props.store.socketChat.emit('chat message', message.text);
         })
-        this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, messages)
-        }));
-        
+        // this.setState(previousState => ({
+        //     messages: GiftedChat.append(previousState.messages, messages)
+        // }));
+        this.props.store.chatHistory = GiftedChat.append([...this.props.store.chatHistory],messages).map(v => ({...v,createdAt:undefined}));// this.setMessage(Math.random(), sender, text));
 		
 	}
 }
