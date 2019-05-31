@@ -4,6 +4,7 @@ import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 class ObservableStore {
     @observable.shallow orders = [];
@@ -16,6 +17,7 @@ class ObservableStore {
     @observable isDriver = false;
     @observable onWork = false;
     @observable orderIdOnWork = '';
+    @observable userId = '';
 
     @observable avatar = '';
 
@@ -44,6 +46,7 @@ class ObservableStore {
     @observable refreshImage = Number(new Date());
 
     @observable socketChat = undefined;
+    @observable chatHistory = [];
 
     @action async updateUserInfo() {
         const userId = await AsyncStorage.getItem('userId');
@@ -63,6 +66,11 @@ class ObservableStore {
         } catch (error) {
             console.log(`get /worker/${userId} error: `, error);
         }
+    }
+    @action async setUserId(userId) {
+        runInAction(() => {
+            this.userId = userId
+        });
     }
 
     @action async getUserInfo() {
@@ -147,6 +155,13 @@ class ObservableStore {
                 });
             }
         }
+    }
+
+    @action async addChatMessage(message) {
+        runInAction(() => {
+            console.log("[MESASAGE]",message);
+            this.chatHistory = [message,...this.chatHistory];
+        })
     }
 
     @action async pullFulfilingOrderInformation(id) {
