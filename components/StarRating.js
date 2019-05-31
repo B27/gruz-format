@@ -9,7 +9,7 @@ export default class StarRating extends React.Component {
 
         return (
             <Rating
-                onChange={rating => console.log('rating changed', rating)}
+                onChange={this.props.onChange}
                 selectedStar={starFilled}
                 unselectedStar={starUnfilled}
                 config={{

@@ -1,25 +1,39 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
+import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
-import OrderCard from '../components/OrderCard';
 import StarRating from '../components/StarRating';
 import styles from '../styles';
+import NetworkRequests from '../mobx/NetworkRequests';
 
 @inject('store')
 @observer
 class OrderCompleteScreen extends React.Component {
     state = {
-        height: null
+        sumText: '',
+        buttonDisabled: false
     };
 
     static navigationOptions = {
         title: 'Завершение заказа'
     };
 
+    componentDidMount() {
+        const { workers: workersObservable, dispatcher } = this.props.store;
+
+        const workers = workersObservable.slice();
+        this.starsSet.add(dispatcher._id);
+        workers.forEach(worker => {
+            this.starsSet.add(worker.id);
+        });
+    }
+
+    starsSet = new Set(); // id пользователей для которых не стоит оценка
+    requestData = { sum: null, data: [] }; // данные для отправки на сервер
+
     render() {
-        const { workers: workersObservable, order, dispatcher } = this.props.store;
+        const { workers: workersObservable, dispatcher } = this.props.store;
 
         const workers = workersObservable.slice();
 
@@ -28,21 +42,13 @@ class OrderCompleteScreen extends React.Component {
         return (
             <Fragment>
                 <ScrollView>
-                    {/* <OrderCard
-                        fullAddress
-                        expandAlways
-                        time={order.start_time}
-                        addresses={order.locations}
-                        description={order.comment}
-                        cardStyle={styles.cardMargins}
-                    /> */}
                     <TextInput
-                        style={[styles.input, styles.cardMargins]}
+                        style={styles.inputSumComplete}
                         placeholder='Полученная вами сумма в рублях'
                         placeholderTextColor='grey'
                         keyboardType='numeric'
-                        onChangeText={height => this.setState({ height })}
-                        value={this.state.height ? this.state.height.toString() : ''}
+                        onChangeText={this._onChangeText}
+                        value={this.state.sumText}
                     />
                     <ExpandCardBase
                         expandAlways
@@ -64,7 +70,7 @@ class OrderCompleteScreen extends React.Component {
                                                 </View>
                                                 <View>
                                                     <Text>{dispatcher.name}</Text>
-                                                    <StarRating />
+                                                    <StarRating onChange={this._onChangeStarRating(dispatcher._id)} />
                                                 </View>
                                             </View>
                                         </View>
@@ -90,7 +96,7 @@ class OrderCompleteScreen extends React.Component {
                                                 </View>
                                                 <View>
                                                     <Text>{driver.name}</Text>
-                                                    <StarRating />
+                                                    <StarRating onChange={this._onChangeStarRating(driver.id)} />
                                                 </View>
                                             </View>
                                         </View>
@@ -119,7 +125,7 @@ class OrderCompleteScreen extends React.Component {
                                                     </View>
                                                     <View>
                                                         <Text>{mover.name}</Text>
-                                                        <StarRating />
+                                                        <StarRating onChange={this._onChangeStarRating(mover.id)} />
                                                     </View>
                                                 </View>
                                             ))}
@@ -136,7 +142,11 @@ class OrderCompleteScreen extends React.Component {
                         <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelPress}>
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonConfirm} onPress={this._confirmPress}>
+                        <TouchableOpacity
+                            style={styles.buttonConfirm}
+                            disabled={this.state.buttonDisabled}
+                            onPress={this._confirmPress}
+                        >
                             <Text style={styles.buttonText}>ГОТОВО</Text>
                         </TouchableOpacity>
                     </View>
@@ -145,20 +155,68 @@ class OrderCompleteScreen extends React.Component {
         );
     }
 
-    _ratingCompleted = () => {
-        console.log();
+    _onChangeStarRating = workerId => rating => {
+        let workerRating = { worker_id: workerId, rating: rating };
+        let data = this.requestData.data;
+
+        if (this.starsSet.delete(workerId)) {
+            this.requestData.data = [...data, workerRating];
+        } else {
+            this.requestData.data = data.map(wrkRtng => {
+                console.log(wrkRtng.worker_id == workerId);
+                return wrkRtng.worker_id == workerId ? workerRating : wrkRtng;
+            });
+        }
+
+        console.log('starsRating set _onChangeStarRating:', this.starsSet);
+
+        console.log('request data _onChangeStarRating:', this.requestData);
+    };
+
+    _onChangeText = text => {
+        if (text.includes(',')) {
+            return;
+        }
+
+        // отрезаю число до копеек
+        if (0 < text.search(/\..../)) {
+            return;
+        }
+
+        this.setState({ sumText: text });
     };
 
     _cancelPress = () => {
         this.props.navigation.goBack();
     };
 
-    _confirmPress = () => {
-        this.props.navigation.navigate('Main');
-    };
+    _confirmPress = async () => {
+        if (this.starsSet.size != 0) {
+            // TODO добавить вывод польователю
+            console.log('Оцените всех участников заказа');
+            return;
+        }
+        if (!this.state.sumText) {
+            // TODO добавить вывод польователю
+            console.log('Укажите полученную ваму сумму');
+            return;
+        }
 
-    _chatPress = () => {
-        this.props.navigation.navigate('OrderChat');
+        const requestData = { ...this.requestData, sum: +this.state.sumText };
+
+        this.setState({
+            buttonDisabled: true
+        });
+
+        try {
+            await NetworkRequests.completeOrder(requestData);
+            this.props.navigation.navigate('AuthLoading');
+        } catch (error) {
+            this.setState({
+                buttonDisabled: false
+            });
+            console.log('Ошибка в OrderCompleteScreen');
+        }
     };
 }
 

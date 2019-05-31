@@ -46,6 +46,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 
+    inputSumComplete: {
+        height: 45,
+        borderWidth: 1,
+        borderRadius: 15,
+        fontSize: 16,
+        justifyContent: 'center',
+        paddingLeft: 15,
+        marginHorizontal: 12,
+        marginTop: 12,
+        marginBottom: 6
+    },
+
     datePickerText: {
         fontSize: 16,
         color: 'grey'

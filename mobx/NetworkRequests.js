@@ -64,4 +64,20 @@ async function getOrder(id) {
     return response;
 }
 
-export default { cancelOrder, getDispatcher, startOrder, getOrder };
+async function completeOrder(data) {
+    try {
+        console.log(data);
+        let response = await axios.post('/order/end_work', data);
+        console.log('completeOrder response.data:', response.data);
+        console.log('completeOrder response.status:', response.status);
+    } catch (error) {
+        if (error.response) {
+            console.log('Error in completeOrder:', error.response.status, error.response.data.message);
+        } else {
+            console.log('Error in completeOrder:', error);
+        }
+        throw error;
+    }
+}
+
+export default { cancelOrder, getDispatcher, startOrder, getOrder, completeOrder };
