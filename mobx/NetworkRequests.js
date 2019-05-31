@@ -7,8 +7,12 @@ async function getDispatcher(id) {
         response = await axios.get(`/dispatcher/${id}`);
         console.log('getDispatcher response.data: ', response.data);
     } catch (error) {
-        console.log('Error in getDispatcher:', error);
-        throw Error(error.message);
+        if (error.response) {
+            console.log('Error in getDispatcher:', error.response.status, error.response.data.message);
+        } else {
+            console.log('Error in getDispatcher:', error);
+        }
+        throw error;
     }
 
     return response;
@@ -20,8 +24,12 @@ async function startOrder(id) {
         let response = await axios.patch(`/order/workers/${id}/${userId}`);
         console.log('startOrder response.status:', response.status);
     } catch (error) {
-        console.log('Error in startOrder:', error);
-        throw Error(error.message);
+        if (error.response) {
+            console.log('Error in startOrder:', error.response.status, error.response.data.message);
+        } else {
+            console.log('Error in startOrder:', error);
+        }
+        throw error;
     }
 }
 
@@ -30,8 +38,12 @@ async function cancelOrder() {
         let response = await axios.post(`/order/cancel_work`);
         console.log('cancelOrder response.status:', response.status);
     } catch (error) {
-        console.log('Error in cancelOrder:', error);
-        throw Error(error.message);
+        if (error.response) {
+            console.log('Error in cancelOrder:', error.response.status, error.response.data.message);
+        } else {
+            console.log('Error in cancelOrder:', error);
+        }
+        throw error;
     }
 }
 
@@ -41,8 +53,12 @@ async function getOrder(id) {
         response = await axios.get(`/order/${id}`);
         //console.log('getOrder response.data:', response.data);
     } catch (error) {
-        console.log('Error in getOrder:', error);
-        throw Error(error.message);
+        if (error.response) {
+            console.log('Error in getOrder:', error.response.status, error.response.data.message);
+        } else {
+            console.log('Error in getOrder:', error);
+        }
+        throw error;
     }
 
     return response;

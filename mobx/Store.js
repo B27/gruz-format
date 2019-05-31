@@ -33,10 +33,10 @@ class ObservableStore {
     @observable weight = '';
 
     @observable veh_is_open = false;
-	@observable veh_height = '';
-	@observable veh_width = '';
-	@observable veh_length = '';
-	@observable veh_loadingCap = '';
+    @observable veh_height = '';
+    @observable veh_width = '';
+    @observable veh_length = '';
+    @observable veh_loadingCap = '';
     @observable veh_frameType = '';
     @observable vehicle0 = '';
     @observable vehicle1 = '';
@@ -73,9 +73,8 @@ class ObservableStore {
             runInAction(() => {
                 //console.log(`get /worker/${userId} response.data >>>>`, response.data);
                 const date = new Date(response.data.birthDate);
-                
-                for(let key in response.data)
-                    this[key] = response.data[key];
+
+                for (let key in response.data) this[key] = response.data[key];
 
                 // this.balance = response.data.balance;
                 // this.name = response.data.name;
@@ -85,7 +84,7 @@ class ObservableStore {
                 this.avatar = URL + response.data.photos.user;
                 this.phone = response.data.phoneNum;
                 [this.lastName, this.firstName, this.patronymic] = response.data.name.split(' ');
-                [this.city, this.street, this.house, this.flat ] = response.data.address.split(' ');
+                [this.city, this.street, this.house, this.flat] = response.data.address.split(' ');
                 this.cityId = response.data.city;
                 this.birthDate = date;
                 this.vehicle0 = URL + response.data.photos.vehicle0;
@@ -104,8 +103,12 @@ class ObservableStore {
                 // console.log('User Info >>>> ', response.data);
             });
         } catch (error) {
-            console.log(`get /worker/${userId} error: `, error);
-            throw new Error(error);
+            if (error.response) {
+                console.log(`get /worker/${userId} error: `, error.response.status, error.response.data.message);
+            } else {
+                console.log(`get /worker/${userId} error: `, error);
+            }
+            throw error;
         }
     }
 
@@ -126,7 +129,8 @@ class ObservableStore {
                 this.orders = response.data;
             });
         } catch (error) {
-            console.log('get order/open/60/1 error: ', error);
+            console.log('get order/open/60/1 error: ', error.response.status, error.response.data.message);
+            throw error;
         }
     }
 
