@@ -1,15 +1,19 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Image, ScrollView, Text, TouchableOpacity, View, TextInput } from 'react-native';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
 import OrderCard from '../components/OrderCard';
+import StarRating from '../components/StarRating';
 import styles from '../styles';
 
 @inject('store')
 @observer
 class OrderCompleteScreen extends React.Component {
+    state = {
+        height: null
+    };
+
     static navigationOptions = {
         title: 'Завершение заказа'
     };
@@ -24,13 +28,21 @@ class OrderCompleteScreen extends React.Component {
         return (
             <Fragment>
                 <ScrollView>
-                    <OrderCard
+                    {/* <OrderCard
                         fullAddress
                         expandAlways
                         time={order.start_time}
                         addresses={order.locations}
                         description={order.comment}
                         cardStyle={styles.cardMargins}
+                    /> */}
+                    <TextInput
+                        style={[styles.input, styles.cardMargins]}
+                        placeholder='Полученная вами сумма в рублях'
+                        placeholderTextColor='grey'
+                        keyboardType='numeric'
+                        onChangeText={height => this.setState({ height })}
+                        value={this.state.height ? this.state.height.toString() : ''}
                     />
                     <ExpandCardBase
                         expandAlways
@@ -52,7 +64,7 @@ class OrderCompleteScreen extends React.Component {
                                                 </View>
                                                 <View>
                                                     <Text>{dispatcher.name}</Text>
-                                                    <Text>{dispatcher.phoneNum}</Text>
+                                                    <StarRating />
                                                 </View>
                                             </View>
                                         </View>
@@ -78,7 +90,7 @@ class OrderCompleteScreen extends React.Component {
                                                 </View>
                                                 <View>
                                                     <Text>{driver.name}</Text>
-                                                    <Text>{driver.phoneNum}</Text>
+                                                    <StarRating />
                                                 </View>
                                             </View>
                                         </View>
@@ -107,7 +119,7 @@ class OrderCompleteScreen extends React.Component {
                                                     </View>
                                                     <View>
                                                         <Text>{mover.name}</Text>
-                                                        <Text>{mover.phoneNum}</Text>
+                                                        <StarRating />
                                                     </View>
                                                 </View>
                                             ))}
@@ -132,6 +144,10 @@ class OrderCompleteScreen extends React.Component {
             </Fragment>
         );
     }
+
+    _ratingCompleted = () => {
+        console.log();
+    };
 
     _cancelPress = () => {
         this.props.navigation.goBack();
