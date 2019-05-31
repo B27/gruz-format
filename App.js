@@ -36,8 +36,8 @@ export default class App extends React.Component {
 	}
 }
 
-TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
-    console.log('28282828282828288282');
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+
     
     if (error) {
       console.log('++++++++++: ', error);
@@ -45,9 +45,24 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
       return;
     }
     if (data) {
+        const socket = await getSocket();
+
+		//	console.log(socket.connected);
+
+		
       const { locations } = data;
-      console.log('------------- ', locations)// do something with the locations captured in the background
-      Notifications.scheduleLocalNotificationAsync({title: 'locations', body: `${locations[0].coords.latitude} ${locations[0].coords.longitude}`},{ time: (new Date()).getTime() + 1000 })
+      //console.log('------------- ', locations)// do something with the locations captured in the background
+
+      if (socket && socket.connected) {
+        socket.emit('geo data', JSON.stringify({
+            type:"Point",
+            coordinates:[locations[0].coords.longitude, locations[0].coords.latitude]
+        }));
+        
+        
+
+    } 
+      //Notifications.scheduleLocalNotificationAsync({title: 'locations', body: `${locations[0].coords.latitude} ${locations[0].coords.longitude}`},{ time: (new Date()).getTime() + 1000 })
     }
   });
 console.log('hgfuyfuyfyfuyfuyuyf' + TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME));

@@ -32,7 +32,6 @@ class MainScreen extends React.Component {
 		this._notificationSubscription = Notifications.addListener(this._handleNotification);
 		// await this.props.store.updateUserInfo()
 		// await store.getOrders();
-		this._onRefresh();
 
 		const socket = await getSocket();
 		// if (!socket || !socket.connected) {
@@ -46,22 +45,32 @@ class MainScreen extends React.Component {
 				errorMessage: 'Permission to access location was denied'
 			});
 		}
-		let location = await Location.getCurrentPositionAsync({});
-		console.log(location);
+		//let location = await Location.getCurrentPositionAsync({});
+
 		await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
 			accuracy: Location.Accuracy.BestForNavigation
 		});
 	};
 
 	_handleNotification = async notification => {
-		if (notification.origin === 'selected') {
+		if (notification.origin === 'selected' && notification.data.type === 'accept') {
 			const res = await Axios.get(`/order/${notification.data.order_id}`);
+
 			//this.setState({ notification: notification, order: res.data });
 			//const data = this.state.notification.data;
 			// console.log('origin: ' + this.state.notification.origin);
 			// console.log('data: ' + (data && data.order_id));
 			this.props.navigation.navigate('OrderPreview', { order: res.data });
+		} else if (notification.origin === 'received' && notification.data.type === 'reject') {
+			console.log('Заказ отменен');
+
+			this.props.navigation.navigate('Main');
+		} else if (notification.origin === 'received' && notification.data.type === 'kicked') {
+			console.log('Вас выпилили из заказа');
+
+			this.props.navigation.navigate('Main');
 		}
+		//console.log(notification.origin, notification.data.type);
 	};
 
 	// static navigationOptions = ({ navigation }) => ({
@@ -99,9 +108,9 @@ class MainScreen extends React.Component {
 						</View>
 					</View>
 				}
-                keyExtractor={this._keyExtractor}
-                data={store.orders.slice().sort((a, b) => a.start_time < b.start_time)} // возможно, эта сортировка когда-то будет работать неправильно
-                renderItem={this._renderItem}
+				keyExtractor={this._keyExtractor}
+				data={store.orders.slice().sort((a, b) => a.start_time < b.start_time)} // возможно, эта сортировка когда-то будет работать неправильно
+				renderItem={this._renderItem}
 				refreshing={this.state.refreshing}
 				onRefresh={this._onRefresh}
 				ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
@@ -135,41 +144,47 @@ class MainScreen extends React.Component {
 
 		if (socket && socket.connected) {
 			socket.emit('set work', !this.props.store.onWork);
-			this.props.store.setOnWork(!this.props.store.onWork);
+            this.props.store.setOnWork(!this.props.store.onWork);
+            this._onRefresh();
 		} else {
 			this.setState({ message: 'Нет соединения с сервером' });
 		}
 	};
 
-    _onPressOrderItemButton = order => {
-        this.props.navigation.navigate('OrderPreview', { order });
-    };
+	_onPressOrderItemButton = order => {
+		this.props.navigation.navigate('OrderPreview', { order });
+	};
 
-    _onRefresh = async () => {
-        //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
-        const { store } = this.props;
-        //  this.fetchData();
-        this.setState({ refreshing: true });
+	_onRefresh = async () => {
+		//  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+		if (this.props.store.onWork) {
+			const { store } = this.props;
+			//  this.fetchData();
+			this.setState({ refreshing: true });
 
-        const UserInfoPromise = store.updateUserInfo();
-        const OrdersPromise = store.getOrders();
+			const UserInfoPromise = store.updateUserInfo();
+			const OrdersPromise = store.getOrders();
 
-        await Promise.all([UserInfoPromise, OrdersPromise]);
+			await Promise.all([UserInfoPromise, OrdersPromise]);
 
-        this.setState({ refreshing: false });
-    };
+			this.setState({ refreshing: false });
+		} else {
+            await this.props.store.updateUserInfo();
+            this.props.store.clearOrders();
+        }
+	};
 
-    _renderItem = ({ item }) => (
-        <OrderCard
-            order={item}
-            time={item.start_time}
-            addresses={item.locations}
-            description={item.comment}
-            cardStyle={styles.cardMargins}
-            onPressButton={this._onPressOrderItemButton}
-            buttonName='ПРИНЯТЬ'
-        />
-    );
+	_renderItem = ({ item }) => (
+		<OrderCard
+			order={item}
+			time={item.start_time}
+			addresses={item.locations}
+			description={item.comment}
+			cardStyle={styles.cardMargins}
+			onPressButton={this._onPressOrderItemButton}
+			buttonName = 'ПРИНЯТЬ'
+		/>
+	);
 }
 
 export default MainScreen;

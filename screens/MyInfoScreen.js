@@ -286,7 +286,7 @@ class MyInfoScreen extends React.Component {
 	};
 	_nextScreen = async () => {
 		console.log(this.state);
-
+        
 		const id = await AsyncStorage.getItem('userId');
 		const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
 		if (
@@ -318,7 +318,8 @@ class MyInfoScreen extends React.Component {
 					weight: this.state.weight,
 					isDriver: this.state.isDriver
 				});
-				console.log(res.data);
+                console.log(res.data);
+                
 				this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
 			} catch (error) {
 				console.log(error);
@@ -332,8 +333,10 @@ class MyInfoScreen extends React.Component {
 				type: 'image/jpeg',
 				name: 'image.jpg'
 			});
-			console.log(data);
-			await axios.patch('/worker/upload/' + id, data);
+            console.log(data);
+            
+            await axios.patch('/worker/upload/' + id, data);
+            await this.props.store.refreshImages();
 		}
 	};
 
@@ -370,7 +373,7 @@ class MyInfoScreen extends React.Component {
 			const { cancelled, uri } = await ImagePicker.launchCameraAsync({
 				mediaTypes: 'Images'
 			});
-			if (!cancelled) this.setState({ pictureUri: uri });
+			if (!cancelled) this.setState({ avatar: uri });
 		}
 	};
 
@@ -383,7 +386,7 @@ class MyInfoScreen extends React.Component {
 				aspect: [1, 1],
 				allowsEditing: true
 			});
-			if (!cancelled) this.setState({ pictureUri: uri });
+			if (!cancelled) this.setState({ avatar: uri });
 		}
 	};
 }

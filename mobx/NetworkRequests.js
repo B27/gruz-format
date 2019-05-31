@@ -30,7 +30,7 @@ async function cancelOrder() {
         let response = await axios.post(`/order/cancel_work`);
         console.log('cancelOrder response.status:', response.status);
     } catch (error) {
-        console.log('Error in cancelOrder:', error);
+        console.log('Error in cancelOrder:', error.response.status, error.response.data.message);
         throw Error(error.message);
     }
 }

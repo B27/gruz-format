@@ -74,9 +74,10 @@ class MyInfoScreen extends React.Component {
                     <TouchableOpacity style={styles.buttonBottom} onPress={() => this._submitPassword()}>
                         <Text style={styles.text}>СОХРАНИТЬ</Text>
                     </TouchableOpacity>
-                    <View>
-                        <Button title='Выйти из аккаунта' onPress={() => this._signOutAsync()} />
-                    </View>
+                   
+                    <TouchableOpacity style={{...styles.buttonConfirm, width: styles.buttonConfirm.width*2}} onPress={() => tthis._signOutAsync()}>
+                        <Text style={styles.buttonText}>ВЫЙТИ ИЗ АККАУНТА</Text>
+                    </TouchableOpacity>
                 </ScrollView>
             </KeyboardAvoidingView>
         );

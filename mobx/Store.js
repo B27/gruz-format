@@ -41,6 +41,7 @@ class ObservableStore {
     @observable vehicle0 = '';
     @observable vehicle1 = '';
     @observable vehicle2 = '';
+    @observable refreshImage = Number(new Date());
 
     @observable socketChat = undefined;
 
@@ -129,6 +130,11 @@ class ObservableStore {
             console.log('get order/open/60/1 error: ', error);
         }
     }
+    @action async clearOrders() {
+        runInAction(() => {
+            this.orders = []
+        })
+    }
 
     @action async startChatSocket(order_id) {
         if (this.socketChat === undefined) {
@@ -189,6 +195,16 @@ class ObservableStore {
         runInAction(() => {
             this.workers = workersData;
         });
+    }
+
+
+
+    @action async refreshImages() {
+        runInAction(() => {
+            this.refreshImage = this.refreshImage + 1;
+        });
+        console.log('refresh Image: ' + this.refreshImage);
+        
     }
 }
 

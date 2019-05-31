@@ -7,6 +7,8 @@ import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 import { inject, observer } from 'mobx-react/native';
 import axios from 'axios';
+
+import {CacheManager} from "react-native-expo-image-cache";
 //import { ImageCacheManager } from 'react-native-cached-image';
 @inject('store')
 @observer
@@ -37,12 +39,14 @@ class MyAutoScreen extends React.Component {
 		this.props.navigation.addListener('willFocus', () => {
 			(async () => {
 				try {
-					await this.props.store.getUserInfo();
+                    await this.props.store.getUserInfo();
+                    //await CacheManager.clearCache();
 				} catch (error) {
 					// TODO добавить вывод ошибки пользователю
-					console.log('Ошибка при получении новых данных, проверьте подключение к сети');
+					console.log('awdwadawdОшибка при получении новых данных, проверьте подключение к сети');
 					return;
-				}
+                }
+                
 				this.setState({...this.props.store, message: ''});
 			})();
 		});
@@ -170,13 +174,24 @@ class MyAutoScreen extends React.Component {
                     type: 'image/jpeg',
                     name: 'image.jpg'
                 });
+                data.append('vehicle1', {
+                    uri: this.state.vehicle1,
+                    type: 'image/jpeg',
+                    name: 'image.jpg'
+                });
+                data.append('vehicle2', {
+                    uri: this.state.vehicle2,
+                    type: 'image/jpeg',
+                    name: 'image.jpg'
+                });
                 //ImageCacheManager.clearCache();
 
 				console.log(data);
-
+                
 				await axios.patch('/worker/upload/' + id, data);
 				//await AsyncStorage.setItem("phoneNum", this.state.phone);
-				this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+                this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+                await this.props.store.refreshImages();
 				//this.props.navigation.navigate('EditCar');
 			} catch (err) {
 				console.log(err);
