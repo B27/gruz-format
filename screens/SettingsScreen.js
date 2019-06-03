@@ -56,7 +56,7 @@ class MyInfoScreen extends React.Component {
 
                 <TouchableOpacity
                     style={{ ...styles.buttonConfirm, width: styles.buttonConfirm.width * 2 }}
-                    onPress={() => tthis._signOutAsync()}
+                    onPress={() => this._signOutAsync()}
                 >
                     <Text style={styles.buttonText}>ВЫЙТИ ИЗ АККАУНТА</Text>
                 </TouchableOpacity>
