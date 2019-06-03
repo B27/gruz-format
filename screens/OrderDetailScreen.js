@@ -84,7 +84,7 @@ class OrderDetailScreen extends React.Component {
                                             </View>
                                         </View>
                                     )}
-                                    {movers && (
+                                    {(movers.length != 0) && (
                                         <View>
                                             <Text style={styles.executorText}>
                                                 {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}

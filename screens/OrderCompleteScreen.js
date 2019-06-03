@@ -33,12 +33,12 @@ class OrderCompleteScreen extends React.Component {
     requestData = { sum: null, data: [] }; // данные для отправки на сервер
 
     render() {
-        const { workers: workersObservable, dispatcher } = this.props.store;
+        const { workers: workersObservable, dispatcher, userId } = this.props.store;
 
         const workers = workersObservable.slice();
 
-        const driver = workers.find(worker => worker.isDriver);
-        const movers = workers.filter(worker => !worker.isDriver);
+        const driver = workers.find(worker => worker.isDriver && worker.id != userId);
+        const movers = workers.filter(worker => !worker.isDriver && worker.id != userId);
         return (
             <Fragment>
                 <ScrollView>
@@ -101,7 +101,7 @@ class OrderCompleteScreen extends React.Component {
                                             </View>
                                         </View>
                                     )}
-                                    {movers && (
+                                    {(movers.length != 0) && (
                                         <View>
                                             <Text style={styles.executorText}>
                                                 {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
