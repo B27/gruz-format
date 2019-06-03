@@ -22,7 +22,7 @@ class OrderCompleteScreen extends React.Component {
     componentDidMount() {
         const { workers: workersObservable, dispatcher } = this.props.store;
 
-        const workers = workersObservable.slice();
+        const workers = workersObservable.slice().filter(worker => worker.id != userId);
         this.starsSet.add(dispatcher._id);
         workers.forEach(worker => {
             this.starsSet.add(worker.id);
@@ -101,7 +101,7 @@ class OrderCompleteScreen extends React.Component {
                                             </View>
                                         </View>
                                     )}
-                                    {(movers.length != 0) && (
+                                    {movers.length != 0 && (
                                         <View>
                                             <Text style={styles.executorText}>
                                                 {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
