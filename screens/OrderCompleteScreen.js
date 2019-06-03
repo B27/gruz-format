@@ -20,7 +20,7 @@ class OrderCompleteScreen extends React.Component {
     };
 
     componentDidMount() {
-        const { workers: workersObservable, dispatcher } = this.props.store;
+        const { workers: workersObservable, dispatcher, userId } = this.props.store;
 
         const workers = workersObservable.slice().filter(worker => worker.id != userId);
         this.starsSet.add(dispatcher._id);
