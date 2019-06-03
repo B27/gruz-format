@@ -15,12 +15,33 @@ class BalanceScreen extends React.Component {
         title: 'Пополнить баланс'
     };
 
-    render() {
-        this.props.navigation.addListener('willFocus', () => {
-            this.props.store.updateUserInfo();
-            this.setState({ sum: '' });
-            this.textInputRef.clear();
+    willFocusSubscription = null;
+
+    componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            (async () => {
+                try {
+                    await this.props.store.getUserInfo();
+                    //await CacheManager.clearCache();
+                } catch (error) {
+                    // TODO добавить вывод ошибки пользователю
+                    console.log(error);
+                    console.log('awdwadawdОшибка при получении новых данных, проверьте подключение к сети');
+                    return;
+                }
+
+                this.setState({ ...this.props.store, message: '' });
+            })();
         });
+    }
+
+    componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
+    }
+
+    render() {
         return (
             <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
                 <View contentContainerStyle={styles.registrationScreen}>
@@ -42,13 +63,17 @@ class BalanceScreen extends React.Component {
                         />
                     </View>
                     <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                    <TouchableOpacity style={[styles.buttonBottom, { marginTop: 0, alignSelf: 'center' }]} onPress={this._goToRobokassa}>
+                    <TouchableOpacity
+                        style={[styles.buttonBottom, { marginTop: 0, alignSelf: 'center' }]}
+                        onPress={this._goToRobokassa}
+                    >
                         <Text style={styles.text}>ПЕРЕЙТИ К ОПЛАТЕ</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
         );
     }
+
     _goToRobokassa = async () => {
         if (!this.state.sum) return this.setState({ message: "Необходимо заполнить поле 'Сумма'" });
 

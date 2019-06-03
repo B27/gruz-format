@@ -17,6 +17,7 @@ import LocalImage from '../components/LocalImage';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
+let renderCount = 0;
 @inject('store')
 @observer
 class MyInfoScreen extends React.Component {
@@ -29,10 +30,13 @@ class MyInfoScreen extends React.Component {
         userId: null,
         colorMessage: 'red'
     };
+
     static navigationOptions = {
         title: 'Моя информация',
         headerLeft: null
     };
+
+    willFocusSubscription = null;
     // lastname: '',
     // firstname: '',
     // patronimyc: '',
@@ -46,10 +50,9 @@ class MyInfoScreen extends React.Component {
     // flat: '',
     // height: '',
     // weight: '',
-    componentDidMount() {}
-
-    render() {
-        this.props.navigation.addListener('willFocus', () => {
+    componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            console.log('Listener willFocus in MyInfoScreen');
             (async () => {
                 try {
                     (async () =>
@@ -77,6 +80,17 @@ class MyInfoScreen extends React.Component {
                 this.setState(this.props.store);
             })();
         });
+    }
+
+    componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
+    }
+
+    render() {
+        console.log('Количество рендеров MyInfoScreen', ++renderCount);
+
         return (
             <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
