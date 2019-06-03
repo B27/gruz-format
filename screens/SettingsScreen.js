@@ -1,19 +1,11 @@
 import axios from 'axios';
+import { TaskManager } from 'expo';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import {
-    AsyncStorage,
-    Button,
-    KeyboardAvoidingView,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import { AsyncStorage, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import styles from '../styles';
-import { TaskManager } from 'expo'
 
 @inject('store')
 @observer
@@ -26,60 +18,50 @@ class MyInfoScreen extends React.Component {
         colorMessage: 'red'
     };
     static navigationOptions = {
-        title: 'Моя информация',
-        headerLeft: null
+        title: 'Настройки'
     };
 
     render() {
-        this.props.navigation.addListener('willFocus', () => {
-            (async () => {
-                try {
-                    await store.getUserInfo();
-                } catch (error) {
-                    // TODO добавить вывод ошибки пользователю
-                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');                   
-                }
-                this.setState(this.props.store);
-            })();
-        });
         return (
-            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
-                <ScrollView contentContainerStyle={styles.registrationScreen}>
-                    <Text style={{ fontSize: 18, marginBottom: 10 }}>Изменение пароля</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder='Текущий пароль'
-                            placeholderTextColor='grey'
-                            onChangeText={currentPassword => this.setState({ currentPassword })}
-                        />
+            <View style={styles.registrationScreen}>
+                <Text style={{ fontSize: 18, marginBottom: 10 }}>Изменение пароля</Text>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Текущий пароль'
+                        placeholderTextColor='grey'
+                        onChangeText={currentPassword => this.setState({ currentPassword })}
+                    />
 
-                        <TextInput
-                            style={styles.input}
-                            placeholder='Новый пароль'
-                            secureTextEntry={true}
-                            placeholderTextColor='grey'
-                            onChangeText={newPassword => this.setState({ newPassword })}
-                        />
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Новый пароль'
+                        secureTextEntry={true}
+                        placeholderTextColor='grey'
+                        onChangeText={newPassword => this.setState({ newPassword })}
+                    />
 
-                        <TextInput
-                            style={styles.input}
-                            placeholder='Повторите пароль'
-                            secureTextEntry={true}
-                            placeholderTextColor='grey'
-                            onChangeText={confirmPassword => this.setState({ confirmPassword })}
-                        />
-                    </View>
-                    <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
-                    <TouchableOpacity style={styles.buttonBottom} onPress={() => this._submitPassword()}>
-                        <Text style={styles.text}>СОХРАНИТЬ</Text>
-                    </TouchableOpacity>
-                   
-                    <TouchableOpacity style={{...styles.buttonConfirm, width: styles.buttonConfirm.width*2}} onPress={() => tthis._signOutAsync()}>
-                        <Text style={styles.buttonText}>ВЫЙТИ ИЗ АККАУНТА</Text>
-                    </TouchableOpacity>
-                </ScrollView>
-            </KeyboardAvoidingView>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Повторите пароль'
+                        secureTextEntry={true}
+                        placeholderTextColor='grey'
+                        onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                    />
+                </View>
+                <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
+                <TouchableOpacity style={styles.buttonBottom} onPress={() => this._submitPassword()}>
+                    <Text style={styles.text}>СОХРАНИТЬ</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={{ ...styles.buttonConfirm, width: styles.buttonConfirm.width * 2 }}
+                    onPress={() => this._signOutAsync()}
+                >
+                    <Text style={styles.buttonText}>ВЫЙТИ ИЗ АККАУНТА</Text>
+                </TouchableOpacity>
+                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+            </View>
         );
     }
     _signOutAsync = async () => {

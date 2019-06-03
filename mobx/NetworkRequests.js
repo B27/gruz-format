@@ -22,7 +22,7 @@ async function startOrder(id) {
     try {
         const userId = await AsyncStorage.getItem('userId');
         let response = await axios.patch(`/order/workers/${id}/${userId}`);
-        console.log('startOrder response.status:', response.status);
+        console.log('startOrder response.status:', response.status, response.data.msg);
     } catch (error) {
         if (error.response) {
             console.log('Error in startOrder:', error.response.status, error.response.data.message);
