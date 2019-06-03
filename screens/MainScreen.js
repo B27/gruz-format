@@ -44,7 +44,7 @@ class MainScreen extends React.Component {
 			this.setState({
 				errorMessage: 'Permission to access location was denied'
 			});
-		} 
+		}
 		//let location = await Location.getCurrentPositionAsync({});
 
 		await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
@@ -79,7 +79,10 @@ class MainScreen extends React.Component {
 	// });
 
 	render() {
-		const { store } = this.props;
+        const { store } = this.props;
+        this.props.navigation.addListener('willFocus', () => {
+			this.setState({ message: '' });
+		});
 		return (
 			<FlatList
 				ListHeaderComponent={
@@ -125,29 +128,33 @@ class MainScreen extends React.Component {
 	_keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой строки нужен key типа String
 
 	_onChangeSwitchValue = async () => {
-		if (!this.props.store.onWork) {
-			if (Platform.OS === 'android' && !Constants.isDevice) {
-				console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
+		if (this.props.store.isDriver && this.props.store.veh_width === '') {
+            this.setState({ message: 'Заполните данные об автомобиле' });
+		} else {
+			if (!this.props.store.onWork) {
+				if (Platform.OS === 'android' && !Constants.isDevice) {
+					console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
+				} else {
+					this._getLocationAsync();
+				}
 			} else {
-				this._getLocationAsync();
+				TaskManager.unregisterAllTasksAsync();
 			}
-		} else {
-			TaskManager.unregisterAllTasksAsync();
-		}
 
-		console.log('1');
-		//	console.log(URL);
+			console.log('1');
+			//	console.log(URL);
 
-		const socket = await getSocket();
+			const socket = await getSocket();
 
-		//	console.log(socket.connected);
+			//	console.log(socket.connected);
 
-		if (socket && socket.connected) {
-			socket.emit('set work', !this.props.store.onWork);
-            this.props.store.setOnWork(!this.props.store.onWork);
-            this._onRefresh();
-		} else {
-			this.setState({ message: 'Нет соединения с сервером' });
+			if (socket && socket.connected) {
+				socket.emit('set work', !this.props.store.onWork);
+				this.props.store.setOnWork(!this.props.store.onWork);
+				this._onRefresh();
+			} else {
+				this.setState({ message: 'Нет соединения с сервером' });
+			}
 		}
 	};
 
@@ -156,7 +163,8 @@ class MainScreen extends React.Component {
 	};
 
 	_onRefresh = async () => {
-		//  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+        //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+        this.setState({ message: '' });
 		if (this.props.store.onWork) {
 			const { store } = this.props;
 			//  this.fetchData();
@@ -169,9 +177,9 @@ class MainScreen extends React.Component {
 
 			this.setState({ refreshing: false });
 		} else {
-            await this.props.store.updateUserInfo();
-            this.props.store.clearOrders();
-        }
+			await this.props.store.updateUserInfo();
+			this.props.store.clearOrders();
+		}
 	};
 
 	_renderItem = ({ item }) => (
@@ -182,7 +190,7 @@ class MainScreen extends React.Component {
 			description={item.comment}
 			cardStyle={styles.cardMargins}
 			onPressButton={this._onPressOrderItemButton}
-			buttonName = 'ПРИНЯТЬ'
+			buttonName='ПРИНЯТЬ'
 		/>
 	);
 }

@@ -206,7 +206,7 @@ class MyInfoScreen extends React.Component {
                                 placeholder='Город'
                             >
                                 {this.state.cities.map(({ name: city, id: id }, index) => {
-                                    console.log(city, id);
+                                    //console.log(city, id);
 
                                     return (
                                         <Picker.Item
