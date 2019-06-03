@@ -44,11 +44,11 @@ class MainScreen extends React.Component {
 			this.setState({
 				errorMessage: 'Permission to access location was denied'
 			});
-		}
+		} 
 		//let location = await Location.getCurrentPositionAsync({});
 
 		await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-			accuracy: Location.Accuracy.BestForNavigation
+			accuracy: Location.Accuracy.High
 		});
 	};
 

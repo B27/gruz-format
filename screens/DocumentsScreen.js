@@ -179,7 +179,7 @@ class DocumentsScreen extends React.Component {
 					//console.log(data);
 
 					await axios.patch('/worker/upload/' + this.state.userId, data);
-					this.props.navigation.navigate('AthLoading');
+					this.props.navigation.navigate('AuthLoading');
 				} catch (err) {
 					console.log('Download photos error: ', err);
 				}
