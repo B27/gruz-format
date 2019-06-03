@@ -15,7 +15,7 @@ let token;
 			Authorization: 'Bearer ' + token
 		};
 	}
-	axios.defaults.baseURL = 'https://gruz.bw2api.ru';
+	axios.defaults.baseURL = 'https://gruz.bw2api.ru';/* 'http://192.168.1.4:3008'; */
 })(); //Этот говнокод для того чтобы не вернулся промис
 
 export default class App extends React.Component {
