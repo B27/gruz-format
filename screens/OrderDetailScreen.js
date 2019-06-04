@@ -10,170 +10,173 @@ import styles from '../styles';
 @inject('store')
 @observer
 class OrderDetailScreen extends React.Component {
-    static navigationOptions = {
-        title: 'Выполнение заказа'
-    };
+	static navigationOptions = {
+		title: 'Выполнение заказа'
+	};
 
-    componentDidMount = async () => {};
+	componentDidMount = async () => {};
 
-    render() {
-        const { workers: workersObservable, order, dispatcher } = this.props.store;
+	render() {
+		const { workers: workersObservable, order, dispatcher } = this.props.store;
 
-        const workers = workersObservable.slice();
+		const workers = workersObservable.slice();
 
-        const driver = workers.find(worker => worker.isDriver);
-        const movers = workers.filter(worker => !worker.isDriver);
-        return (
-            <Fragment>
-                <ScrollView>
-                    <OrderCard
-                        fullAddress
-                        expandAlways
-                        time={order.start_time}
-                        addresses={order.locations}
-                        description={order.comment}
-                        cardStyle={styles.cardMargins}
-                    />
-                    <ExpandCardBase
-                        OpenComponent={<Text style={styles.cardH2}>Исполнители</Text>}
-                        HiddenComponent={
-                            <Fragment>
-                                <View style={styles.cardDescription}>
-                                    {dispatcher && (
-                                        <View>
-                                            <Text style={styles.executorTextDisp}>Диспетчер:</Text>
-                                            <View style={styles.executorsRow}>
-                                                <View>
-                                                    <IconCam
-                                                        name={'camera'}
-                                                        color={'#FFC234'}
-                                                        size={50}
-                                                        style={styles.orderIcon}
-                                                    />
-                                                </View>
-                                                <View>
-                                                    <Text>{dispatcher.name}</Text>
-                                                    <Text>{dispatcher.phoneNum}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )}
-                                    {driver && (
-                                        <View>
-                                            <Text style={styles.executorText}>Водитель:</Text>
-                                            <View style={styles.executorsRow}>
-                                                <View>
-                                                    {driver.avatar ? (
-                                                        <Image
-                                                            style={styles.executorImage}
-                                                            source={{ uri: driver.avatar }}
-                                                        />
-                                                    ) : (
-                                                        <IconCam
-                                                            name={'camera'}
-                                                            color={'#FFC234'}
-                                                            size={50}
-                                                            style={styles.orderIcon}
-                                                        />
-                                                    )}
-                                                </View>
-                                                <View>
-                                                    <Text>{driver.name}</Text>
-                                                    <Text>{driver.phoneNum}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )}
-                                    {(movers.length != 0) && (
-                                        <View>
-                                            <Text style={styles.executorText}>
-                                                {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
-                                            </Text>
-                                            {movers.map(mover => (
-                                                <View key={mover.id} style={styles.executorsRow}>
-                                                    <View>
-                                                        {mover.avatar ? (
-                                                            <Image
-                                                                style={styles.executorImage}
-                                                                source={{ uri: mover.avatar }}
-                                                            />
-                                                        ) : (
-                                                            <IconCam
-                                                                name={'camera'}
-                                                                color={'#FFC234'}
-                                                                size={50}
-                                                                style={styles.orderIcon}
-                                                            />
-                                                        )}
-                                                    </View>
-                                                    <View>
-                                                        <Text>{mover.name}</Text>
-                                                        <Text>{mover.phoneNum}</Text>
-                                                    </View>
-                                                </View>
-                                            ))}
-                                        </View>
-                                    )}
-                                </View>
-                            </Fragment>
-                        }
-                        cardStyle={styles.cardMargins}
-                    />
-                    <TouchableOpacity style={[styles.cardChat, styles.spaceBottom]} onPress={this._chatPress}>
-                        <View style={styles.cardRowTopContainer}>
-                            <Text style={styles.cardH2}>Чат</Text>
-                            <Icon name='chevron-right' size={42} color='#c4c4c4' />
-                        </View>
-                    </TouchableOpacity>
-                </ScrollView>
-                <View style={styles.absoluteButtonContainer}>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelOrderPress}>
-                            <Text style={styles.buttonText}>ОТМЕНА</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonConfirm} onPress={this._completeOrderPress}>
-                            <Text style={styles.buttonText}>ГОТОВО</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Fragment>
-        );
-    }
+		const driver = workers.find(worker => worker.isDriver);
+		const movers = workers.filter(worker => !worker.isDriver);
+		return (
+			<Fragment>
+				<ScrollView>
+					<OrderCard
+						fullAddress
+						expandAlways
+						time={order.start_time}
+						addresses={order.locations}
+						description={order.comment}
+						cardStyle={styles.cardMargins}
+					/>
+					<ExpandCardBase
+						OpenComponent={<Text style={styles.cardH2}>Исполнители</Text>}
+						HiddenComponent={
+							<Fragment>
+								<View style={styles.cardDescription}>
+									{dispatcher && (
+										<View>
+											<Text style={styles.executorTextDisp}>Диспетчер:</Text>
+											<View style={styles.executorsRow}>
+												<View>
+													<IconCam
+														name={'camera'}
+														color={'#FFC234'}
+														size={50}
+														style={styles.orderIcon}
+													/>
+												</View>
+												<View>
+													<Text>{dispatcher.name}</Text>
+													<Text>{dispatcher.phoneNum}</Text>
+												</View>
+											</View>
+										</View>
+									)}
+									{driver && (
+										<View>
+											<Text style={styles.executorText}>Водитель:</Text>
+											<View style={styles.executorsRow}>
+												<View>
+													{driver.avatar ? (
+														<Image
+															style={styles.executorImage}
+															source={{ uri: driver.avatar }}
+														/>
+													) : (
+														<IconCam
+															name={'camera'}
+															color={'#FFC234'}
+															size={50}
+															style={styles.orderIcon}
+														/>
+													)}
+												</View>
+												<View>
+													<Text>{driver.name}</Text>
+													<Text>{driver.phoneNum}</Text>
+												</View>
+											</View>
+										</View>
+									)}
+									{movers.length != 0 && (
+										<View>
+											<Text style={styles.executorText}>
+												{movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
+											</Text>
+											{movers.map(mover => (
+												<View key={mover.id} style={styles.executorsRow}>
+													<View>
+														{mover.avatar ? (
+															<Image
+																style={styles.executorImage}
+																source={{ uri: mover.avatar }}
+															/>
+														) : (
+															<IconCam
+																name={'camera'}
+																color={'#FFC234'}
+																size={50}
+																style={styles.orderIcon}
+															/>
+														)}
+													</View>
+													<View>
+														<Text>{mover.name}</Text>
+														<Text>{mover.phoneNum}</Text>
+													</View>
+												</View>
+											))}
+										</View>
+									)}
+								</View>
+							</Fragment>
+						}
+						cardStyle={styles.cardMargins}
+					/>
+					<TouchableOpacity style={[styles.cardChat, styles.spaceBottom]} onPress={this._chatPress}>
+						<View style={styles.cardRowTopContainer}>
+							<Text style={styles.cardH2}>Чат</Text>
+							<Icon name='chevron-right' size={42} color='#c4c4c4' />
+						</View>
+					</TouchableOpacity>
+				</ScrollView>
+				<View style={styles.absoluteButtonContainer}>
+					<View style={styles.buttonContainer}>
+						<TouchableOpacity style={styles.buttonCancel} onPress={this._cancelOrderPress}>
+							<Text style={styles.buttonText}>ОТМЕНА</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.buttonConfirm} onPress={this._completeOrderPress}>
+							<Text style={styles.buttonText}>ГОТОВО</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</Fragment>
+		);
+	}
 
-    _cancelOrderPress = () => {
-        Alert.alert(
-            'Вы уверены, что хотите отменить заказ ?',
-            'За отказ вам будет выставлена минимальная оценка.',
-            [
-                {
-                    text: 'ОТМЕНА',
-                    style: 'cancel'
-                },
-                {
-                    text: 'ОК',
-                    onPress: this._cancelOrder
-                }
-            ],
-            { cancelable: true }
-        );
-    };
+	_cancelOrderPress = () => {
+		Alert.alert(
+			'Вы уверены, что хотите отменить заказ ?',
+			'За отказ вам будет выставлена минимальная оценка.',
+			[
+				{
+					text: 'ОТМЕНА',
+					style: 'cancel'
+				},
+				{
+					text: 'ОК',
+					onPress: this._cancelOrder
+				}
+			],
+			{ cancelable: true }
+		);
+	};
 
-    _cancelOrder = async () => {
-        try {
-            await this.props.store.cancelFulfillingOrder();
-            this.props.navigation.navigate('Main');
-        } catch (error) {
-            console.log('error in OrderDetailScreen cancelOrder', error);
-        }
-    };
+	_cancelOrder = async () => {
+		try {
+			await this.props.store.cancelFulfillingOrder();
+			this.props.navigation.navigate('Main');
+		} catch (error) {
+			console.log('error in OrderDetailScreen cancelOrder', error);
+		}
+	};
 
-    _completeOrderPress = () => {
-        this.props.navigation.navigate('OrderComplete');
-    };
+	_completeOrderPress = () => {
+		this.props.navigation.navigate('OrderComplete');
+	};
 
-    _chatPress = () => {
-        this.props.navigation.navigate('OrderChat');
-    };
+	_chatPress = () => {
+		this.props.navigation.navigate('OrderChat', [
+			{ name: this.props.store.dispatcher.name, id: this.props.store.dispatcher._id, avatar: 'https://pp.userapi.com/c851020/v851020958/124b79/hm1z7MpbpAk.jpg' },
+			...this.props.store.workers.slice()
+		]);
+	};
 }
 
 export default OrderDetailScreen;

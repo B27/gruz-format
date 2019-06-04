@@ -52,6 +52,7 @@ class MyInfoScreen extends React.Component {
     componentDidMount() {
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
             console.log('Listener willFocus in MyInfoScreen');
+            this.setState({message: ''});
             (async () => {
                 try {
                     (async () =>
