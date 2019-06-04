@@ -4,9 +4,9 @@ import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';
-import { GiftedChat } from 'react-native-gifted-chat';
 
 class ObservableStore {
+    lastOrderPullTime = null;
     @observable.shallow orders = [];
     @observable.shallow workers = [];
     @observable order = null;
@@ -69,7 +69,7 @@ class ObservableStore {
     }
     @action async setUserId(userId) {
         runInAction(() => {
-            this.userId = userId
+            this.userId = userId;
         });
     }
 
@@ -144,8 +144,8 @@ class ObservableStore {
     }
     @action async clearOrders() {
         runInAction(() => {
-            this.orders = []
-        })
+            this.orders = [];
+        });
     }
 
     @action async startChatSocket(order_id) {
@@ -163,9 +163,9 @@ class ObservableStore {
 
     @action async addChatMessage(message) {
         runInAction(() => {
-            console.log("[MESASAGE]",message);
-            this.chatHistory = [message,...this.chatHistory];
-        })
+            console.log('[MESASAGE]', message);
+            this.chatHistory = [message, ...this.chatHistory];
+        });
     }
 
     @action async pullFulfilingOrderInformation(id) {
@@ -176,12 +176,14 @@ class ObservableStore {
 
         runInAction(() => {
             this.order = order;
+            this.lastOrderPullTime = Date.now();
         });
 
         const PromisePullDispatcher = this.pullDispatcherById(order.creating_dispatcher);
         const PromisePullWorkers = this.setWorkersByArray(order.workers.data);
 
         await Promise.all([PromisePullDispatcher, PromisePullWorkers]);
+        this.updateLastOrderPullTime();
     }
 
     async startFulfillingOrder(id) {
@@ -216,14 +218,11 @@ class ObservableStore {
         });
     }
 
-
-
     @action async refreshImages() {
         runInAction(() => {
             this.refreshImage = this.refreshImage + 1;
         });
         console.log('refresh Image: ' + this.refreshImage);
-        
     }
 }
 

@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View, RefreshControl } from 'react-native';
+import { Alert, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -18,7 +18,21 @@ class OrderDetailScreen extends React.Component {
         title: 'Выполнение заказа'
     };
 
-    componentDidMount = async () => {};
+    componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            const { lastOrderPullTime } = this.props.store;
+            const timeDiff = Date.now() - lastOrderPullTime;
+            if (timeDiff > 5 * 60 * 1000) {
+                this._onRefresh();
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
+    }
 
     render() {
         const { workers: workersObservable, order, dispatcher } = this.props.store;
@@ -149,7 +163,7 @@ class OrderDetailScreen extends React.Component {
     _onRefresh = async () => {
         this.setState({ refreshing: true });
         try {
-            await store.pullFulfilingOrderInformation();
+            await this.props.store.pullFulfilingOrderInformation();
         } catch (error) {
             // TODO добавить вывод ошибки пользователю
             console.log('onRefresh OrderDetailScreen error', error);
