@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -10,6 +10,10 @@ import styles from '../styles';
 @inject('store')
 @observer
 class OrderDetailScreen extends React.Component {
+    state = {
+        refreshing: false
+    };
+
     static navigationOptions = {
         title: 'Выполнение заказа'
     };
@@ -25,7 +29,9 @@ class OrderDetailScreen extends React.Component {
         const movers = workers.filter(worker => !worker.isDriver);
         return (
             <Fragment>
-                <ScrollView>
+                <ScrollView
+                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh} />}
+                >
                     <OrderCard
                         fullAddress
                         expandAlways
@@ -84,7 +90,7 @@ class OrderDetailScreen extends React.Component {
                                             </View>
                                         </View>
                                     )}
-                                    {(movers.length != 0) && (
+                                    {movers.length != 0 && (
                                         <View>
                                             <Text style={styles.executorText}>
                                                 {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
@@ -139,6 +145,17 @@ class OrderDetailScreen extends React.Component {
             </Fragment>
         );
     }
+
+    _onRefresh = async () => {
+        this.setState({ refreshing: true });
+        try {
+            await store.pullFulfilingOrderInformation();
+        } catch (error) {
+            // TODO добавить вывод ошибки пользователю
+            console.log('onRefresh OrderDetailScreen error', error);
+        }
+        this.setState({ refreshing: false });
+    };
 
     _cancelOrderPress = () => {
         Alert.alert(
