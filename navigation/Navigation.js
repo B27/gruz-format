@@ -24,6 +24,7 @@ import OrderPreviewScreen from '../screens/OrderPreviewScreen';
 import RobokassaScreen from '../screens/RobokassaScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SignInScreen from '../screens/SignInScreen';
+import WaitCompleteOrder from '../screens/WaitCompleteOrder';
 import AppDrawer from './AppDrawer';
 
 const { height, width } = Dimensions.get('window');
@@ -49,7 +50,8 @@ const FulfillingOrderStack = createStackNavigator(
     {
         OrderDetail: OrderDetailScreen,
         OrderChat: ChatScreen,
-        OrderComplete: OrderCompleteScreen
+        OrderComplete: OrderCompleteScreen,
+        WaitCompleteOrder: WaitCompleteOrder
     },
     { defaultNavigationOptions: yellowHeader }
 );
