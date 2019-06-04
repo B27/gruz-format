@@ -15,8 +15,6 @@ class BalanceScreen extends React.Component {
         title: 'Пополнить баланс'
     };
 
-    willFocusSubscription = null;
-
     componentDidMount() {
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
             (async () => {

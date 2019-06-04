@@ -3,7 +3,7 @@ import { TaskManager } from 'expo';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { AsyncStorage, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import styles from '../styles';
 
@@ -60,7 +60,7 @@ class MyInfoScreen extends React.Component {
                 >
                     <Text style={styles.buttonText}>ВЫЙТИ ИЗ АККАУНТА</Text>
                 </TouchableOpacity>
-                {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+                <KeyboardSpacer />
             </View>
         );
     }

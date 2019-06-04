@@ -25,9 +25,7 @@ class MainScreen extends React.Component {
         workingStatus: false,
         refreshing: false,
         message: ''
-    };
-
-    willFocusSubscription = null;
+    };    
 
     componentDidMount = async () => {
         registerForPushNotificationsAsync();

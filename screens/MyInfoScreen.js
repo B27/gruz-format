@@ -5,6 +5,7 @@ import React from 'react';
 import {
     AsyncStorage,
     DatePickerAndroid,
+    Keyboard,
     KeyboardAvoidingView,
     Picker,
     ScrollView,
@@ -17,7 +18,6 @@ import LocalImage from '../components/LocalImage';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
-let renderCount = 0;
 @inject('store')
 @observer
 class MyInfoScreen extends React.Component {
@@ -36,7 +36,6 @@ class MyInfoScreen extends React.Component {
         headerLeft: null
     };
 
-    willFocusSubscription = null;
     // lastname: '',
     // firstname: '',
     // patronimyc: '',
@@ -80,17 +79,22 @@ class MyInfoScreen extends React.Component {
                 this.setState(this.props.store);
             })();
         });
+
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            Keyboard.dismiss();
+        });
     }
 
     componentWillUnmount() {
         if (this.willFocusSubscription) {
             this.willFocusSubscription.remove();
         }
+        if (this.keyboardDidHideListener) {
+            this.keyboardDidHideListener.remove();
+        }
     }
 
     render() {
-        console.log('Количество рендеров MyInfoScreen', ++renderCount);
-
         return (
             <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
