@@ -3,4 +3,4 @@
 /android/.expo/*
 /package-lock.json
 /packager-info.json
-/screens/.DS_Store
+.DS_Store

@@ -4,8 +4,8 @@ import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'reac
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
 import StarRating from '../components/StarRating';
-import styles from '../styles';
 import NetworkRequests from '../mobx/NetworkRequests';
+import styles from '../styles';
 
 @inject('store')
 @observer
@@ -70,7 +70,10 @@ class OrderCompleteScreen extends React.Component {
                                                 </View>
                                                 <View>
                                                     <Text>{dispatcher.name}</Text>
-                                                    <StarRating onChange={this._onChangeStarRating(dispatcher._id)} />
+                                                    <StarRating
+                                                        id={dispatcher._id}
+                                                        onChange={this._onChangeStarRating}
+                                                    />
                                                 </View>
                                             </View>
                                         </View>
@@ -96,7 +99,7 @@ class OrderCompleteScreen extends React.Component {
                                                 </View>
                                                 <View>
                                                     <Text>{driver.name}</Text>
-                                                    <StarRating onChange={this._onChangeStarRating(driver.id)} />
+                                                    <StarRating id={driver.id} onChange={this._onChangeStarRating} />
                                                 </View>
                                             </View>
                                         </View>
@@ -125,7 +128,7 @@ class OrderCompleteScreen extends React.Component {
                                                     </View>
                                                     <View>
                                                         <Text>{mover.name}</Text>
-                                                        <StarRating onChange={this._onChangeStarRating(mover.id)} />
+                                                        <StarRating id={mover.id} onChange={this._onChangeStarRating} />
                                                     </View>
                                                 </View>
                                             ))}
@@ -155,7 +158,7 @@ class OrderCompleteScreen extends React.Component {
         );
     }
 
-    _onChangeStarRating = workerId => rating => {
+    _onChangeStarRating = (workerId, rating) => {
         let workerRating = { worker_id: workerId, rating: rating };
         let data = this.requestData.data;
 
