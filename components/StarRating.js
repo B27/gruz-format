@@ -13,7 +13,7 @@ export default class StarRating extends React.Component {
 
         return (
             <Rating
-                onChange={onChangeRating}
+                onChange={this.onChangeRating}
                 selectedStar={starFilled}
                 unselectedStar={starUnfilled}
                 config={{
