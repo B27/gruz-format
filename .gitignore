@@ -1,4 +1,5 @@
 /node_modules
-.expo/settings.json
-.expo/packager-info.json
-package-lock.json
+.expo/*
+/android/.expo/*
+/package-lock.json
+/packager-info.json
