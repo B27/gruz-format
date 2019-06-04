@@ -24,7 +24,7 @@ import OrderPreviewScreen from '../screens/OrderPreviewScreen';
 import RobokassaScreen from '../screens/RobokassaScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SignInScreen from '../screens/SignInScreen';
-import WaitCompleteOrder from '../screens/WaitCompleteOrder';
+import WaitCompleteOrderScreen from '../screens/WaitCompleteOrder';
 import AppDrawer from './AppDrawer';
 
 const { height, width } = Dimensions.get('window');
@@ -39,7 +39,7 @@ const yellowHeader = {
     }
 };
 
-const yellowHeaderWithHamburger = ({ navigation, ...others }) => {
+const yellowHeaderWithHamburger = ({ navigation }) => {
     return Object.assign({}, yellowHeader, {
         headerLeft: <MenuIcon navigationProps={navigation} />,
         headerLeftContainerStyle: { paddingLeft: 8 }
@@ -50,11 +50,19 @@ const FulfillingOrderStack = createStackNavigator(
     {
         OrderDetail: OrderDetailScreen,
         OrderChat: ChatScreen,
-        OrderComplete: OrderCompleteScreen,
-        WaitCompleteOrder: WaitCompleteOrder
+        OrderComplete: OrderCompleteScreen
     },
     { defaultNavigationOptions: yellowHeader }
 );
+
+const FulfillingOrderSwitch = createSwitchNavigator(
+    {
+        FulfillingOrder: FulfillingOrderStack,
+        WaitCompleteOrder: WaitCompleteOrderScreen
+    },
+    { defaultNavigationOptions: yellowHeader }
+);
+
 
 const MainStack = createStackNavigator(
     {
@@ -194,7 +202,7 @@ export default createAppContainer(
             AuthLoading: AuthLoadingScreen,
             App: AppStack,
             Auth: AuthStack,
-            FulfillingOrder: FulfillingOrderStack
+            FulfillingOrder: FulfillingOrderSwitch
         },
         {
             initialRouteName: 'AuthLoading',
