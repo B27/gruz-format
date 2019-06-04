@@ -42,6 +42,7 @@ class OrderPreview extends React.Component {
                         cardStyle={styles.cardMargins}
                     />
                     <ExpandCardBase
+                        expanded
                         OpenComponent={<Text style={styles.cardH2}>Комментарий к заказу</Text>}
                         HiddenComponent={
                             <Fragment>

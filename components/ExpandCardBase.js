@@ -14,6 +14,12 @@ class ExpandCardBase extends React.Component {
         });
     };
 
+    componentDidMount() {
+        const { expanded } = this.props;
+        if (expanded) {
+            this.setState({ cardExpanded: expanded });
+        }
+    }
     // судя по ТЗ переход в подробную информация на кнопку Принять
     // _onPressCard = () => {
     //     this.props.onPressCard(this.props.id);
@@ -23,17 +29,18 @@ class ExpandCardBase extends React.Component {
         const { cardExpanded } = this.state;
         const { cardStyle, OpenComponent, HiddenComponent, id, expandAlways } = this.props;
         return (
-            <TouchableOpacity
-                style={[styles.cardBase, cardStyle]}
-                key={id}
-                onPress={expandAlways ? undefined : this._pressExpand}
-                // onPress срабатывает сразу после корректного нажатия,
-                // но для того чтобы появилась анимация прозрачности необходимо держать компонент нажатым 10 секунд
-                delayPressIn={10000}
-            >
+            <View style={[styles.cardBase, cardStyle]} key={id}>
                 <View>
                     <View style={styles.cardRowTopContainer}>
-                        <View style={{ flex: 1 }}>{OpenComponent}</View>
+                        <TouchableOpacity
+                            style={{ flex: 1 }}
+                            onPress={expandAlways ? undefined : this._pressExpand}
+                            // onPress срабатывает сразу после корректного нажатия,
+                            // но для того чтобы появилась анимация прозрачности необходимо держать компонент нажатым 10 секунд
+                            delayPressIn={10000}
+                        >
+                            {OpenComponent}
+                        </TouchableOpacity>
                         {expandAlways || (
                             <TouchableOpacity style={styles.orderChevronIcon} onPress={this._pressExpand}>
                                 {cardExpanded ? (
@@ -47,7 +54,7 @@ class ExpandCardBase extends React.Component {
 
                     {(cardExpanded || expandAlways) && <Fragment>{HiddenComponent}</Fragment>}
                 </View>
-            </TouchableOpacity>
+            </View>
         );
     }
 }
