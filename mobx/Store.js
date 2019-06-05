@@ -183,7 +183,6 @@ class ObservableStore {
         const PromisePullWorkers = this.setWorkersByArray(order.workers.data);
 
         await Promise.all([PromisePullDispatcher, PromisePullWorkers]);
-        this.updateLastOrderPullTime();
     }
 
     async startFulfillingOrder(id) {
