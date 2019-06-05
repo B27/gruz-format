@@ -419,8 +419,6 @@ class EditUserScreen extends React.Component {
             this.setState({ choiceModalVisible: false });
             const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
-                aspect: [1, 1],
-                allowsEditing: true,
                 quality: 0.3
             });
             if (!cancelled) this.setState({ pictureUri: uri });

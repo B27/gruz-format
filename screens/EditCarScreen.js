@@ -259,7 +259,6 @@ class EditCarScreen extends React.Component {
             this.setState({ choiceModalVisible: false });
             const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
-                allowsEditing: true,
                 quality: 0.3
             });
             if (!cancelled) this.setState({ [`image${this.state.imageNum}`]: uri });

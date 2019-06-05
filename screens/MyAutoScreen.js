@@ -260,7 +260,6 @@ class MyAutoScreen extends React.Component {
             this.setState({ choiceModalVisible: false });
             const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
-                allowsEditing: true,
                 quality: 0.3
             });
             if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
