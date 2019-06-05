@@ -15,6 +15,7 @@ import {
     View
 } from 'react-native';
 import LocalImage from '../components/LocalImage';
+import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
@@ -52,7 +53,7 @@ class MyInfoScreen extends React.Component {
     componentDidMount() {
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
             console.log('Listener willFocus in MyInfoScreen');
-            this.setState({message: ''});
+            this.setState({ message: '' });
             (async () => {
                 try {
                     (async () =>
@@ -246,18 +247,18 @@ class MyInfoScreen extends React.Component {
                             value={this.state.street}
                         />
                         <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
                                 placeholder='Дом'
-                                placeholderTextColor='grey'
                                 onChangeText={house => this.setState({ house })}
                                 value={this.state.house}
                             />
                             <View style={{ width: 15 }} />
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
                                 placeholder='Квартира'
-                                placeholderTextColor='grey'
                                 onChangeText={flat => this.setState({ flat })}
                                 value={this.state.flat}
                             />
@@ -267,20 +268,18 @@ class MyInfoScreen extends React.Component {
                         </TouchableOpacity>
 
                         <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
-                                placeholder='Рост'
-                                placeholderTextColor='grey'
-                                keyboardType='numeric'
+                                placeholder='Рост (м)'
                                 onChangeText={height => this.setState({ height })}
                                 value={this.state.height ? this.state.height.toString() : ''}
                             />
                             <View style={{ width: 15 }} />
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
-                                placeholder='Вес'
-                                placeholderTextColor='grey'
-                                keyboardType='numeric'
+                                placeholder='Вес (кг)'
                                 onChangeText={weight => this.setState({ weight })}
                                 value={this.state.weight ? this.state.weight.toString() : ''}
                             />
@@ -297,7 +296,7 @@ class MyInfoScreen extends React.Component {
     getBirthDate = () => {
         if (this.state.birthDate !== undefined && this.state.birthDate !== 'Дата рождения') {
             const date = this.state.birthDate;
-            console.log(date + ' ----------------------');
+            // console.log(date + ' ----------------------');
             return `${this.state.birthDate.getDate()}.${this.state.birthDate.getMonth()}.${this.state.birthDate.getFullYear()}`;
         } else {
             return;

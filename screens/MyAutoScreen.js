@@ -3,17 +3,9 @@ import { ImagePicker, Permissions } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import { Picker } from 'native-base';
 import React from 'react';
-import {
-    AsyncStorage,
-    Keyboard,
-    KeyboardAvoidingView,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
+import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
@@ -136,32 +128,28 @@ class MyAutoScreen extends React.Component {
                                 </Picker>
                             </View>
 
-                            <TextInput
+                            <NumericInput
                                 style={styles.input}
-                                placeholder='Грузоподъёмность (тонны)'
-                                placeholderTextColor='grey'
+                                placeholder='Грузоподъёмность (т)'
                                 onChangeText={veh_loadingCap => this.setState({ veh_loadingCap })}
                                 value={this.state.veh_loadingCap ? this.state.veh_loadingCap.toString() : ''}
                             />
                             <Text style={styles.descriptionTwo}>Кузов:</Text>
-                            <TextInput
+                            <NumericInput
                                 style={styles.input}
-                                placeholder='Длина'
-                                placeholderTextColor='grey'
+                                placeholder='Длина (м)'
                                 onChangeText={veh_length => this.setState({ veh_length })}
                                 value={this.state.veh_length ? this.state.veh_length.toString() : ''}
                             />
-                            <TextInput
+                            <NumericInput
                                 style={styles.input}
-                                placeholder='Ширина'
-                                placeholderTextColor='grey'
+                                placeholder='Ширина (м)'
                                 onChangeText={veh_width => this.setState({ veh_width })}
                                 value={this.state.veh_width ? this.state.veh_width.toString() : ''}
                             />
-                            <TextInput
+                            <NumericInput
                                 style={styles.input}
-                                placeholder='Высота'
-                                placeholderTextColor='grey'
+                                placeholder='Высота (м)'
                                 onChangeText={veh_height => this.setState({ veh_height })}
                                 value={this.state.veh_height ? this.state.veh_height.toString() : ''}
                             />

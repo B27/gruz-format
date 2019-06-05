@@ -2,16 +2,7 @@ import axios from 'axios';
 import { ImagePicker, Permissions } from 'expo';
 import { Picker } from 'native-base';
 import React from 'react';
-import {
-    AsyncStorage,
-    Keyboard,
-    KeyboardAvoidingView,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
@@ -30,10 +21,10 @@ class EditCarScreen extends React.Component {
             { name: 'Кран. борт', isOpen: true },
             { name: 'Тент (крытый)', isOpen: false }
         ],
-        loadCapacity: 543,
-        length: 32,
-        width: 32,
-        height: 23
+        loadCapacity: '',
+        length: '',
+        width: '',
+        height: ''
     };
 
     static navigationOptions = {
@@ -104,30 +95,30 @@ class EditCarScreen extends React.Component {
                             </Picker>
                         </View>
 
-                        <TextInput
+                        <NumericInput
                             style={styles.input}
-                            placeholder='Грузоподъёмность (тонны)'
-                            placeholderTextColor='grey'
+                            placeholder='Грузоподъёмность (т)'
                             onChangeText={loadCapacity => this.setState({ loadCapacity })}
+                            value={this.state.loadCapacity}
                         />
                         <Text style={styles.descriptionTwo}>Кузов:</Text>
-                        <TextInput
+                        <NumericInput
                             style={styles.input}
-                            placeholder='Длина'
-                            placeholderTextColor='grey'
+                            placeholder='Длина (м)'
                             onChangeText={length => this.setState({ length })}
+                            value={this.state.length}
                         />
-                        <TextInput
+                        <NumericInput
                             style={styles.input}
-                            placeholder='Ширина'
-                            placeholderTextColor='grey'
+                            placeholder='Ширина (м)'
                             onChangeText={width => this.setState({ width })}
+                            value={this.state.width}
                         />
-                        <TextInput
+                        <NumericInput
                             style={styles.input}
-                            placeholder='Высота'
-                            placeholderTextColor='grey'
+                            placeholder='Высота (м)'
                             onChangeText={height => this.setState({ height })}
+                            value={this.state.height}
                         />
                         <Text style={styles.descriptionTwo}>Фотографии:</Text>
                         <View style={styles.photoButtonContainer}>

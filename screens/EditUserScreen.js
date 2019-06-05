@@ -13,6 +13,7 @@ import {
     View
 } from 'react-native';
 import LocalImage from '../components/LocalImage';
+import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
@@ -20,19 +21,19 @@ class EditUserScreen extends React.Component {
     state = {
         choiceModalVisible: false,
         pictureUri: require('../images/unknown.png'),
-        lastname: 'Устьянцев',
-        firstname: 'Роман',
-        patronimyc: 'Николаевич',
-        phone: '89834323022',
-        password: '123',
+        lastname: '',
+        firstname: '',
+        patronimyc: '',
+        phone: '',
+        password: '',
         birthDate: 'Дата рождения',
         city: '',
         cityId: null,
-        street: 'Октябрьская',
-        house: '2',
-        flat: '45',
-        height: '190',
-        weight: '80',
+        street: '',
+        house: '',
+        flat: '',
+        height: '',
+        weight: '',
         message: '',
         cities: [],
         list: [],
@@ -250,18 +251,20 @@ class EditUserScreen extends React.Component {
                             onChangeText={street => this.setState({ street })}
                         />
                         <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
                                 placeholder='Дом'
-                                placeholderTextColor='grey'
                                 onChangeText={house => this.setState({ house })}
+                                value={this.state.house}
                             />
                             <View style={{ width: 15 }} />
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
                                 placeholder='Квартира'
-                                placeholderTextColor='grey'
                                 onChangeText={flat => this.setState({ flat })}
+                                value={this.state.flat}
                             />
                         </View>
                         <TouchableOpacity style={styles.input} onPress={() => this.openDatePicker()}>
@@ -273,20 +276,20 @@ class EditUserScreen extends React.Component {
                         </TouchableOpacity>
 
                         <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
-                                placeholder='Рост'
-                                placeholderTextColor='grey'
-                                keyboardType='numeric'
+                                placeholder='Рост (м)'
                                 onChangeText={height => this.setState({ height })}
+                                value={this.state.height}
                             />
                             <View style={{ width: 15 }} />
-                            <TextInput
+                            <NumericInput
+                                onlyNum
                                 style={styles.inputHalf}
-                                placeholder='Вес'
-                                placeholderTextColor='grey'
-                                keyboardType='numeric'
+                                placeholder='Вес (кг)'
                                 onChangeText={weight => this.setState({ weight })}
+                                value={this.state.weight}
                             />
                         </View>
                     </View>

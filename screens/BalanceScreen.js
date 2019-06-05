@@ -1,6 +1,7 @@
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { AsyncStorage, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
+import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 
 @inject('store')
@@ -8,7 +9,8 @@ import styles from '../styles';
 class BalanceScreen extends React.Component {
     state = {
         sum: null,
-        message: ''
+        message: '',
+        sum: ''
     };
 
     static navigationOptions = {
@@ -51,13 +53,11 @@ class BalanceScreen extends React.Component {
                         <Text style={{ marginBottom: 15, fontSize: 16 }}>
                             Введите сумму на которую хотите пополнить счет:
                         </Text>
-                        <TextInput
-                            ref={ref => (this.textInputRef = ref)}
+                        <NumericInput
                             style={styles.input}
                             placeholder='Сумма'
-                            placeholderTextColor='grey'
-                            keyboardType='numeric'
                             onChangeText={sum => this.setState({ sum })}
+                            value={this.state.sum}
                         />
                     </View>
                     <Text style={{ color: 'red' }}>{this.state.message}</Text>

@@ -1,8 +1,9 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
+import NumericInput from '../components/NumericInput';
 import StarRating from '../components/StarRating';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
@@ -42,12 +43,10 @@ class OrderCompleteScreen extends React.Component {
         return (
             <Fragment>
                 <ScrollView>
-                    <TextInput
+                    <NumericInput
                         style={styles.inputSumComplete}
                         placeholder='Полученная вами сумма в рублях'
-                        placeholderTextColor='grey'
-                        keyboardType='numeric'
-                        onChangeText={this._onChangeText}
+                        onChangeText={this._onChangeSum}
                         value={this.state.sumText}
                     />
                     <ExpandCardBase
@@ -176,16 +175,7 @@ class OrderCompleteScreen extends React.Component {
         console.log('request data _onChangeStarRating:', this.requestData);
     };
 
-    _onChangeText = text => {
-        if (text.includes(',')) {
-            return;
-        }
-
-        // отрезаю число до копеек
-        if (0 < text.search(/\..../)) {
-            return;
-        }
-
+    _onChangeSum = text => {
         this.setState({ sumText: text });
     };
 

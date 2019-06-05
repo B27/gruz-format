@@ -14,6 +14,7 @@ import {
     View
 } from 'react-native';
 import LocalImage from '../components/LocalImage';
+import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
@@ -23,9 +24,9 @@ class DocumentsScreen extends React.Component {
         firstPageUri: require('../images/unknown.png'),
         secondPageUri: require('../images/unknown.png'),
         firstPage: true,
-        passportNumber: '435',
-        passportSeries: '435',
-        agreement: '34',
+        passportNumber: '',
+        passportSeries: '',
+        agreement: '',
         message: null,
         policy: true,
         policyURL: 'https://gruz.bw2api.ru/policy.pdf'
@@ -61,19 +62,19 @@ class DocumentsScreen extends React.Component {
                         closeModal={this.closeModals}
                     />
                     <View style={styles.inputContainer}>
-                        <TextInput
+                        <NumericInput
+                            onlyNum
                             style={styles.input}
                             placeholder='Номер паспорта'
-                            placeholderTextColor='grey'
-                            keyboardType='numeric'
                             onChangeText={passportNumber => this.setState({ passportNumber })}
+                            value={this.state.passportNumber}
                         />
-                        <TextInput
+                        <NumericInput
+                            onlyNum
                             style={styles.input}
                             placeholder='Серия паспорта'
-                            placeholderTextColor='grey'
-                            keyboardType='numeric'
                             onChangeText={passportSeries => this.setState({ passportSeries })}
+                            value={this.state.passportSeries}
                         />
                         <Text>Фотография первой страницы паспорта:</Text>
                         <TouchableOpacity style={styles.fullScreenPicture} onPress={() => this.openFirstCameraRoll()}>
@@ -88,6 +89,7 @@ class DocumentsScreen extends React.Component {
                             placeholder='Номер договора'
                             placeholderTextColor='grey'
                             onChangeText={agreement => this.setState({ agreement })}
+                            value={this.state.agreement}
                         />
                     </View>
                     <View style={styles.policy}>
