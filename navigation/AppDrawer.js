@@ -83,7 +83,7 @@ class CustomDrawerContentComponent extends React.Component {
 						<DrawerItems {...this.props} />
 					</View>
 					<Text style={styles.drawerLicenseAgreement} onPress={this._licenseAgreementPress}>
-						Политика конфиденциальности
+						Сублицензионное соглашение
 					</Text>
 				</SafeAreaView>
 			</View>

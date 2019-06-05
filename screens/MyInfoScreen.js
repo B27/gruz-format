@@ -303,7 +303,7 @@ class MyInfoScreen extends React.Component {
         }
     };
     _nextScreen = async () => {
-        console.log(this.state);
+        //console.log(this.state);
 
         const id = await AsyncStorage.getItem('userId');
         const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
@@ -336,12 +336,12 @@ class MyInfoScreen extends React.Component {
                     weight: this.state.weight,
                     isDriver: this.state.isDriver
                 });
-                console.log(res.data);
+                //console.log(res.data);
 
                 this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
 
                 const data = new FormData();
-                console.log(this.state.pictureUri);
+                //console.log(this.state.pictureUri);
 
                 data.append('user', {
                     uri: this.state.avatar,
