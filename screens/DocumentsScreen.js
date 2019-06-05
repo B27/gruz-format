@@ -246,7 +246,8 @@ class DocumentsScreen extends React.Component {
         if (status === 'granted') {
             this.setState({ choiceModalVisible: false });
             const { cancelled, uri } = await ImagePicker.launchCameraAsync({
-                mediaTypes: 'Images'
+                mediaTypes: 'Images',
+                quality: 0.3
             });
             if (!cancelled) {
                 if (this.state.first) this.setState({ firstPageUri: uri });
@@ -262,7 +263,8 @@ class DocumentsScreen extends React.Component {
             const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
                 aspect: [1, 1],
-                allowsEditing: true
+                allowsEditing: true,
+                quality: 0.3
             });
             if (!cancelled) {
                 if (this.state.first) this.setState({ firstPageUri: uri });

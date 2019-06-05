@@ -389,7 +389,8 @@ class MyInfoScreen extends React.Component {
         if (status === 'granted') {
             this.setState({ choiceModalVisible: false });
             const { cancelled, uri } = await ImagePicker.launchCameraAsync({
-                mediaTypes: 'Images'
+                mediaTypes: 'Images',
+                quality: 0.3
             });
             if (!cancelled) this.setState({ avatar: uri });
         }
@@ -402,7 +403,8 @@ class MyInfoScreen extends React.Component {
             const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
                 aspect: [1, 1],
-                allowsEditing: true
+                allowsEditing: true,
+                quality: 0.3
             });
             if (!cancelled) this.setState({ avatar: uri });
         }
