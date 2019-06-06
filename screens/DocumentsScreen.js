@@ -29,7 +29,7 @@ class DocumentsScreen extends React.Component {
         passportSeries: '',
         agreement: '',
         message: null,
-        policy: true,
+        policy: false,
         policyURL: 'https://gruz.bw2api.ru/policy.pdf'
     };
     static navigationOptions = {
@@ -106,7 +106,7 @@ class DocumentsScreen extends React.Component {
                                     Linking.openURL(this.state.policyURL);
                                 }}
                             >
-                                Политика конфиденциальности
+                                Сублицензионное соглашение
                             </Text>
                         </View>
                     </View>
@@ -126,7 +126,7 @@ class DocumentsScreen extends React.Component {
             this.state.passportNumber === null ||
             this.state.passportSeries === null ||
             this.state.agreement === null ||
-            !this.state.policy
+            this.state.policy === false
         ) {
             this.setState({ message: 'Все поля должны быть заполнены' });
         } else {

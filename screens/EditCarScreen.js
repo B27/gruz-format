@@ -5,6 +5,7 @@ import React from 'react';
 import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
 import LoadingButton from '../components/LoadingButton';
+import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
