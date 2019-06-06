@@ -14,7 +14,7 @@ class RobokassaScreen extends React.Component {
     };
 
     render() {
-        const pass2 = 'z5pg0ih2E6y8qruYMPZo';
+        const pass2 = 'pyIq4zr7KYPN2HqXl9l5';
         const outSum = this.props.navigation.getParam('sum');
         const userId = this.props.navigation.getParam('userId');
         const invId = Number(new Date())
@@ -22,14 +22,14 @@ class RobokassaScreen extends React.Component {
             .slice(4);
         console.log(invId, userId);
 
-        const hash = md5(`baikalweb:${outSum}:${invId}:${pass2}:Shp_UserID=${userId}`);
-        console.log(hash);
+        const hash = md5(`Format.Gruz:${outSum}:${invId}:${pass2}:Shp_UserID=${userId}`);
+        //console.log(hash);
 
         return (
             <KeyboardAvoidingView style={styles.flex1} behavior='padding'>
                 <WebView
                     source={{
-                        uri: `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=baikalweb&InvId=${invId}&Culture=ru&Encoding=utf-8&OutSum=${outSum}&IsTest=1&Shp_UserID=${userId}&SignatureValue=${hash}`
+                        uri: `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=Format.Gruz&InvId=${invId}&Culture=ru&Encoding=utf-8&OutSum=${outSum}&Shp_UserID=${userId}&SignatureValue=${hash}`
                     }}
                 />
             </KeyboardAvoidingView>
