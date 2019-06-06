@@ -2,8 +2,9 @@ import axios from 'axios';
 import { ImagePicker, Permissions } from 'expo';
 import { Picker } from 'native-base';
 import React from 'react';
-import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
+import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
@@ -128,15 +129,15 @@ class EditCarScreen extends React.Component {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.buttonBottom} onPress={this.nextScreen}>
-                        <Text style={styles.text}>ПРОДОЛЖИТЬ</Text>
-                    </TouchableOpacity>
+                    <LoadingButton style={styles.buttonBottom} onPress={this.nextScreen}>
+                        ПРОДОЛЖИТЬ
+                    </LoadingButton>
                 </ScrollView>
             </KeyboardAvoidingView>
         );
     }
 
-    nextScreen = async () => {
+    nextScreen = async (offButtonSetState) => {
         if (
             !this.state.image1 ||
             !this.state.image2 ||
@@ -221,6 +222,7 @@ class EditCarScreen extends React.Component {
                 //console.log(data);
 
                 await axios.patch('/worker/upload/' + this.state.userId, data);
+                offButtonSetState();
                 this.props.navigation.navigate('AuthLoading');
             } catch (err) {
                 console.log('Download photos error: ', err);

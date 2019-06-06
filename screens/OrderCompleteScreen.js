@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
+import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import StarRating from '../components/StarRating';
 import NetworkRequests from '../mobx/NetworkRequests';
@@ -144,13 +145,13 @@ class OrderCompleteScreen extends React.Component {
                         <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelPress}>
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        <LoadingButton
                             style={styles.buttonConfirm}
                             disabled={this.state.buttonDisabled}
                             onPress={this._confirmPress}
                         >
-                            <Text style={styles.buttonText}>ГОТОВО</Text>
-                        </TouchableOpacity>
+                            ГОТОВО
+                        </LoadingButton>
                     </View>
                 </View>
             </Fragment>
@@ -183,7 +184,7 @@ class OrderCompleteScreen extends React.Component {
         this.props.navigation.goBack();
     };
 
-    _confirmPress = async () => {
+    _confirmPress = async offButtonSetState => {
         if (this.starsSet.size != 0) {
             // TODO добавить вывод польователю
             console.log('Оцените всех участников заказа');
@@ -203,6 +204,7 @@ class OrderCompleteScreen extends React.Component {
 
         try {
             await NetworkRequests.completeOrder(requestData);
+            offButtonSetState();
             this.props.navigation.navigate('AuthLoading');
         } catch (error) {
             this.setState({

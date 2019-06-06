@@ -14,6 +14,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import LoadingButton from '../components/LoadingButton';
 import LocalImage from '../components/LocalImage';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
@@ -286,9 +287,9 @@ class MyInfoScreen extends React.Component {
                         </View>
                     </View>
                     <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
-                    <TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
-                        <Text style={styles.text}>СОХРАНИТЬ</Text>
-                    </TouchableOpacity>
+                    <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
+                        СОХРАНИТЬ
+                    </LoadingButton>
                 </ScrollView>
             </KeyboardAvoidingView>
         );
@@ -304,6 +305,7 @@ class MyInfoScreen extends React.Component {
     };
     _nextScreen = async () => {
         //console.log(this.state);
+        this.setState({ message: '' });
 
         const id = await AsyncStorage.getItem('userId');
         const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
@@ -338,8 +340,6 @@ class MyInfoScreen extends React.Component {
                 });
                 //console.log(res.data);
 
-                this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
-
                 const data = new FormData();
                 //console.log(this.state.pictureUri);
 
@@ -352,6 +352,8 @@ class MyInfoScreen extends React.Component {
 
                 await axios.patch('/worker/upload/' + id, data);
                 await this.props.store.refreshImages();
+
+                this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
             } catch (error) {
                 console.log(error);
             }

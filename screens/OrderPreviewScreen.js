@@ -4,21 +4,22 @@ import { ScrollView, Text, TouchableOpacity, View, AsyncStorage } from 'react-na
 import ExpandCardBase from '../components/ExpandCardBase';
 import OrderCard from '../components/OrderCard';
 import styles from '../styles';
+import LoadingButton from '../components/LoadingButton';
 
 @inject('store')
 class OrderPreview extends React.Component {
-
     static navigationOptions = {
         title: 'Заказ'
     };
 
-    _acceptOrder = async () => {
+    _acceptOrder = async (offButtonSetState) => {
         const { store, navigation } = this.props;
-        
+
         const order = navigation.getParam('order');
 
-        try {           
-            await store.startFulfillingOrder(order._id);                
+        try {
+            await store.startFulfillingOrder(order._id);
+            offButtonSetState();
             navigation.navigate('OrderDetail');
             console.log('Accept order successful');
         } catch (error) {
@@ -60,9 +61,9 @@ class OrderPreview extends React.Component {
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
                     <View style={styles.buttonContainerAlone}>
-                        <TouchableOpacity style={styles.buttonConfirmAlone} onPress={this._acceptOrder}>
-                            <Text style={styles.buttonText}>ПРИНЯТЬ</Text>
-                        </TouchableOpacity>
+                        <LoadingButton style={styles.buttonConfirmAlone} onPress={this._acceptOrder}>
+                            ПРИНЯТЬ
+                        </LoadingButton>
                     </View>
                 </View>
             </Fragment>

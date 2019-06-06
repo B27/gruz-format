@@ -95,11 +95,10 @@ class SignInScreen extends React.Component {
         this.props.navigation.navigate('RegisterPerson');
     };
 
-    _signInAsync = async () => {
+    _signInAsync = async offButtonSetState => {
         this.setState({ message: '' });
         if (!this.state.phone || !this.state.password) {
             this.setState({ message: 'Введите логин и пароль' });
-            throw 'error';
         } else {
             try {
                 const response = await axios.post('/login', {
@@ -119,6 +118,7 @@ class SignInScreen extends React.Component {
                     Authorization: 'Bearer ' + response.data.token
                 };
 
+                offButtonSetState();
                 this.props.navigation.navigate('AuthLoading');
             } catch (error) {
                 if (error.response) {
@@ -138,7 +138,6 @@ class SignInScreen extends React.Component {
                 } else {
                     console.log('Error in SignInScreen');
                 }
-                throw error;
             }
         }
     };
