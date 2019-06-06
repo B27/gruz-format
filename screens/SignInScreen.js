@@ -14,6 +14,7 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import bgImage from '../images/background.png';
 import styles from '../styles';
+import LoadingButton from '../components/LoadingButton';
 
 class SignInScreen extends React.Component {
     state = {
@@ -21,8 +22,7 @@ class SignInScreen extends React.Component {
         password: '',
         showPass: true,
         press: false,
-        message: null,
-        buttonDisabled: false
+        message: null
     };
 
     static navigationOptions = {
@@ -72,13 +72,11 @@ class SignInScreen extends React.Component {
                             </TouchableOpacity>
                         </View>
                         <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={this._signInAsync}
-                            disabled={this.state.buttonDisabled}
-                        >
-                            <Text style={styles.text}>ВОЙТИ</Text>
-                        </TouchableOpacity>
+
+                        <LoadingButton style={styles.button} onPress={this._signInAsync}>
+                            ВОЙТИ
+                        </LoadingButton>
+
                         <Text style={styles.registrationQuestion}>
                             Нет аккаунта?{' '}
                             <Text style={{ color: '#FFC234', fontSize: 16 }} onPress={this.goToRegistartionScreen}>
@@ -97,13 +95,12 @@ class SignInScreen extends React.Component {
         this.props.navigation.navigate('RegisterPerson');
     };
 
-    _signInAsync = async () => {
+    _signInAsync = async offButtonSetState => {
+        this.setState({ message: '' });
         if (!this.state.phone || !this.state.password) {
-            return this.setState({ message: 'Введенные данные некорректны' });
+            this.setState({ message: 'Введите логин и пароль' });
         } else {
             try {
-                this.setState({ buttonDisabled: true });
-
                 const response = await axios.post('/login', {
                     login: this.state.phone,
                     password: this.state.password
@@ -121,15 +118,23 @@ class SignInScreen extends React.Component {
                     Authorization: 'Bearer ' + response.data.token
                 };
 
+                offButtonSetState();
                 this.props.navigation.navigate('AuthLoading');
             } catch (error) {
-                this.setState({ buttonDisabled: false });
                 if (error.response) {
                     console.log(
                         'Error axios in SignInScreen post /login',
                         error.response.status,
                         error.response.data.message
                     );
+                    switch (error.response.status) {
+                        case 404:
+                            this.setState({ message: 'Пользователь не найден' });
+                            break;
+                        case 403:
+                            this.setState({ message: 'Введён неверный пароль' });
+                            break;
+                    }
                 } else {
                     console.log('Error in SignInScreen');
                 }

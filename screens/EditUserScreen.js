@@ -12,6 +12,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import LoadingButton from '../components/LoadingButton';
 import LocalImage from '../components/LocalImage';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
@@ -294,14 +295,15 @@ class EditUserScreen extends React.Component {
                         </View>
                     </View>
                     <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                    <TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
-                        <Text style={styles.text}>ПРОДОЛЖИТЬ</Text>
-                    </TouchableOpacity>
+                    <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
+                        ПРОДОЛЖИТЬ
+                    </LoadingButton>
                 </ScrollView>
             </KeyboardAvoidingView>
         );
     }
-    _nextScreen = async () => {
+
+    _nextScreen = async (offButtonSetState) => {
         const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
         if (
             typeof this.state.pictureUri === 'number' ||
@@ -334,44 +336,8 @@ class EditUserScreen extends React.Component {
                 isDriver: this.state.isDriver
             };
             console.log(userData);
+            offButtonSetState();
             this.props.navigation.navigate('Documents', { ...userData, avatar: this.state.pictureUri });
-            // try {
-            //     const res = await axios.post('/worker', userData);
-
-            //     console.log(res);
-            //     //await AsyncStorage.setItem("phoneNum", this.state.phone);
-            //     this.setState({ userId: res.data._id });
-            //     this.props.navigation.navigate('Documents');
-            // } catch (error) {
-            //     console.log(error);
-            // }
-
-            // const response = await axios
-            //     .post('/login', {
-            //         login: this.state.phone,
-            //         password: this.state.password
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
-
-            // console.log(response.data);
-            // await AsyncStorage.setItem('token', response.data.token);
-            // axios.defaults.headers = {
-            // Authorization: 'Bearer ' + response.data.token
-            // };
-
-            // const data = new FormData();
-            // console.log(this.state.pictureUri);
-
-            // data.append('user', {
-            //     uri: this.state.pictureUri,
-            //     type: 'image/jpeg',
-            //     name: 'image.jpg'
-            // });
-            // console.log(data);
-            // await AsyncStorage.setItem('userId', this.state.userId);
-            // await axios.patch('/worker/upload/' + this.state.userId, data);
         }
     };
 

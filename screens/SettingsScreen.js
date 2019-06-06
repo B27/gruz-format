@@ -3,13 +3,14 @@ import { TaskManager } from 'expo';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { AsyncStorage, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Text, TextInput, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
 
 @inject('store')
 @observer
-class MyInfoScreen extends React.Component {
+class SettingsScreen extends React.Component {
     state = {
         message: '',
         currentPassword: '',
@@ -50,25 +51,29 @@ class MyInfoScreen extends React.Component {
                     />
                 </View>
                 <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
-                <TouchableOpacity style={styles.buttonBottom} onPress={() => this._submitPassword()}>
-                    <Text style={styles.text}>СОХРАНИТЬ</Text>
-                </TouchableOpacity>
+                <LoadingButton style={styles.buttonBottom} onPress={() => this._submitPassword()}>
+                    СОХРАНИТЬ
+                </LoadingButton>
 
-                <TouchableOpacity
-                    style={{ ...styles.buttonConfirm, width: styles.buttonConfirm.width * 2 }}
+                <LoadingButton
+                    yellowButton
+                    style={[styles.buttonConfirm, { width: styles.buttonConfirm.width * 2 }]}
                     onPress={() => this._signOutAsync()}
                 >
-                    <Text style={styles.buttonText}>ВЫЙТИ ИЗ АККАУНТА</Text>
-                </TouchableOpacity>
+                    ВЫЙТИ ИЗ АККАУНТА
+                </LoadingButton>
                 <KeyboardSpacer />
             </View>
         );
     }
-    _signOutAsync = async () => {
+
+    _signOutAsync = async (offButtonSetState) => {
         await AsyncStorage.clear();
         TaskManager.unregisterAllTasksAsync();
+        offButtonSetState();
         this.props.navigation.navigate('SignIn');
     };
+
     _submitPassword = async () => {
         const id = await AsyncStorage.getItem('userId');
         if (this.state.currentPassword === '' || this.state.newPassword === '' || this.state.confirmPassword === '') {
@@ -92,4 +97,4 @@ class MyInfoScreen extends React.Component {
     };
 }
 
-export default MyInfoScreen;
+export default SettingsScreen;

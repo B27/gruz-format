@@ -3,8 +3,9 @@ import { ImagePicker, Permissions } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import { Picker } from 'native-base';
 import React from 'react';
-import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
+import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
@@ -161,9 +162,9 @@ class MyAutoScreen extends React.Component {
                             </View>
                         </View>
 
-                        <TouchableOpacity style={styles.buttonBottom} onPress={this.nextScreen}>
-                            <Text style={styles.text}>СОХРАНИТЬ</Text>
-                        </TouchableOpacity>
+                        <LoadingButton style={styles.buttonBottom} onPress={this.nextScreen}>
+                            СОХРАНИТЬ
+                        </LoadingButton>
                     </ScrollView>
                 )}
             </KeyboardAvoidingView>

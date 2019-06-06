@@ -13,6 +13,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import LoadingButton from '../components/LoadingButton';
 import LocalImage from '../components/LocalImage';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
@@ -111,14 +112,14 @@ class DocumentsScreen extends React.Component {
                     </View>
 
                     <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                    <TouchableOpacity style={styles.buttonBottom} onPress={() => this._nextScreen()}>
-                        <Text style={styles.text}>ПРОДОЛЖИТЬ</Text>
-                    </TouchableOpacity>
+                    <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
+                        ПРОДОЛЖИТЬ
+                    </LoadingButton>
                 </ScrollView>
             </KeyboardAvoidingView>
         );
     }
-    _nextScreen = async () => {
+    _nextScreen = async (offButtonSetState) => {
         if (
             typeof this.state.firstPageUri === 'number' ||
             typeof this.state.secondPageUri === 'number' ||
@@ -139,6 +140,7 @@ class DocumentsScreen extends React.Component {
             };
 
             if (this.props.navigation.getParam('isDriver')) {
+                offButtonSetState();
                 this.props.navigation.navigate('EditCar', dataToSend);
             } else {
                 try {
@@ -188,42 +190,11 @@ class DocumentsScreen extends React.Component {
                     //console.log(data);
 
                     await axios.patch('/worker/upload/' + this.state.userId, data);
+                    offButtonSetState();
                     this.props.navigation.navigate('AuthLoading');
                 } catch (err) {
                     console.log('Download photos error: ', err);
                 }
-                // await axios
-                // 	.patch('/worker/' + id, {
-                // 		passportNumber: this.state.passportNumber,
-                // 		passportSeries: this.state.passportSeries,
-                // 		agreement: this.state.agreement
-                // 	})
-                // 	.catch(err => {
-                // 		console.log(err);
-                // 	})
-                // 	.then(res => {
-                // 		console.log(res.data);
-                // 		//await AsyncStorage.setItem("phoneNum", this.state.phone);
-                // 		this.props.navigation.navigate('EditCar');
-                // 	});
-
-                // const data = new FormData();
-                // console.log(this.state.pictureUri);
-
-                // data.append('pass', {
-                // 	uri: this.state.firstPageUri,
-                // 	type: 'image/jpeg',
-                // 	name: 'image.jpg'
-                // });
-                // data.append('pass_reg', {
-                // 	uri: this.state.secondPageUri,
-                // 	type: 'image/jpeg',
-                // 	name: 'image.jpg'
-                // });
-
-                // console.log(data);
-
-                // await axios.patch('/worker/upload/' + id, data);
             }
         }
     };
