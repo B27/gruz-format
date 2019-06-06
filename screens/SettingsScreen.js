@@ -58,7 +58,7 @@ class SettingsScreen extends React.Component {
                 <LoadingButton
                     yellowButton
                     style={[styles.buttonConfirm, { width: styles.buttonConfirm.width * 2 }]}
-                    onPress={() => this._signOutAsync()}
+                    onPress={this._signOutAsync}
                 >
                     ВЫЙТИ ИЗ АККАУНТА
                 </LoadingButton>
