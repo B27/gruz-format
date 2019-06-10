@@ -1,35 +1,7 @@
 {
+  "name": "FormatGruz",
+  "displayName": "FormatGruz",
   "expo": {
-    "name": "Груз-Формат",
-    "slug": "gruz-format",
-    "privacy": "public",
-    "sdkVersion": "32.0.0",
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "version": "1.0.1",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "bundleIdentifier": "ru.baikalweb.gruz"
-    },
-    "android": {
-        "versionCode": 2,
-        "permissions": ["CAMERA", "MANAGE_DOCUMENTS", "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION", "com.google.android.c2dm.permission.RECEIVE", "WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"],
-        "package": "ru.baikalweb.gruz"
-    }
+    "sdkVersion": "33.0.0"
   }
 }

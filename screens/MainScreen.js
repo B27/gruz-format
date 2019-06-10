@@ -1,15 +1,15 @@
 import Axios from 'axios';
-import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
+// import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { FlatList, Platform, Text, View, YellowBox } from 'react-native';
 import OrderCard from '../components/OrderCard';
-import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
+// import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
 
-const LOCATION_TASK_NAME = 'background-location-task';
+// const LOCATION_TASK_NAME = 'background-location-task';
 
 YellowBox.ignoreWarnings([
 	'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
@@ -26,12 +26,12 @@ class MainScreen extends React.Component {
 	};
 
 	componentDidMount = async () => {
-		registerForPushNotificationsAsync();
-		this._notificationSubscription = Notifications.addListener(this._handleNotification);
+		// registerForPushNotificationsAsync();
+		// this._notificationSubscription = Notifications.addListener(this._handleNotification);
 		// await this.props.store.updateUserInfo()
 		// await store.getOrders();
 
-		const socket = await getSocket();
+		// const socket = await getSocket();
 		// if (!socket || !socket.connected) {
 		//     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
 		// } else this.setState({message: ''})
@@ -47,19 +47,19 @@ class MainScreen extends React.Component {
 		}
     }
     
-	_getLocationAsync = async () => {
-		let { status } = await Permissions.askAsync(Permissions.LOCATION);
-		if (status !== 'granted') {
-			this.setState({
-				errorMessage: 'Permission to access location was denied'
-			});
-		}
-		//let location = await Location.getCurrentPositionAsync({});
+	// _getLocationAsync = async () => {
+	// 	let { status } = await Permissions.askAsync(Permissions.LOCATION);
+	// 	if (status !== 'granted') {
+	// 		this.setState({
+	// 			errorMessage: 'Permission to access location was denied'
+	// 		});
+	// 	}
+	// 	//let location = await Location.getCurrentPositionAsync({});
 
-		await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-			accuracy: Location.Accuracy.High
-		});
-	};
+	// 	await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+	// 		accuracy: Location.Accuracy.High
+	// 	});
+	// };
 
 	_handleNotification = async notification => {
 		if (notification.origin === 'selected' && notification.data.type === 'accept') {
@@ -140,17 +140,17 @@ class MainScreen extends React.Component {
 			if (this.props.store.balance < 0) {
 				this.setState({ message: 'Вы не можете выполнять заказы при отрицательном балансе. Пополните баланс' });
 			} else {
-				if (!this.props.store.onWork) {
-					if (Platform.OS === 'android' && !Constants.isDevice) {
-						console.log(
-							'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
-						);
-					} else {
-						this._getLocationAsync();
-					}
-				} else {
-					TaskManager.unregisterAllTasksAsync();
-				}
+				// if (!this.props.store.onWork) {
+				// 	if (Platform.OS === 'android' && !Constants.isDevice) {
+				// 		console.log(
+				// 			'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+				// 		);
+				// 	} else {
+				// 		this._getLocationAsync();
+				// 	}
+				// } else {
+				// 	TaskManager.unregisterAllTasksAsync();
+				// }
 
 				console.log('1');
 
