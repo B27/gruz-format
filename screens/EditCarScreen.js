@@ -21,7 +21,8 @@ class EditCarScreen extends React.Component {
             { name: 'Рефрижератор (крытый)', isOpen: false },
             { name: 'Термобудка (крытый)', isOpen: false },
             { name: 'Кран. борт', isOpen: true },
-            { name: 'Тент (крытый)', isOpen: false }
+            { name: 'Тент (крытый)', isOpen: false },
+            { name: 'Открытый борт', isOpen: true }
         ],
         loadCapacity: '',
         length: '',
