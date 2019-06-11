@@ -31,6 +31,8 @@ target 'FormatGruz' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
   target 'FormatGruzTests' do
     inherit! :search_paths
   end

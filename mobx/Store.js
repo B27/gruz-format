@@ -80,7 +80,7 @@ class ObservableStore {
             const response = await axios.get(`/worker/${userId}`);
 
             runInAction(() => {
-                //console.log(`get /worker/${userId} response.data >>>>`, response.data);
+                // console.log(`get /worker/${userId} response.data >>>>`, response.data);
                 const date = new Date(response.data.birthDate);
 
                 for (let key in response.data) this[key] = response.data[key];
@@ -89,7 +89,7 @@ class ObservableStore {
                 // this.name = response.data.name;
                 // this.isDriver = response.data.isDriver;
                 // this.onWork = response.data.onWork; // на данный момент всегда false, необходимо смотреть response.data.order
-                this.orderIdOnWork = response.data.order; // null когда рузчиком не выполняется заказ
+                this.orderIdOnWork = response.data.order; // null когда грузчиком не выполняется заказ
                 this.avatar = URL + response.data.photos.user;
                 this.phone = response.data.phoneNum;
                 [this.lastName, this.firstName, this.patronymic] = response.data.name.split(' ');
