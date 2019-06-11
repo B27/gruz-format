@@ -55,7 +55,7 @@ class EditCarScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
+            
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
                     <ChoiceCameraRoll
                         pickFromCamera={this.pickFromCamera}
@@ -136,7 +136,7 @@ class EditCarScreen extends React.Component {
                         ПРОДОЛЖИТЬ
                     </LoadingButton>
                 </ScrollView>
-            </KeyboardAvoidingView>
+
         );
     }
 

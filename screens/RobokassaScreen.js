@@ -27,13 +27,13 @@ class RobokassaScreen extends React.Component {
 		//console.log(hash);
 
 		return (
-			<KeyboardAvoidingView style={styles.flex1} behavior='padding'>
+			
 				<WebView
 					source={{
 						uri: `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=Format.Gruz&InvId=${invId}&Culture=ru&Encoding=utf-8&OutSum=${outSum}&Shp_UserID=${userId}&SignatureValue=${hash}`
 					}}
 				/>
-			</KeyboardAvoidingView>
+			
 		);
 	}
 }

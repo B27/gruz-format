@@ -70,7 +70,7 @@ class MyAutoScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
+            <View>
                 {!this.state.isDriver ? (
                     <View
                         style={{
@@ -168,7 +168,7 @@ class MyAutoScreen extends React.Component {
                         </LoadingButton>
                     </ScrollView>
                 )}
-            </KeyboardAvoidingView>
+            </View>
         );
     }
 

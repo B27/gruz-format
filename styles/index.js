@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: WIDTH - 55,
         marginHorizontal: 25,
-        marginTop: 10
+        marginTop: 10,
+        backgroundColor: 'white'
         //        flex: 1
     },
 

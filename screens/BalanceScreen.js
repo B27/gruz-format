@@ -43,7 +43,7 @@ class BalanceScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.flex1} contentContainerStyle={styles.flex1} behavior='padding'>
+           
                 <View contentContainerStyle={styles.registrationScreen}>
                     <View style={styles.inputContainer}>
                         <Text style={{ marginBottom: 15, fontSize: 16 }}>
@@ -68,7 +68,7 @@ class BalanceScreen extends React.Component {
                         <Text style={styles.text}>ПЕРЕЙТИ К ОПЛАТЕ</Text>
                     </TouchableOpacity>
                 </View>
-            </KeyboardAvoidingView>
+            
         );
     }
 

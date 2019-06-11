@@ -103,7 +103,7 @@ class EditUserScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView keyboardVerticalOffset={85} behavior='padding'>
+            
                 <ScrollView contentContainerStyle={styles.registrationScreen}>
                     <ChoiceCameraRoll
                         pickFromCamera={this.pickFromCamera}
@@ -301,7 +301,7 @@ class EditUserScreen extends React.Component {
                         ПРОДОЛЖИТЬ
                     </LoadingButton>
                 </ScrollView>
-            </KeyboardAvoidingView>
+            
         );
     }
 

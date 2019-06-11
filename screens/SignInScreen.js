@@ -31,12 +31,12 @@ class SignInScreen extends React.Component {
     //flow
     render() {
         return (
-            <KeyboardAvoidingView
-                style={styles.flex1}
-                contentContainerStyle={styles.flex1}
-                behavior='position'
-                // keyboardVerticalOffset={-50}
-            >
+            // <KeyboardAvoidingView
+            //     style={styles.flex1}
+            //     //contentContainerStyle={styles.flex1}
+            //     behavior='padding'
+            //     //keyboardVerticalOffset={-50}
+            // >
                 <ImageBackground source={bgImage} style={styles.backgroundContainer}>
                     <View style={styles.logoContainer}>
                         <Text style={styles.logoText}>ДОБРО {'\n'}ПОЖАЛОВАТЬ</Text>
@@ -85,7 +85,7 @@ class SignInScreen extends React.Component {
                         </Text>
                     </View>
                 </ImageBackground>
-            </KeyboardAvoidingView>
+            //</KeyboardAvoidingView>
         );
     }
 

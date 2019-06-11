@@ -87,7 +87,7 @@ class Chat extends React.Component {
 					placeholder='Введите сообщение...'
 					renderUsernameOnMessage={true}
 				/>
-				{Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+				
 			</View>
 		);
 	}
