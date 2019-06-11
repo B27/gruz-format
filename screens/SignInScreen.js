@@ -35,7 +35,7 @@ class SignInScreen extends React.Component {
                 style={styles.flex1}
                 contentContainerStyle={styles.flex1}
                 behavior='position'
-                keyboardVerticalOffset={-50}
+                // keyboardVerticalOffset={-50}
             >
                 <ImageBackground source={bgImage} style={styles.backgroundContainer}>
                     <View style={styles.logoContainer}>
