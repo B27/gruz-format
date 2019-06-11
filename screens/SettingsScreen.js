@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TaskManager } from 'expo';
+// import { TaskManager } from 'expo';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
@@ -69,7 +69,7 @@ class SettingsScreen extends React.Component {
 
     _signOutAsync = async (offButtonSetState) => {
         await AsyncStorage.clear();
-        TaskManager.unregisterAllTasksAsync();
+        // TaskManager.unregisterAllTasksAsync();
         offButtonSetState();
         this.props.navigation.navigate('SignIn');
     };
