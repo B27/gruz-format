@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
     createAppContainer,
@@ -35,7 +35,8 @@ function IconMenuItem({ tintColor, name }) {
 
 const yellowHeader = {
     headerStyle: {
-        backgroundColor: '#FFC234'
+        backgroundColor: '#FFC234',
+        marginTop: StatusBar.currentHeight
     }
 };
 
