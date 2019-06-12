@@ -1,5 +1,7 @@
 import Axios from 'axios';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
+import * as Permissions from 'expo-permissions';
+import Geolocation from 'react-native-geolocation-service';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { FlatList, Platform, Text, View, YellowBox } from 'react-native';
@@ -8,6 +10,8 @@ import OrderCard from '../components/OrderCard';
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
+import VIForegroundService from '@voximplant/react-native-foreground-service';
+
 
 // const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -47,19 +51,33 @@ class MainScreen extends React.Component {
 		}
     }
     
-	// _getLocationAsync = async () => {
-	// 	let { status } = await Permissions.askAsync(Permissions.LOCATION);
-	// 	if (status !== 'granted') {
-	// 		this.setState({
-	// 			errorMessage: 'Permission to access location was denied'
-	// 		});
-	// 	}
-	// 	//let location = await Location.getCurrentPositionAsync({});
+	_getLocationAsync = async () => {
+		let { status } = await Permissions.askAsync(Permissions.LOCATION);
+		if (status !== 'granted') {
+			this.setState({
+				errorMessage: 'Permission to access location was denied'
+			});
+        } else {
+            
+            // Geolocation.getCurrentPosition(
+            //     (position) => {
+            //         console.log(position);
+            //     },
+            //     (error) => {
+            //         // See error code charts below.
+            //         console.log(error.code, error.message);
+            //     },
+            //     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            // );
+        }
+        
 
-	// 	await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-	// 		accuracy: Location.Accuracy.High
-	// 	});
-	// };
+		//let location = await Location.getCurrentPositionAsync({});
+        
+		// await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+		// 	accuracy: Location.Accuracy.High
+		// });
+	};
 
 	_handleNotification = async notification => {
 		if (notification.origin === 'selected' && notification.data.type === 'accept') {
@@ -140,17 +158,38 @@ class MainScreen extends React.Component {
 			if (this.props.store.balance < 0) {
 				this.setState({ message: 'Вы не можете выполнять заказы при отрицательном балансе. Пополните баланс' });
 			} else {
-				// if (!this.props.store.onWork) {
-				// 	if (Platform.OS === 'android' && !Constants.isDevice) {
-				// 		console.log(
-				// 			'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
-				// 		);
-				// 	} else {
-				// 		this._getLocationAsync();
-				// 	}
-				// } else {
-				// 	TaskManager.unregisterAllTasksAsync();
-				// }
+				if (!this.props.store.onWork) {
+					if (!Platform.OS === 'android' ) {//&& !Constants.isDevice
+						console.log(
+							'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+						);
+					} else {
+                        this._getLocationAsync();
+                        const channelConfig = {
+                            id: 'channelId',
+                            name: 'Формат.Груз',
+                            description: 'Channel description',
+                            enableVibration: false
+                        };
+                        VIForegroundService.createNotificationChannel(channelConfig);
+            
+                        const notificationConfig = {
+                            channelId: 'channelId',
+                            id: 3456,
+                            title: 'Формат.Груз',
+                            text: 'Поиск заказов...',
+                            icon: 'ic_icon'
+                        };
+                        try {
+                            await VIForegroundService.startService(notificationConfig);
+                        } catch (e) {
+                            console.error(e);
+                        }
+					}
+				} else {
+                    //TaskManager.unregisterAllTasksAsync();
+                    VIForegroundService.stopService();
+				}
 
 				console.log('1');
 

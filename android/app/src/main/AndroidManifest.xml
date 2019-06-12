@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <!-- END OPTIONAL PERMISSIONS -->
 
     <application
@@ -32,6 +33,7 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <service android:name="com.voximplant.foregroundservice.VIForegroundService"> </service>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

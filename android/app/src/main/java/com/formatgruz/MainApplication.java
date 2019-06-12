@@ -3,6 +3,7 @@ package com.formatgruz;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.voximplant.foregroundservice.VIForegroundServicePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -23,6 +24,8 @@ import expo.modules.filesystem.FileSystemPackage;
 import java.util.Arrays;
 import java.util.List;
 
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
+
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList(),
@@ -39,9 +42,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new VIForegroundServicePackage(),
             new RNCWebViewPackage(),
             new RNGestureHandlerPackage(),
-          new ModuleRegistryAdapter(mModuleRegistryProvider)
+          new ModuleRegistryAdapter(mModuleRegistryProvider),
+          new RNFusedLocationPackage()
       );
     }
 
@@ -61,4 +66,6 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
   }
+
+  
 }
