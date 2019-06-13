@@ -1,4 +1,4 @@
-package com.formatgruz;
+package ru.baikalweb.gruz;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

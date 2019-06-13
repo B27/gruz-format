@@ -1,4 +1,4 @@
-package com.formatgruz.generated;
+package ru.baikalweb.gruz.generated;
 
 import java.util.Arrays;
 import java.util.List;

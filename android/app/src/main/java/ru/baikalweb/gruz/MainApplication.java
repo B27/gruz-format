@@ -1,4 +1,4 @@
-package com.formatgruz;
+package ru.baikalweb.gruz;
 
 import android.app.Application;
 
@@ -9,7 +9,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.formatgruz.generated.BasePackageList;
+import ru.baikalweb.gruz.generated.BasePackageList;
 
 import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
