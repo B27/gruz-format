@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FormatGruz</string>
+    <string name="default_notification_channel_id">GruzNotif</string>
+    <string name="fcm_message">ГрузФормат оповещает</string>
 </resources>
