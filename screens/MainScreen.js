@@ -2,7 +2,7 @@ import Axios from 'axios';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { FlatList, Platform, Text, View, YellowBox } from 'react-native';
+import { FlatList, Text, View, YellowBox } from 'react-native';
 import OrderCard from '../components/OrderCard';
 // import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import { getSocket } from '../components/Socket';
@@ -45,8 +45,8 @@ class MainScreen extends React.Component {
 		if (this.willFocusSubscription) {
 			this.willFocusSubscription.remove();
 		}
-    }
-    
+	}
+
 	// _getLocationAsync = async () => {
 	// 	let { status } = await Permissions.askAsync(Permissions.LOCATION);
 	// 	if (status !== 'granted') {
