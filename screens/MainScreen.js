@@ -8,6 +8,8 @@ import OrderCard from '../components/OrderCard';
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
+import { NativeModules } from 'react-native';
+
 
 // const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -35,7 +37,9 @@ class MainScreen extends React.Component {
 		// if (!socket || !socket.connected) {
 		//     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
 		// } else this.setState({message: ''})
-
+        NativeModules.ForegroundTaskModule.getDeviceName((err, name) => {
+            console.log(err, name);
+        });
 		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
 			this.setState({ message: '' });
 		});
