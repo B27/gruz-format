@@ -144,17 +144,18 @@ class MainScreen extends React.Component {
 			if (this.props.store.balance < 0) {
 				this.setState({ message: 'Вы не можете выполнять заказы при отрицательном балансе. Пополните баланс' });
 			} else {
-				// if (!this.props.store.onWork) {
-				// 	if (Platform.OS === 'android' && !Constants.isDevice) {
-				// 		console.log(
-				// 			'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
-				// 		);
-				// 	} else {
-				// 		this._getLocationAsync();
-				// 	}
-				// } else {
-				// 	TaskManager.unregisterAllTasksAsync();
-				// }
+				if (!this.props.store.onWork) {
+					if (!Platform.OS === 'android') {
+						console.log(
+							'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+						);
+					} else {
+						NativeModules.ForegroundTaskModule.startService();
+					}
+				} else {
+                    //TaskManager.unregisterAllTasksAsync();
+                    NativeModules.ForegroundTaskModule.stopService();
+				}
 
 				console.log('1');
 
