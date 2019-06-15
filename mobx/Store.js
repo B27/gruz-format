@@ -128,26 +128,8 @@ class ObservableStore {
     @action async getOrders() {
         try {
             const response = await axios.get(`order/open/60/1`);
-            response.data.forEach((item) => {
 
-            const date = new Date(item.start_time);
-            let dd = date.getDate();
-            if (dd < 10) dd = '0' + dd;
-            let mm = date.getMonth() + 1;
-            if (mm < 10) mm = '0' + mm;
-            let yy = date.getFullYear();
-            if (yy < 10) yy = '0' + yy;
-            const time = date.toLocaleTimeString();
-            const d = dd + '.' + mm + '.' + yy + ' ' + time;
-           
-            item.start_time = d;
-            })
-            
             runInAction(() => {
-                //console.log('get order/open/60/1 response.data >>>> ', response.data);
-                //  console.log('this.orders', this.orders);
-                //  console.log('this.balance', this.balance);
-                
                 this.orders = response.data;
             });
         } catch (error) {
@@ -185,32 +167,13 @@ class ObservableStore {
         if (!id) {
             id = this.orderIdOnWork;
         }
-        
+
         const { data: order } = await NetworkRequests.getOrder(id);
-        //console.log();
-        if (order.city.timezone) {
-            //const timeZone = order.city.timezone;
-            const date = new Date(order.start_time);
-            let dd = date.getDate();
-            if (dd < 10) dd = '0' + dd;
-            let mm = date.getMonth() + 1;
-            if (mm < 10) mm = '0' + mm;
-            let yy = date.getFullYear();
-            if (yy < 10) yy = '0' + yy;
-            const time = date.toLocaleTimeString();
-            const d = dd + '.' + mm + '.' + yy + ' ' + time;
-            //console.log(d);
-           
-            order.start_time = d;
-            
-            //console.log(order.start_time);
-            
-            runInAction(() => {
-                this.order = order;
-                this.lastOrderPullTime = Date.now();
-            });
-        }
-        
+
+        runInAction(() => {
+            this.order = order;
+            this.lastOrderPullTime = Date.now();
+        });
 
         const PromisePullDispatcher = this.pullDispatcherById(order.creating_dispatcher);
         const PromisePullWorkers = this.setWorkersByArray(order.workers.data);
