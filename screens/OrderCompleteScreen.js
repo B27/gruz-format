@@ -185,7 +185,7 @@ class OrderCompleteScreen extends React.Component {
 		this.props.navigation.goBack();
 	};
 
-	_confirmPress = async offButtonSetState => {
+	_confirmPress = async () => {
 		if (this.starsSet.size != 0) {
 			// TODO добавить вывод польователю
 			console.log('Оцените всех участников заказа');
@@ -205,7 +205,6 @@ class OrderCompleteScreen extends React.Component {
 
 		try {
 			await NetworkRequests.completeOrder(requestData);
-			offButtonSetState();
 			this.props.navigation.navigate('AuthLoading');
 		} catch (error) {
 			this.setState({

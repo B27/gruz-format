@@ -140,7 +140,7 @@ class EditCarScreen extends React.Component {
         );
     }
 
-    nextScreen = async (offButtonSetState) => {
+    nextScreen = async () => {
         if (
             !this.state.image1 ||
             !this.state.image2 ||
@@ -225,7 +225,6 @@ class EditCarScreen extends React.Component {
                 //console.log(data);
 
                 await axios.patch('/worker/upload/' + this.state.userId, data);
-                offButtonSetState();
                 this.props.navigation.navigate('AuthLoading');
             } catch (err) {
                 console.log('Download photos error: ', err);

@@ -118,7 +118,7 @@ class DocumentsScreen extends React.Component {
 			</ScrollView>
 		);
 	}
-	_nextScreen = async offButtonSetState => {
+	_nextScreen = async () => {
 		if (
 			typeof this.state.firstPageUri === 'number' ||
 			typeof this.state.secondPageUri === 'number' ||
@@ -139,7 +139,6 @@ class DocumentsScreen extends React.Component {
 			};
 
 			if (this.props.navigation.getParam('isDriver')) {
-				offButtonSetState();
 				this.props.navigation.navigate('EditCar', dataToSend);
 			} else {
 				try {
@@ -189,7 +188,6 @@ class DocumentsScreen extends React.Component {
 					//console.log(data);
 
 					await axios.patch('/worker/upload/' + this.state.userId, data);
-					offButtonSetState();
 					this.props.navigation.navigate('AuthLoading');
 				} catch (err) {
 					console.log('Download photos error: ', err);

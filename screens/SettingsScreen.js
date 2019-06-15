@@ -67,10 +67,9 @@ class SettingsScreen extends React.Component {
         );
     }
 
-    _signOutAsync = async (offButtonSetState) => {
+    _signOutAsync = async () => {
         await AsyncStorage.clear();
         // TaskManager.unregisterAllTasksAsync();
-        offButtonSetState();
         this.props.navigation.navigate('SignIn');
     };
 

@@ -95,7 +95,7 @@ class SignInScreen extends React.Component {
         this.props.navigation.navigate('RegisterPerson');
     };
 
-    _signInAsync = async offButtonSetState => {
+    _signInAsync = async () => {
         this.setState({ message: '' });
         if (!this.state.phone || !this.state.password) {
             this.setState({ message: 'Введите логин и пароль' });
@@ -118,7 +118,6 @@ class SignInScreen extends React.Component {
                     Authorization: 'Bearer ' + response.data.token
                 };
 
-                offButtonSetState();
                 this.props.navigation.navigate('AuthLoading');
             } catch (error) {
                 if (error.response) {

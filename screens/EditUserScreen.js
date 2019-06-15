@@ -305,7 +305,7 @@ class EditUserScreen extends React.Component {
         );
     }
 
-    _nextScreen = async (offButtonSetState) => {
+    _nextScreen = async () => {
         const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
         if (
             typeof this.state.pictureUri === 'number' ||
@@ -338,7 +338,6 @@ class EditUserScreen extends React.Component {
                 isDriver: this.state.isDriver
             };
             console.log(userData);
-            offButtonSetState();
             this.props.navigation.navigate('Documents', { ...userData, avatar: this.state.pictureUri });
         }
     };

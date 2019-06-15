@@ -1,40 +1,34 @@
-import React from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import styles from '../styles';
 
-export default class LoadingButton extends React.Component {
-    state = {
-        loading: false,
-        update: true
-    };
+export default function LoadingButton({ style, children, yellowButton, onPress }) {
+    let [loading, setLoading] = useState(false);
 
-    // в onPress может быть переход в другой стек и unmount всех компонентов
-    // setState на отмонтированном компоненте вызывает утечку памяти
-    // для этого необходимо отключить его вызов
-    offButtonSetState = () => {
-        this.setState({ update: false });
-    };
+    let update = useRef(true);
 
-    _onPress = async () => {
-        this.setState({ loading: true });
+    useEffect(() => {
+        return () => (update = false);
+    }, []);
 
-        await this.props.onPress(this.offButtonSetState);
+    const _onPress = useMemo(
+        () => async () => {
+            setLoading(true);
+            await onPress();
+            if (update.current) {
+                setLoading(false);
+            }
+        },
+        [onPress]
+    );
 
-        if (this.state.update) {
-            this.setState({ loading: false });
-        }
-    };
-
-    render() {
-        const { style, children, yellowButton } = this.props;
-        return (
-            <TouchableOpacity style={style} onPress={this._onPress} disabled={this.state.loading}>
-                {this.state.loading ? (
-                    <ActivityIndicator style={{ flex: 1 }} color='grey' />
-                ) : (
-                    <Text style={yellowButton ? styles.buttonText : styles.text}>{children}</Text>
-                )}
-            </TouchableOpacity>
-        );
-    }
+    return (
+        <TouchableOpacity style={style} onPress={_onPress} disabled={loading}>
+            {loading ? (
+                <ActivityIndicator style={{ flex: 1 }} color='grey' />
+            ) : (
+                <Text style={yellowButton ? styles.buttonText : styles.text}>{children}</Text>
+            )}
+        </TouchableOpacity>
+    );
 }
