@@ -5,7 +5,8 @@ import {
     createAppContainer,
     createDrawerNavigator,
     createStackNavigator,
-    createSwitchNavigator
+    createSwitchNavigator,
+    SafeAreaView
 } from 'react-navigation';
 import { MenuIcon } from '../components/MenuIcon';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
@@ -33,10 +34,13 @@ function IconMenuItem({ tintColor, name }) {
     return <Icon name={name} size={24} style={{ color: tintColor }} />;
 }
 
+// добавляет высоту статусбара в SafeAreaView (используется в ActionBar) из react-navigation
+// необходимо для отрисовки под прозрачным статусбаром, иначе статусбар перекрывает ActionBar
+SafeAreaView.setStatusBarHeight(StatusBar.currentHeight);
+
 const yellowHeader = {
     headerStyle: {
         backgroundColor: '#FFC234',
-        marginTop: StatusBar.currentHeight
     }
 };
 
@@ -63,7 +67,6 @@ const FulfillingOrderSwitch = createSwitchNavigator(
     },
     { defaultNavigationOptions: yellowHeader }
 );
-
 
 const MainStack = createStackNavigator(
     {
