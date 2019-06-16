@@ -1,6 +1,9 @@
 package ru.baikalweb.gruz;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
@@ -23,7 +26,17 @@ public class MainActivity extends ReactActivity {
      @Override
      protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
-         
+
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+             // Create channel to show notifications.
+             String channelId  = getString(R.string.default_notification_channel_id);
+             String channelName = getString(R.string.default_notification_channel_name);
+             NotificationManager notificationManager =
+                     getSystemService(NotificationManager.class);
+             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
+                     channelName, NotificationManager.IMPORTANCE_HIGH));
+         }
+
          // компонент StatusBar из React Native делает то же самое
          // но почему-то, если свернуть приложение и снова запустить из меню приложений
          // слушатель сбрасывается, поэтому пришлось настроить статусбар здесь  
