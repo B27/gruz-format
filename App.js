@@ -5,7 +5,10 @@ import { AsyncStorage, View } from 'react-native';
 import { getSocket } from './components/Socket';
 import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
+import NotificationListener from './utils/NotificationListener';
+import UniversalEventEmitter from './utils/UniversalEventEmitter';
 // import { TaskManager, Notifications } from "expo";
+
 const LOCATION_TASK_NAME = 'background-location-task';
 let token;
 (async () => {
@@ -19,12 +22,24 @@ let token;
 })(); //Этот говнокод для того чтобы не вернулся промис
 
 export default class App extends React.Component {
+    componentDidMount() {
+        this.onReceiptNotificationListener = UniversalEventEmitter.addListener(
+            'onReceiptNotification',
+            NotificationListener
+        );
+    }
+
     componentWillUnmount() {
         (async () => {
             const socket = await getSocket();
             socket.emit('setWork', false);
         })();
+
+        if (this.onReceiptNotificationListener) {
+            this.onReceiptNotificationListener.remove();
+        }
     }
+
     render() {
         return (
             <Provider store={Store}>
