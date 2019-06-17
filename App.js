@@ -7,6 +7,7 @@ import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
 import NotificationListener from './utils/NotificationListener';
 import UniversalEventEmitter from './utils/UniversalEventEmitter';
+import PushTokenListener from './utils/PushTokenListener';
 // import { TaskManager, Notifications } from "expo";
 
 const LOCATION_TASK_NAME = 'background-location-task';
@@ -23,20 +24,28 @@ let token;
 
 export default class App extends React.Component {
     componentDidMount() {
-        this.onReceiptNotificationListener = UniversalEventEmitter.addListener(
-            'onReceiptNotification',
+        this.onMessageReceivedListener = UniversalEventEmitter.addListener(
+            'onMessageReceived',
             NotificationListener
+        );
+        this.onNewTokenListener = UniversalEventEmitter.addListener(
+            'onNewToken',
+            PushTokenListener
         );
     }
 
     componentWillUnmount() {
-        (async () => {
-            const socket = await getSocket();
-            socket.emit('setWork', false);
-        })();
+        // (async () => {
+        //     const socket = await getSocket();
+        //     socket.emit('setWork', false);
+        // })();
 
-        if (this.onReceiptNotificationListener) {
-            this.onReceiptNotificationListener.remove();
+        if (this.onMessageReceivedListener) {
+            this.onMessageReceivedListener.remove();
+        }
+
+        if (this.onNewTokenListener) {
+            this.onNewTokenListener.remove();
         }
     }
 
