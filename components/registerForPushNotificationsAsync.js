@@ -1,43 +1,28 @@
-import { Permissions, Notifications } from 'expo';
+import { NativeModules, Alert } from 'react-native';
 import axios from 'axios';
 
 export default async function registerForPushNotificationsAsync() {
-	const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-	let finalStatus = existingStatus;
+    // Get the token that uniquely identifies this device
+    let pushToken;
 
-	// only ask if permissions have not already been determined, because
-	// iOS won't necessarily prompt the user a second time.
-	if (existingStatus !== 'granted') {
-		// Android remote notification permissions are granted during the app
-		// install, so this will only ask on iOS
-		const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-		finalStatus = status;
-	}
+    try {
+        ({ pushToken } = await NativeModules.RNFirebasePushToken.getToken());
+        Alert.alert('Получен токен', pushToken);
+        console.log('token push', );
+    } catch (error) {
+        console.log('error when get token', error);
+        Alert.alert('Ошибка получения токена', error);
+        return;
+    }
 
-	// Stop here if the user did not grant permissions
-	if (finalStatus !== 'granted') {
-		return;
-	}
-
-	// Get the token that uniquely identifies this device
-	let token = await Notifications.getExpoPushTokenAsync();
-
-	// axios.interceptors.request.use(request => {
-	// 	console.log('Starting Request', request);
-	// 	return request;
-	// });
-
-	// axios.interceptors.response.use(response => {
-	// 	console.log('Response:', response);
-	// 	return response;
-	// });
-	let response;
-	// POST the token to your backend server from where you can retrieve it to send push notifications.
-	try {
-		console.log(token);
-		response = await axios.post('/push_token', {token});
-	} catch (err) {
-		//console.log('post error', err.response);
-	}
-
+    try {
+        console.log(pushToken);
+        await axios.post('/push_token', { token: pushToken });
+    } catch (error) {
+        if (error.response) {
+            console.log('Error in registerForPushNotificationsAsync:', error.response.status, error.response.data.message);
+        } else {
+            console.log('Error in registerForPushNotificationsAsync:', error);
+        }
+    }
 }

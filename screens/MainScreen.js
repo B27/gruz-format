@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { FlatList, Text, View, YellowBox } from 'react-native';
 import OrderCard from '../components/OrderCard';
-// import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
+import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
@@ -26,7 +26,7 @@ class MainScreen extends React.Component {
 	};
 
 	componentDidMount = async () => {
-		// registerForPushNotificationsAsync();
+		registerForPushNotificationsAsync();
 		// this._notificationSubscription = Notifications.addListener(this._handleNotification);
 		// await this.props.store.updateUserInfo()
 		// await store.getOrders();
@@ -154,10 +154,14 @@ class MainScreen extends React.Component {
 
 				console.log('1');
 
-				const socket = await getSocket();
+                const socket = await getSocket();
+                
+                socket.on('error', result => {
+                    console.log('error', result);
+                });
 
 				if (socket && socket.connected) {
-					socket.emit('set work', !this.props.store.onWork);
+                    socket.emit('set work', !this.props.store.onWork);
 					this.props.store.setOnWork(!this.props.store.onWork);
 					this._onRefresh();
 				} else {
