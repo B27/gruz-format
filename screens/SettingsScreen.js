@@ -1,9 +1,10 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 // import { TaskManager } from 'expo';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { AsyncStorage, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';

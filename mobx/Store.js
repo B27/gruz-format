@@ -1,6 +1,6 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { action, observable, runInAction } from 'mobx';
-import { AsyncStorage } from 'react-native';
 import io from 'socket.io-client';
 import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';

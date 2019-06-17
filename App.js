@@ -1,13 +1,13 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { Provider } from 'mobx-react/native';
 import React from 'react';
-import { AsyncStorage, View } from 'react-native';
-import { getSocket } from './components/Socket';
+import { View } from 'react-native';
 import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
 import NotificationListener from './utils/NotificationListener';
-import UniversalEventEmitter from './utils/UniversalEventEmitter';
 import PushTokenListener from './utils/PushTokenListener';
+import UniversalEventEmitter from './utils/UniversalEventEmitter';
 // import { TaskManager, Notifications } from "expo";
 
 const LOCATION_TASK_NAME = 'background-location-task';
@@ -24,14 +24,8 @@ let token;
 
 export default class App extends React.Component {
     componentDidMount() {
-        this.onMessageReceivedListener = UniversalEventEmitter.addListener(
-            'onMessageReceived',
-            NotificationListener
-        );
-        this.onNewTokenListener = UniversalEventEmitter.addListener(
-            'onNewToken',
-            PushTokenListener
-        );
+        this.onMessageReceivedListener = UniversalEventEmitter.addListener('onMessageReceived', NotificationListener);
+        this.onNewTokenListener = UniversalEventEmitter.addListener('onNewToken', PushTokenListener);
     }
 
     componentWillUnmount() {

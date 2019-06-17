@@ -1,6 +1,7 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { AsyncStorage, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 
@@ -43,32 +44,30 @@ class BalanceScreen extends React.Component {
 
     render() {
         return (
-           
-                <View contentContainerStyle={styles.registrationScreen}>
-                    <View style={styles.inputContainer}>
-                        <Text style={{ marginBottom: 15, fontSize: 16 }}>
-                            Ваш баланс:{' '}
-                            <Text style={{ marginBottom: 10, fontSize: 16 }}>{this.props.store.balance}</Text> р.
-                        </Text>
-                        <Text style={{ marginBottom: 15, fontSize: 16 }}>
-                            Введите сумму на которую хотите пополнить счет:
-                        </Text>
-                        <NumericInput
-                            style={styles.input}
-                            placeholder='Сумма'
-                            onChangeText={sum => this.setState({ sum })}
-                            value={this.state.sum}
-                        />
-                    </View>
-                    <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                    <TouchableOpacity
-                        style={[styles.buttonBottom, { marginTop: 0, alignSelf: 'center' }]}
-                        onPress={this._goToRobokassa}
-                    >
-                        <Text style={styles.text}>ПЕРЕЙТИ К ОПЛАТЕ</Text>
-                    </TouchableOpacity>
+            <View contentContainerStyle={styles.registrationScreen}>
+                <View style={styles.inputContainer}>
+                    <Text style={{ marginBottom: 15, fontSize: 16 }}>
+                        Ваш баланс: <Text style={{ marginBottom: 10, fontSize: 16 }}>{this.props.store.balance}</Text>{' '}
+                        р.
+                    </Text>
+                    <Text style={{ marginBottom: 15, fontSize: 16 }}>
+                        Введите сумму на которую хотите пополнить счет:
+                    </Text>
+                    <NumericInput
+                        style={styles.input}
+                        placeholder='Сумма'
+                        onChangeText={sum => this.setState({ sum })}
+                        value={this.state.sum}
+                    />
                 </View>
-            
+                <Text style={{ color: 'red' }}>{this.state.message}</Text>
+                <TouchableOpacity
+                    style={[styles.buttonBottom, { marginTop: 0, alignSelf: 'center' }]}
+                    onPress={this._goToRobokassa}
+                >
+                    <Text style={styles.text}>ПЕРЕЙТИ К ОПЛАТЕ</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
