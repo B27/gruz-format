@@ -9,6 +9,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
 
+const TAG = '|SettingsScreen|'
 @inject('store')
 @observer
 class SettingsScreen extends React.Component {
@@ -69,9 +70,19 @@ class SettingsScreen extends React.Component {
     }
 
     _signOutAsync = async () => {
-        await AsyncStorage.clear();
-        // TaskManager.unregisterAllTasksAsync();
-        this.props.navigation.navigate('SignIn');
+        try {
+            await axios.post('/push_token', { token: null });
+            await AsyncStorage.clear();
+            this.props.navigation.navigate('SignIn');
+        } catch (error) {
+            if (error.response) {
+                console.log(TAG, 'Error post /push_token', error.response.status, error.response.data.message);
+            } else {
+                console.log(TAG, 'Error:', error);
+            }
+            this.setState({ message: 'Ошибка сети', colorMessage: 'red' })
+            setTimeout(() => {this.setState({ message: ''})}, 2000);
+        }
     };
 
     _submitPassword = async () => {

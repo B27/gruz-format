@@ -4,6 +4,7 @@ import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { setNavigationToNotifListener } from '../utils/NotificationListener';
 
 @inject('store')
 class AuthLoadingScreen extends React.Component {
@@ -18,6 +19,8 @@ class AuthLoadingScreen extends React.Component {
     _bootstrapAsync = async () => {
         const { store, navigation } = this.props;
 
+        setNavigationToNotifListener(navigation);
+        
         console.log('AuthLoadingScreen bootstrapAsync');
         const userToken = await AsyncStorage.getItem('token');
 

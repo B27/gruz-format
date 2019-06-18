@@ -6,6 +6,8 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
+
 import ru.baikalweb.gruz.birdge.EventHelper;
 
 public class GruzFirebaseMessagingService extends FirebaseMessagingService {
@@ -14,38 +16,25 @@ public class GruzFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         WritableNativeArray params = new WritableNativeArray();
 
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
+        // Check if message contains a data payload and notification payload.
+        if (/*(remoteMessage.getData().size() > 0) &&*/ (remoteMessage.getNotification() != null)) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-        }
-
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            params.pushString(remoteMessage.getNotification().getBody());
-        }    
 
-        EventHelper.sendEvent("onMessageReceived", this, params);
-    }
+            RemoteMessage.Notification notification = remoteMessage.getNotification();
+            Map<String, String> data = remoteMessage.getData();
 
-    @Override
-    public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
+            params.pushString(data.get("type"));
+            params.pushString(data.get("order_id"));
+            params.pushString(notification.getTitle());
+            params.pushString(notification.getBody());
 
-        sendRegistrationToServer(token);
-    }
-
-
-    private void sendRegistrationToServer(String token) {
-        // TODO: Implement this method to send token to your app server.
-        WritableNativeArray params = new WritableNativeArray();
-        params.pushString(token);
-        EventHelper.sendEvent("onNewToken", this, params);
+            EventHelper.sendEvent("onMessageReceived", this, params);
+        }
     }
 }

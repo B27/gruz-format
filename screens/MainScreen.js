@@ -61,26 +61,26 @@ class MainScreen extends React.Component {
 	// 	});
 	// };
 
-	_handleNotification = async notification => {
-		if (notification.origin === 'selected' && notification.data.type === 'accept') {
-			const res = await Axios.get(`/order/${notification.data.order_id}`);
+	// _handleNotification = async notification => {
+	// 	if (notification.origin === 'selected' && notification.data.type === 'accept') {
+	// 		const res = await Axios.get(`/order/${notification.data.order_id}`);
 
-			//this.setState({ notification: notification, order: res.data });
-			//const data = this.state.notification.data;
-			// console.log('origin: ' + this.state.notification.origin);
-			// console.log('data: ' + (data && data.order_id));
-			this.props.navigation.navigate('OrderPreview', { order: res.data });
-		} else if (notification.origin === 'received' && notification.data.type === 'reject') {
-			console.log('Заказ отменен');
+	// 		//this.setState({ notification: notification, order: res.data });
+	// 		//const data = this.state.notification.data;
+	// 		// console.log('origin: ' + this.state.notification.origin);
+	// 		// console.log('data: ' + (data && data.order_id));
+	// 		this.props.navigation.navigate('OrderPreview', { order: res.data });
+	// 	} else if (notification.origin === 'received' && notification.data.type === 'reject') {
+	// 		console.log('Заказ отменен');
 
-			this.props.navigation.navigate('AuthLoading');
-		} else if (notification.origin === 'received' && notification.data.type === 'kicked') {
-			console.log('Вас выпилили из заказа');
+	// 		this.props.navigation.navigate('AuthLoading');
+	// 	} else if (notification.origin === 'received' && notification.data.type === 'kicked') {
+	// 		console.log('Вас выпилили из заказа');
 
-			this.props.navigation.navigate('AuthLoading');
-		}
-		//console.log(notification.origin, notification.data.type);
-	};
+	// 		this.props.navigation.navigate('AuthLoading');
+	// 	}
+	// 	//console.log(notification.origin, notification.data.type);
+	// };
 
 	// static navigationOptions = ({ navigation }) => ({
 	//     headerLeft: <MenuIcon navigationProps={navigation} />,

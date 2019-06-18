@@ -8,24 +8,13 @@ import AppContainer from './navigation/Navigation';
 import NotificationListener from './utils/NotificationListener';
 import PushTokenListener from './utils/PushTokenListener';
 import UniversalEventEmitter from './utils/UniversalEventEmitter';
-// import { TaskManager, Notifications } from "expo";
 
-const LOCATION_TASK_NAME = 'background-location-task';
-let token;
-(async () => {
-    token = await AsyncStorage.getItem('token');
-    if (token) {
-        axios.defaults.headers = {
-            Authorization: 'Bearer ' + token
-        };
-    }
-    axios.defaults.baseURL = 'https://gruz.bw2api.ru'; /* 'http://192.168.1.4:3008'; */
-})(); //Этот говнокод для того чтобы не вернулся промис
+axios.defaults.baseURL = 'https://gruz.bw2api.ru'; /* 'http://192.168.1.4:3008'; */
 
 export default class App extends React.Component {
     componentDidMount() {
         this.onMessageReceivedListener = UniversalEventEmitter.addListener('onMessageReceived', NotificationListener);
-        this.onNewTokenListener = UniversalEventEmitter.addListener('onNewToken', PushTokenListener);
+        // this.onNewTokenListener = UniversalEventEmitter.addListener('onNewToken', PushTokenListener);
     }
 
     componentWillUnmount() {
@@ -38,9 +27,9 @@ export default class App extends React.Component {
             this.onMessageReceivedListener.remove();
         }
 
-        if (this.onNewTokenListener) {
-            this.onNewTokenListener.remove();
-        }
+        // if (this.onNewTokenListener) {
+        //     this.onNewTokenListener.remove();
+        // }
     }
 
     render() {
