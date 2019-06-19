@@ -4,7 +4,6 @@ import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { FlatList, Text, View, YellowBox } from 'react-native';
 import OrderCard from '../components/OrderCard';
-import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
@@ -26,7 +25,6 @@ class MainScreen extends React.Component {
 	};
 
 	componentDidMount = async () => {
-		registerForPushNotificationsAsync();
 		// this._notificationSubscription = Notifications.addListener(this._handleNotification);
 		// await this.props.store.updateUserInfo()
 		// await store.getOrders();

@@ -4,6 +4,7 @@ import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import registerForPushNotificationAsync from '../components/registerForPushNotificationsAsync';
 import { setNavigationToNotifListener } from '../utils/NotificationListener';
 
 @inject('store')
@@ -20,7 +21,7 @@ class AuthLoadingScreen extends React.Component {
         const { store, navigation } = this.props;
 
         setNavigationToNotifListener(navigation);
-        
+
         console.log('AuthLoadingScreen bootstrapAsync');
         const userToken = await AsyncStorage.getItem('token');
 
@@ -35,6 +36,7 @@ class AuthLoadingScreen extends React.Component {
                 Authorization: 'Bearer ' + userToken
             };
 
+            registerForPushNotificationAsync();
             try {
                 await store.getUserInfo();
             } catch (error) {

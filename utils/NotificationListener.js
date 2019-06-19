@@ -3,13 +3,17 @@ import NetworkRequests from '../mobx/NetworkRequests';
 
 let _navigation = null;
 
-const TAG = '|NotificationListener|';
+const TAG = '~NotificationListener~';
 
 export default async function NotificationListener(params) {
     const [type, order, title, body] = params;
 
-    console.log(TAG, 'params: ', params);
+    console.log(TAG, 'Notification recieved, params: ', params);
 
+    // Когда приложение на переднем плане, GruzFirebaseMessagingService отсылает event с type, order, title, body.
+    // Когда приложение в фоне или закрыто, firebase отправляет уведомление в трей
+    // по нажатии на уведомление в MainActivity в методе onResume отсылается event
+    // с type и order, title и body не приходят
     if (title && body) {
         if (_navigation) {
             if (type == 'accept') {
@@ -34,7 +38,6 @@ export default async function NotificationListener(params) {
         }
         //  Alert.alert('Вы перешли через уведомление', type + order);
     }
-
 }
 
 function showAlert(title, msg, { okFn, cancel }) {
@@ -45,7 +48,7 @@ function showAlert(title, msg, { okFn, cancel }) {
             text: 'Отмена',
             style: 'cancel'
         });
-        buttons.reverse() // кнопка отмены должна быть слева
+        buttons.reverse(); // кнопка отмены должна быть слева
     }
 
     Alert.alert(title, msg, buttons);

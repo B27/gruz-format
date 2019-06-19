@@ -11,7 +11,7 @@ class OrderCard extends React.Component {
     };
 
     render() {
-        const { cardStyle, buttonName, description, addresses, time, order, expandAlways, fullAddress } = this.props;
+        const { cardStyle, buttonName, description, addresses = [], time, order, expandAlways, fullAddress } = this.props;
         let orderId = order ? order._id : 'id';
 
         return (

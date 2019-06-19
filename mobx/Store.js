@@ -56,7 +56,7 @@ class ObservableStore {
 
             runInAction(() => {
                 //console.log(`get /worker/${userId} response.data >>>>`, response.data);
-                this.balance = response.data.balance;
+                this.balance = (+response.data.balance).toFixed(2);
                 this.name = response.data.name;
                 this.isDriver = response.data.isDriver;
                 this.onWork = response.data.onWork;
@@ -84,6 +84,7 @@ class ObservableStore {
                 const date = new Date(response.data.birthDate);
 
                 for (let key in response.data) this[key] = response.data[key];
+                this.balance = (+response.data.balance).toFixed(2);
 
                 // this.balance = response.data.balance;
                 // this.name = response.data.name;

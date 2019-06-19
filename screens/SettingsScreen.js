@@ -9,7 +9,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
 
-const TAG = '|SettingsScreen|'
+const TAG = '~SettingsScreen~'
 @inject('store')
 @observer
 class SettingsScreen extends React.Component {
