@@ -2,7 +2,7 @@ import Axios from 'axios';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { FlatList, Platform, Text, View, YellowBox } from 'react-native';
+import { FlatList, Platform, Text, View, YellowBox, AsyncStorage } from 'react-native';
 import OrderCard from '../components/OrderCard';
 // import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import { getSocket } from '../components/Socket';
@@ -37,9 +37,7 @@ class MainScreen extends React.Component {
 		// if (!socket || !socket.connected) {
 		//     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
 		// } else this.setState({message: ''})
-        NativeModules.ForegroundTaskModule.getDeviceName((err, name) => {
-            console.log(err, name);
-        });
+        
 		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
 			this.setState({ message: '' });
 		});
@@ -150,7 +148,8 @@ class MainScreen extends React.Component {
 							'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
 						);
 					} else {
-						NativeModules.ForegroundTaskModule.startService();
+                        //const token = ;
+						NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'));
 					}
 				} else {
                     //TaskManager.unregisterAllTasksAsync();

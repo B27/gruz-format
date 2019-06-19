@@ -29,7 +29,7 @@ import android.graphics.BitmapFactory;
 import ru.baikalweb.gruz.foreground.SendLocation;
 
 public class ForegroundTaskModule extends ReactContextBaseJavaModule {
-    public static final String REACT_CLASS = "ForegroundTaskModule";
+    public static final String REACT_CLASS = "ReactNativeJS";
 
     public ForegroundTaskModule(@Nonnull ReactApplicationContext reactContext) {
         super(reactContext);
@@ -38,7 +38,7 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     //Mandatory function getName that specifies the module name
     @Override
     public String getName() {
-        return REACT_CLASS;
+        return "ForegroundTaskModule";
     }
     //Custom function that we are going to export to JS
     @ReactMethod
@@ -51,21 +51,24 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod 
-    public void startService(Promise promise) {
+    public void startService(String token) {
         Log.d(REACT_CLASS, "startService");
         try {
             Intent intent = new Intent(SendLocation.FOREGROUND);
+            intent.putExtra("token", token);
             intent.setClass(this.getReactApplicationContext(), SendLocation.class);
             //startService(intent);
+            Log.d(REACT_CLASS, token);
+            //intent.putExtra("token", cb());
             getReactApplicationContext().startService(intent);
             Log.d(REACT_CLASS, "startService, success");
-            promise.resolve(true);
+            //promise.resolve(true);
             //Intent intent = new Intent(GeoLocationService.FOREGROUND);
             //intent.setClass(this.getReactApplicationContext(), GeoLocationService.class);
             //getReactApplicationContext().startService(intent);
         } catch (Exception e) {
             Log.d(REACT_CLASS, "startService failed!");
-            promise.reject(e);
+            //promise.reject(e);
             return;
         }
     }

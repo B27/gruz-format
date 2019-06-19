@@ -147,6 +147,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.github.nkzawa:socket.io-client:0.6.0'
     addUnimodulesDependencies()
 }
 

@@ -1,39 +1,68 @@
 package ru.baikalweb.gruz.foreground;
 
-import ru.baikalweb.gruz.R;
-import ru.baikalweb.gruz.MainActivity;
-
-import android.app.Service;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.annotation.TargetApi;
-import android.util.Log;
-import android.os.IBinder;
-import android.os.Build;
-import android.content.Intent;
 import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.graphics.BitmapFactory;
+import android.util.Log;
 
-public class SendLocation extends Service {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import ru.baikalweb.gruz.MainActivity;
+import ru.baikalweb.gruz.R;
+
+public class SendLocation extends Service implements LocationListener {
     public static final String APP_NAME = "Формат.Груз";
-    public static final String REACT_CLASS = "ReactNativeJS";                                                
+    public static final String REACT_CLASS = "ReactNativeJS";
     private NotificationManager mNotificationManager;
+    private GoogleApiClient mGoogleApiClient;
+
+    private LocationRequest mLocationRequest;
+
+    private double fusedLatitude = 0.0;
+    private double fusedLongitude = 0.0;
 
     public static final String FOREGROUND = "ru.baikalweb.gruz.foreground.SendLocation";
     private static int NOTIFICATION_ID = 3313;
+    private Socket mSocket;
 
     @Override
     @TargetApi(Build.VERSION_CODES.M)
     public void onCreate() {
         Log.d(REACT_CLASS, "onCreate");
+
         super.onCreate();
+
     }
 
     @Override
     public void onDestroy() {
         Log.d(REACT_CLASS, "onDestroy");
+        stopFusedLocation();
         super.onDestroy();
     }
 
@@ -41,6 +70,23 @@ public class SendLocation extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(REACT_CLASS, "onStartCommand, calling startForeground");
         startForeground(NOTIFICATION_ID, getCompatNotification());
+
+        // Log.d(REACT_CLASS, "IN SENDLOCATION: " + intent.getStringExtra("token"));
+        try {
+
+            Log.d(REACT_CLASS, "IN SENDLOCATION: " + intent.getStringExtra("token"));
+            IO.Options opts = new IO.Options();
+            opts.query = "token=" + intent.getStringExtra("token");
+            mSocket = IO.socket("https://gruz.bw2api.ru/socket", opts);
+            mSocket.connect();
+            mSocket.emit("set work'", true);
+        } catch (URISyntaxException e) {
+        }
+
+        if (checkPlayServices()) {
+            startFusedLocation();
+            registerRequestUpdate(this);
+        }
         return START_STICKY;
     }
 
@@ -54,16 +100,131 @@ public class SendLocation extends Service {
         Log.d(REACT_CLASS, "getCompatNotification");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         String str = "В работе";
-        builder
-                .setSmallIcon(R.mipmap.ic_launcher)
+        builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setContentTitle(APP_NAME)
-                .setContentText(str)
-                .setTicker(str)
-                .setWhen(System.currentTimeMillis());
+                .setContentTitle(APP_NAME).setContentText(str).setTicker(str).setWhen(System.currentTimeMillis());
         Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, startIntent, 0);
         builder.setContentIntent(contentIntent);
         return builder.build();
+    }
+
+    // check if google play services is installed on the device
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                Log.d(REACT_CLASS, "This device is supported. Please download google play services");
+            } else {
+                Log.d(REACT_CLASS, "This device is not supported.");
+                // finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public void startFusedLocation() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API)
+                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnectionSuspended(int cause) {
+                        }
+
+                        @Override
+                        public void onConnected(Bundle connectionHint) {
+
+                        }
+                    }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+
+                        @Override
+                        public void onConnectionFailed(ConnectionResult result) {
+
+                        }
+                    }).build();
+            mGoogleApiClient.connect();
+        } else {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    public void stopFusedLocation() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    public void registerRequestUpdate(final LocationListener listener) {
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(10000); // every second
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,
+                            listener);
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (!isGoogleApiClientConnected()) {
+                        mGoogleApiClient.connect();
+                    }
+                    registerRequestUpdate(listener);
+                }
+            }
+        }, 1000);
+    }
+
+    public boolean isGoogleApiClientConnected() {
+        return mGoogleApiClient != null && mGoogleApiClient.isConnected();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        setFusedLatitude(location.getLatitude());
+        setFusedLongitude(location.getLongitude());
+
+        // Toast.makeText(getApplicationContext(), "NEW LOCATION RECEIVED",
+        // Toast.LENGTH_LONG).show();
+        JSONObject obj = new JSONObject();
+        JSONArray coords = new JSONArray();
+        try {
+            coords.put(getFusedLongitude());
+            coords.put(getFusedLatitude());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            obj.put("type", "Point");
+            obj.put("coordinates", coords);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(REACT_CLASS, "data to send: " + obj);
+
+        mSocket.emit("geo data", obj.toString());
+        Log.d(REACT_CLASS, "Lat: " + getFusedLatitude());
+        Log.d(REACT_CLASS, "Lng: " + getFusedLongitude());
+    }
+
+    public void setFusedLatitude(double lat) {
+        fusedLatitude = lat;
+    }
+
+    public void setFusedLongitude(double lon) {
+        fusedLongitude = lon;
+    }
+
+    public double getFusedLatitude() {
+        return fusedLatitude;
+    }
+
+    public double getFusedLongitude() {
+        return fusedLongitude;
     }
 }
