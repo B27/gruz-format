@@ -59,7 +59,7 @@ class ObservableStore {
                 this.balance = (+response.data.balance).toFixed(2);
                 this.name = response.data.name;
                 this.isDriver = response.data.isDriver;
-                this.onWork = response.data.onWork;
+                //this.onWork = response.data.onWork;
                 this.avatar = URL + response.data.photos.user;
                 //console.log('avatar ', this.avatar);
             });

@@ -207,7 +207,7 @@ class OrderDetailScreen extends React.Component {
             {
                 name: this.props.store.dispatcher.name,
                 id: this.props.store.dispatcher._id,
-                avatar: 'https://pp.userapi.com/c851020/v851020958/124b79/hm1z7MpbpAk.jpg'
+                avatar: require('../images/camera.png')
             },
             ...this.props.store.workers.slice()
         ]);

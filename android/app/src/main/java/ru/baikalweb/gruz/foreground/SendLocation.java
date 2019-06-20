@@ -78,8 +78,9 @@ public class SendLocation extends Service implements LocationListener {
             opts.query = "token=" + intent.getStringExtra("token");
             mSocket = IO.socket("https://gruz.bw2api.ru/socket", opts);
             mSocket.connect();
-            mSocket.emit("set work'", true);
+            mSocket.emit("set work", true);
         } catch (URISyntaxException e) {
+            Log.d(REACT_CLASS, e.toString());
         }
 
         if (checkPlayServices()) {
@@ -151,6 +152,7 @@ public class SendLocation extends Service implements LocationListener {
     public void stopFusedLocation() {
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
+            mSocket.emit("set work", false);
         }
     }
 

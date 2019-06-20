@@ -152,8 +152,10 @@ class MainScreen extends React.Component {
                         this._onRefresh();
 					}
 				} else {
-					//TaskManager.unregisterAllTasksAsync();
-					await NativeModules.ForegroundTaskModule.stopService();
+                    //TaskManager.unregisterAllTasksAsync();
+                    this.props.store.setOnWork(!this.props.store.onWork);
+                    await NativeModules.ForegroundTaskModule.stopService();
+                    this._onRefresh();
 				}
 			}
 		}
