@@ -23,15 +23,14 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import ru.baikalweb.gruz.MainActivity;
 import ru.baikalweb.gruz.R;
 

@@ -10,7 +10,6 @@ import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
 import { NativeModules } from 'react-native';
 
-
 // const LOCATION_TASK_NAME = 'background-location-task';
 
 YellowBox.ignoreWarnings([
@@ -36,7 +35,7 @@ class MainScreen extends React.Component {
 		// if (!socket || !socket.connected) {
 		//     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
 		// } else this.setState({message: ''})
-        
+
 		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
 			this.setState({ message: '' });
 		});
@@ -147,28 +146,14 @@ class MainScreen extends React.Component {
 							'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
 						);
 					} else {
-                        //const token = ;
-						NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'));
+						this.props.store.setOnWork(!this.props.store.onWork);
+						
+                        await NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'));
+                        this._onRefresh();
 					}
 				} else {
-                    //TaskManager.unregisterAllTasksAsync();
-                    NativeModules.ForegroundTaskModule.stopService();
-				}
-
-				console.log('1');
-
-                const socket = await getSocket();
-                
-                socket.on('error', result => {
-                    console.log('error', result);
-                });
-
-				if (socket && socket.connected) {
-                    socket.emit('set work', !this.props.store.onWork);
-					this.props.store.setOnWork(!this.props.store.onWork);
-					this._onRefresh();
-				} else {
-					this.setState({ message: 'Нет соединения с сервером' });
+					//TaskManager.unregisterAllTasksAsync();
+					await NativeModules.ForegroundTaskModule.stopService();
 				}
 			}
 		}

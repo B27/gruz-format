@@ -282,7 +282,7 @@ class EditUserScreen extends React.Component {
                             <NumericInput
                                 onlyNum
                                 style={styles.inputHalf}
-                                placeholder='Рост (м)'
+                                placeholder='Рост (cм)'
                                 onChangeText={height => this.setState({ height })}
                                 value={this.state.height}
                             />

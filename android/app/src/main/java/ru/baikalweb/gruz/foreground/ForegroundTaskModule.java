@@ -51,7 +51,7 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod 
-    public void startService(String token) {
+    public void startService(String token, Promise promise) {
         Log.d(REACT_CLASS, "startService");
         try {
             Intent intent = new Intent(SendLocation.FOREGROUND);
@@ -62,13 +62,13 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
             //intent.putExtra("token", cb());
             getReactApplicationContext().startService(intent);
             Log.d(REACT_CLASS, "startService, success");
-            //promise.resolve(true);
+            promise.resolve(true);
             //Intent intent = new Intent(GeoLocationService.FOREGROUND);
             //intent.setClass(this.getReactApplicationContext(), GeoLocationService.class);
             //getReactApplicationContext().startService(intent);
         } catch (Exception e) {
             Log.d(REACT_CLASS, "startService failed!");
-            //promise.reject(e);
+            promise.reject(e);
             return;
         }
     }
