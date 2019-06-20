@@ -1,20 +1,13 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import md5 from 'md5';
 import React from 'react';
-import {
-    AsyncStorage,
-    ImageBackground,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    KeyboardAvoidingView
-} from 'react-native';
+import { ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import LoadingButton from '../components/LoadingButton';
 import bgImage from '../images/background.png';
 import styles from '../styles';
-import LoadingButton from '../components/LoadingButton';
 
 class SignInScreen extends React.Component {
     state = {
@@ -37,54 +30,50 @@ class SignInScreen extends React.Component {
             //     behavior='padding'
             //     //keyboardVerticalOffset={-50}
             // >
-                <ImageBackground source={bgImage} style={styles.backgroundContainer}>
-                    <View style={styles.logoContainer}>
-                        <Text style={styles.logoText}>ДОБРО {'\n'}ПОЖАЛОВАТЬ</Text>
-                        <Icon name={'fiber-manual-record'} size={42} color={'black'} style={styles.logoIcon} />
-                        <Icon name={'fiber-manual-record'} size={42} color={'white'} style={styles.logoIcon} />
+            <ImageBackground source={bgImage} style={styles.backgroundContainer}>
+                <View style={styles.logoContainer}>
+                    <Text style={styles.logoText}>ДОБРО {'\n'}ПОЖАЛОВАТЬ</Text>
+                    <Icon name={'fiber-manual-record'} size={42} color={'black'} style={styles.logoIcon} />
+                    <Icon name={'fiber-manual-record'} size={42} color={'white'} style={styles.logoIcon} />
+                </View>
+                <View style={styles.inputBlock}>
+                    <View style={styles.inputContainer}>
+                        <Icon name={'person'} size={28} color='#FFC234' style={styles.inputIcon} />
+                        <TextInput
+                            style={styles.inputWithIcon}
+                            placeholder='Номер телефона'
+                            placeholderTextColor='grey'
+                            onChangeText={phone => this.setState({ phone })}
+                        />
                     </View>
-                    <View style={styles.inputBlock}>
-                        <View style={styles.inputContainer}>
-                            <Icon name={'person'} size={28} color='#FFC234' style={styles.inputIcon} />
-                            <TextInput
-                                style={styles.inputWithIcon}
-                                placeholder='Номер телефона'
-                                placeholderTextColor='grey'
-                                onChangeText={phone => this.setState({ phone })}
-                            />
-                        </View>
 
-                        <View style={styles.inputContainer}>
-                            <Icon name={'lock'} size={28} color='#FFC234' style={styles.inputIcon} />
-                            <TextInput
-                                style={styles.inputWithIcon}
-                                placeholder='Пароль'
-                                secureTextEntry={this.state.showPass}
-                                placeholderTextColor='grey'
-                                onChangeText={password => this.setState({ password })}
-                            />
-                            <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
-                                <Icon2
-                                    name={this.state.press == false ? 'md-eye' : 'md-eye-off'}
-                                    size={26}
-                                    color='grey'
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={{ color: 'red' }}>{this.state.message}</Text>
+                    <View style={styles.inputContainer}>
+                        <Icon name={'lock'} size={28} color='#FFC234' style={styles.inputIcon} />
+                        <TextInput
+                            style={styles.inputWithIcon}
+                            placeholder='Пароль'
+                            secureTextEntry={this.state.showPass}
+                            placeholderTextColor='grey'
+                            onChangeText={password => this.setState({ password })}
+                        />
+                        <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
+                            <Icon2 name={this.state.press == false ? 'md-eye' : 'md-eye-off'} size={26} color='grey' />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={{ color: 'red' }}>{this.state.message}</Text>
 
-                        <LoadingButton style={styles.button} onPress={this._signInAsync}>
-                            ВОЙТИ
-                        </LoadingButton>
+                    <LoadingButton style={styles.button} onPress={this._signInAsync}>
+                        ВОЙТИ
+                    </LoadingButton>
 
-                        <Text style={styles.registrationQuestion}>
-                            Нет аккаунта?{' '}
-                            <Text style={{ color: '#FFC234', fontSize: 16 }} onPress={this.goToRegistartionScreen}>
-                                Зарегистрироваться.
-                            </Text>
+                    <Text style={styles.registrationQuestion}>
+                        Нет аккаунта?{' '}
+                        <Text style={{ color: '#FFC234', fontSize: 16 }} onPress={this.goToRegistartionScreen}>
+                            Зарегистрироваться.
                         </Text>
-                    </View>
-                </ImageBackground>
+                    </Text>
+                </View>
+            </ImageBackground>
             //</KeyboardAvoidingView>
         );
     }
@@ -95,7 +84,7 @@ class SignInScreen extends React.Component {
         this.props.navigation.navigate('RegisterPerson');
     };
 
-    _signInAsync = async offButtonSetState => {
+    _signInAsync = async () => {
         this.setState({ message: '' });
         if (!this.state.phone || !this.state.password) {
             this.setState({ message: 'Введите логин и пароль' });
@@ -118,7 +107,6 @@ class SignInScreen extends React.Component {
                     Authorization: 'Bearer ' + response.data.token
                 };
 
-                offButtonSetState();
                 this.props.navigation.navigate('AuthLoading');
             } catch (error) {
                 if (error.response) {

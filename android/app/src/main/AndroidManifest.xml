@@ -2,11 +2,11 @@
     package="ru.baikalweb.gruz">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!-- OPTIONAL PERMISSIONS, REMOVE WHATEVER YOU DO NOT NEED -->
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
-    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+      
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -26,24 +26,43 @@
     <!-- END OPTIONAL PERMISSIONS -->
 
     <application
-      android:name=".MainApplication"
-      android:label="@string/app_name"
-      android:icon="@mipmap/ic_launcher"
-      android:roundIcon="@mipmap/ic_launcher_round"
-      android:allowBackup="false"
-      android:theme="@style/AppTheme">
-      <activity
-        android:name=".MainActivity"
+        android:name=".MainApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-        android:windowSoftInputMode="adjustResize">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-      </activity>
+        android:windowSoftInputMode="adjustResize"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/AppTheme">
+        
+      
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-      <service android:name=".foreground.SendLocation" />
+      
+        
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+        <service
+            android:name=".firebase.push.GruzFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".foreground.SendLocation" />
     </application>
 
 </manifest>

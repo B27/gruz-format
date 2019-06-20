@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ExpandCardBase from './ExpandCardBase';
 import styles from '../styles';
+import moment from 'moment';
 
 class OrderCard extends React.Component {
     _onPressButton = () => {
@@ -10,7 +11,7 @@ class OrderCard extends React.Component {
     };
 
     render() {
-        const { cardStyle, buttonName, description, addresses, time, order, expandAlways, fullAddress } = this.props;
+        const { cardStyle, buttonName, description, addresses = [], time, order, expandAlways, fullAddress } = this.props;
         let orderId = order ? order._id : 'id';
 
         return (
@@ -77,10 +78,8 @@ function generateAddress(location, fullAddress) {
     return address;
 }
 
-const regExp = /^(\d{4}?)-(\d{2}?)-(\d{2}?)T(\d{2}?):(\d{2}?)(?:.+)$/;
-
 function formatDate(date) {
-    return date.replace(regExp, '$3.$2.$1 $4:$5');
+    return moment(date).format('DD.MM.YY HH:mm');
 }
 
 export default OrderCard;

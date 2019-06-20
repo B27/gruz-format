@@ -152,7 +152,7 @@ class OrderDetailScreen extends React.Component {
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonConfirm} onPress={this._completeOrderPress}>
-                            <Text style={styles.buttonText}>ГОТОВО</Text>
+                            <Text style={styles.buttonText}>ЗАВЕРШИТЬ</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -1,10 +1,10 @@
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, AsyncStorage } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import ExpandCardBase from '../components/ExpandCardBase';
+import LoadingButton from '../components/LoadingButton';
 import OrderCard from '../components/OrderCard';
 import styles from '../styles';
-import LoadingButton from '../components/LoadingButton';
 
 @inject('store')
 class OrderPreview extends React.Component {
@@ -12,14 +12,13 @@ class OrderPreview extends React.Component {
         title: 'Заказ'
     };
 
-    _acceptOrder = async (offButtonSetState) => {
+    _acceptOrder = async () => {
         const { store, navigation } = this.props;
 
         const order = navigation.getParam('order');
 
         try {
             await store.startFulfillingOrder(order._id);
-            offButtonSetState();
             navigation.navigate('OrderDetail');
             console.log('Accept order successful');
         } catch (error) {

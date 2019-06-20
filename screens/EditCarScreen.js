@@ -1,9 +1,10 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 import { Picker } from 'native-base';
 import React from 'react';
-import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
+import { Keyboard, ScrollView, Text, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
@@ -55,92 +56,90 @@ class EditCarScreen extends React.Component {
 
     render() {
         return (
-            
-                <ScrollView contentContainerStyle={styles.registrationScreen}>
-                    <ChoiceCameraRoll
-                        pickFromCamera={this.pickFromCamera}
-                        selectPicture={this.selectPicture}
-                        visible={this.state.choiceModalVisible}
-                        closeModal={this.closeModals}
-                    />
-                    <Text>{this.state.message}</Text>
-                    <View style={styles.inputContainer}>
-                        <View
-                            style={{
-                                height: 45,
-                                borderWidth: 1,
-                                borderRadius: 15,
-                                paddingLeft: 5,
-                                marginBottom: 15,
-                                justifyContent: 'center'
+            <ScrollView contentContainerStyle={styles.registrationScreen}>
+                <ChoiceCameraRoll
+                    pickFromCamera={this.pickFromCamera}
+                    selectPicture={this.selectPicture}
+                    visible={this.state.choiceModalVisible}
+                    closeModal={this.closeModals}
+                />
+                <Text>{this.state.message}</Text>
+                <View style={styles.inputContainer}>
+                    <View
+                        style={{
+                            height: 45,
+                            borderWidth: 1,
+                            borderRadius: 15,
+                            paddingLeft: 5,
+                            marginBottom: 15,
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <Picker
+                            selectedValue={this.state.bodyType}
+                            onValueChange={(itemValue, itemIndex) => {
+                                this.setState({
+                                    bodyType: itemValue,
+                                    isOpen: this.state.types[itemIndex].isOpen
+                                });
+                                console.log(itemValue, this.state.types[itemIndex].isOpen);
                             }}
+                            placeholder='Тип кузова'
                         >
-                            <Picker
-                                selectedValue={this.state.bodyType}
-                                onValueChange={(itemValue, itemIndex) => {
-                                    this.setState({
-                                        bodyType: itemValue,
-                                        isOpen: this.state.types[itemIndex].isOpen
-                                    });
-                                    console.log(itemValue, this.state.types[itemIndex].isOpen);
-                                }}
-                                placeholder='Тип кузова'
-                            >
-                                {this.state.types.map(({ name }, index) => {
-                                    return (
-                                        <Picker.Item
-                                            color={!index ? 'grey' : 'black'}
-                                            key={name}
-                                            label={name}
-                                            value={name}
-                                        />
-                                    );
-                                })}
-                            </Picker>
-                        </View>
-
-                        <NumericInput
-                            style={styles.input}
-                            placeholder='Грузоподъёмность (т)'
-                            onChangeText={loadCapacity => this.setState({ loadCapacity })}
-                            value={this.state.loadCapacity}
-                        />
-                        <Text style={styles.descriptionTwo}>Кузов:</Text>
-                        <NumericInput
-                            style={styles.input}
-                            placeholder='Длина (м)'
-                            onChangeText={length => this.setState({ length })}
-                            value={this.state.length}
-                        />
-                        <NumericInput
-                            style={styles.input}
-                            placeholder='Ширина (м)'
-                            onChangeText={width => this.setState({ width })}
-                            value={this.state.width}
-                        />
-                        <NumericInput
-                            style={styles.input}
-                            placeholder='Высота (м)'
-                            onChangeText={height => this.setState({ height })}
-                            value={this.state.height}
-                        />
-                        <Text style={styles.descriptionTwo}>Фотографии:</Text>
-                        <View style={styles.photoButtonContainer}>
-                            <ImageChooser openModal={this.openModalImage(1)} img={this.state.image1} />
-                            <ImageChooser openModal={this.openModalImage(2)} img={this.state.image2} />
-                            <ImageChooser openModal={this.openModalImage(3)} img={this.state.image3} />
-                        </View>
+                            {this.state.types.map(({ name }, index) => {
+                                return (
+                                    <Picker.Item
+                                        color={!index ? 'grey' : 'black'}
+                                        key={name}
+                                        label={name}
+                                        value={name}
+                                    />
+                                );
+                            })}
+                        </Picker>
                     </View>
 
-                    <LoadingButton style={styles.buttonBottom} onPress={this.nextScreen}>
-                        ПРОДОЛЖИТЬ
-                    </LoadingButton>
-                </ScrollView>
+                    <NumericInput
+                        style={styles.input}
+                        placeholder='Грузоподъёмность (т)'
+                        onChangeText={loadCapacity => this.setState({ loadCapacity })}
+                        value={this.state.loadCapacity}
+                    />
+                    <Text style={styles.descriptionTwo}>Кузов:</Text>
+                    <NumericInput
+                        style={styles.input}
+                        placeholder='Длина (м)'
+                        onChangeText={length => this.setState({ length })}
+                        value={this.state.length}
+                    />
+                    <NumericInput
+                        style={styles.input}
+                        placeholder='Ширина (м)'
+                        onChangeText={width => this.setState({ width })}
+                        value={this.state.width}
+                    />
+                    <NumericInput
+                        style={styles.input}
+                        placeholder='Высота (м)'
+                        onChangeText={height => this.setState({ height })}
+                        value={this.state.height}
+                    />
+                    <Text style={styles.descriptionTwo}>Фотографии:</Text>
+                    <View style={styles.photoButtonContainer}>
+                        <ImageChooser openModal={this.openModalImage(1)} img={this.state.image1} />
+                        <ImageChooser openModal={this.openModalImage(2)} img={this.state.image2} />
+                        <ImageChooser openModal={this.openModalImage(3)} img={this.state.image3} />
+                    </View>
+                </View>
 
+                <LoadingButton style={styles.buttonBottom} onPress={this.nextScreen}>
+                    ПРОДОЛЖИТЬ
+                </LoadingButton>
+            </ScrollView>
         );
     }
 
-    nextScreen = async (offButtonSetState) => {
+    nextScreen = async () => {
         if (
             !this.state.image1 ||
             !this.state.image2 ||
@@ -225,7 +224,6 @@ class EditCarScreen extends React.Component {
                 //console.log(data);
 
                 await axios.patch('/worker/upload/' + this.state.userId, data);
-                offButtonSetState();
                 this.props.navigation.navigate('AuthLoading');
             } catch (err) {
                 console.log('Download photos error: ', err);

@@ -1,43 +1,30 @@
-import { Permissions, Notifications } from 'expo';
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import { NativeModules } from 'react-native';
+
+const TAG = '~registerForPushNotificationsAsync~';
 
 export default async function registerForPushNotificationsAsync() {
-	const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-	let finalStatus = existingStatus;
+    // Get the token that uniquely identifies this device
+    let notifToken;
 
-	// only ask if permissions have not already been determined, because
-	// iOS won't necessarily prompt the user a second time.
-	if (existingStatus !== 'granted') {
-		// Android remote notification permissions are granted during the app
-		// install, so this will only ask on iOS
-		const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-		finalStatus = status;
-	}
+    try {
+        ({ pushToken: notifToken } = await NativeModules.RNFirebasePushToken.getToken());
+        console.log(TAG, 'Token for push notifications received:', notifToken);
+    } catch (error) {
+        console.log(TAG, 'Error getting token', error);
+        return;
+    }
 
-	// Stop here if the user did not grant permissions
-	if (finalStatus !== 'granted') {
-		return;
-	}
 
-	// Get the token that uniquely identifies this device
-	let token = await Notifications.getExpoPushTokenAsync();
-
-	// axios.interceptors.request.use(request => {
-	// 	console.log('Starting Request', request);
-	// 	return request;
-	// });
-
-	// axios.interceptors.response.use(response => {
-	// 	console.log('Response:', response);
-	// 	return response;
-	// });
-	let response;
-	// POST the token to your backend server from where you can retrieve it to send push notifications.
-	try {
-		console.log(token);
-		response = await axios.post('/push_token', {token});
-	} catch (err) {
-		//console.log('post error', err.response);
-	}
-
+    try {
+        await axios.post('/push_token', { token: notifToken });
+        console.log(TAG, 'Send token to server and save in AsyncStorage succesful');
+    } catch (error) {
+        if (error.response) {
+            console.log(TAG, 'Error post /push_token', error.response.status, error.response.data.message);
+        } else {
+            console.log(TAG, 'Error:', error);
+        }
+    }
 }

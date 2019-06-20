@@ -2,9 +2,12 @@ import Axios from 'axios';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
+<<<<<<< HEAD
 import { FlatList, Platform, Text, View, YellowBox, AsyncStorage } from 'react-native';
+=======
+import { FlatList, Text, View, YellowBox } from 'react-native';
+>>>>>>> bitb/b27_screens
 import OrderCard from '../components/OrderCard';
-// import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
@@ -28,7 +31,6 @@ class MainScreen extends React.Component {
 	};
 
 	componentDidMount = async () => {
-		// registerForPushNotificationsAsync();
 		// this._notificationSubscription = Notifications.addListener(this._handleNotification);
 		// await this.props.store.updateUserInfo()
 		// await store.getOrders();
@@ -47,8 +49,8 @@ class MainScreen extends React.Component {
 		if (this.willFocusSubscription) {
 			this.willFocusSubscription.remove();
 		}
-    }
-    
+	}
+
 	// _getLocationAsync = async () => {
 	// 	let { status } = await Permissions.askAsync(Permissions.LOCATION);
 	// 	if (status !== 'granted') {
@@ -63,26 +65,26 @@ class MainScreen extends React.Component {
 	// 	});
 	// };
 
-	_handleNotification = async notification => {
-		if (notification.origin === 'selected' && notification.data.type === 'accept') {
-			const res = await Axios.get(`/order/${notification.data.order_id}`);
+	// _handleNotification = async notification => {
+	// 	if (notification.origin === 'selected' && notification.data.type === 'accept') {
+	// 		const res = await Axios.get(`/order/${notification.data.order_id}`);
 
-			//this.setState({ notification: notification, order: res.data });
-			//const data = this.state.notification.data;
-			// console.log('origin: ' + this.state.notification.origin);
-			// console.log('data: ' + (data && data.order_id));
-			this.props.navigation.navigate('OrderPreview', { order: res.data });
-		} else if (notification.origin === 'received' && notification.data.type === 'reject') {
-			console.log('Заказ отменен');
+	// 		//this.setState({ notification: notification, order: res.data });
+	// 		//const data = this.state.notification.data;
+	// 		// console.log('origin: ' + this.state.notification.origin);
+	// 		// console.log('data: ' + (data && data.order_id));
+	// 		this.props.navigation.navigate('OrderPreview', { order: res.data });
+	// 	} else if (notification.origin === 'received' && notification.data.type === 'reject') {
+	// 		console.log('Заказ отменен');
 
-			this.props.navigation.navigate('AuthLoading');
-		} else if (notification.origin === 'received' && notification.data.type === 'kicked') {
-			console.log('Вас выпилили из заказа');
+	// 		this.props.navigation.navigate('AuthLoading');
+	// 	} else if (notification.origin === 'received' && notification.data.type === 'kicked') {
+	// 		console.log('Вас выпилили из заказа');
 
-			this.props.navigation.navigate('AuthLoading');
-		}
-		//console.log(notification.origin, notification.data.type);
-	};
+	// 		this.props.navigation.navigate('AuthLoading');
+	// 	}
+	// 	//console.log(notification.origin, notification.data.type);
+	// };
 
 	// static navigationOptions = ({ navigation }) => ({
 	//     headerLeft: <MenuIcon navigationProps={navigation} />,
@@ -158,10 +160,14 @@ class MainScreen extends React.Component {
 
 				console.log('1');
 
-				const socket = await getSocket();
+                const socket = await getSocket();
+                
+                socket.on('error', result => {
+                    console.log('error', result);
+                });
 
 				if (socket && socket.connected) {
-					socket.emit('set work', !this.props.store.onWork);
+                    socket.emit('set work', !this.props.store.onWork);
 					this.props.store.setOnWork(!this.props.store.onWork);
 					this._onRefresh();
 				} else {

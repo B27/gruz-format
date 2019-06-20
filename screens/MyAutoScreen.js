@@ -1,10 +1,11 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 import { inject, observer } from 'mobx-react/native';
 import { Picker } from 'native-base';
 import React from 'react';
-import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
+import { Keyboard, ScrollView, Text, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
