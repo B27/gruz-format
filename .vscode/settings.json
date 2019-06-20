@@ -17,9 +17,5 @@
     "prettier.tabWidth": 4,
         "editor.detectIndentation": false,
         "javascript.implicitProjectConfig.experimentalDecorators": true,
-<<<<<<< HEAD
-        "java.configuration.updateBuildConfiguration": "automatic"
-=======
-        "java.configuration.updateBuildConfiguration": "disabled"
->>>>>>> bitb/b27_screens
+
 }

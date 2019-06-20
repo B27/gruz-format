@@ -2,11 +2,8 @@ import Axios from 'axios';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-<<<<<<< HEAD
-import { FlatList, Platform, Text, View, YellowBox, AsyncStorage } from 'react-native';
-=======
-import { FlatList, Text, View, YellowBox } from 'react-native';
->>>>>>> bitb/b27_screens
+import { FlatList, Platform, Text, View, YellowBox } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import OrderCard from '../components/OrderCard';
 import { getSocket } from '../components/Socket';
 import SwitchToggle from '../components/SwitchToggle';
