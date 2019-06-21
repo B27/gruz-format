@@ -54,6 +54,7 @@ class AuthLoadingScreen extends React.Component {
                     const workersData = toJS(store.order).workers.data;
 
                     let sumEntered = true;
+                    // проверка на то, указал ли пользователь полученную сумму
                     if (!workersData.find(wrkr => wrkr.id._id == userId).sum) {
                         sumEntered = false;
                     }

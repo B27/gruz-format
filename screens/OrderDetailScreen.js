@@ -203,14 +203,7 @@ class OrderDetailScreen extends React.Component {
     };
 
     _chatPress = () => {
-        this.props.navigation.navigate('OrderChat', [
-            {
-                name: this.props.store.dispatcher.name,
-                id: this.props.store.dispatcher._id,
-                avatar: require('../images/camera.png')
-            },
-            ...this.props.store.workers.slice()
-        ]);
+        this.props.navigation.navigate('OrderChat');
     };
 }
 
