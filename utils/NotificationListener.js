@@ -56,7 +56,7 @@ function showAlert(title, msg, { okFn, cancel }) {
 
 gotoOrderPreview = order_id => async () => {
     try {
-        await NetworkRequests.getOrder(order_id);
+        const res = await NetworkRequests.getOrder(order_id);
         _navigation.navigate('OrderPreview', { order: res.data });
     } catch (error) {
         console.log('gotoOrderPreview', error);

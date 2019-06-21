@@ -1,5 +1,6 @@
 package ru.baikalweb.gruz;
 
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.graphics.Color;
@@ -14,6 +15,8 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.messaging.RemoteMessage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
@@ -29,6 +32,8 @@ public class MainActivity extends ReactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
@@ -57,6 +62,14 @@ public class MainActivity extends ReactActivity {
         });
 
         ViewCompat.requestApplyInsets(decorView);
+
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
+                getApplicationContext());
+        if (code != ConnectionResult.SUCCESS) {
+            Dialog dlg =
+                    GoogleApiAvailability.getInstance().getErrorDialog(this, code, 1);
+            dlg.show();
+        }
     }
 
     @Override
