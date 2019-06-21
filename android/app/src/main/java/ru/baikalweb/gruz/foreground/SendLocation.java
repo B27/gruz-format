@@ -37,16 +37,13 @@ import ru.baikalweb.gruz.R;
 public class SendLocation extends Service implements LocationListener {
     public static final String APP_NAME = "Формат.Груз";
     public static final String REACT_CLASS = "ReactNativeJS";
-    private NotificationManager mNotificationManager;
-    private GoogleApiClient mGoogleApiClient;
-
-    private LocationRequest mLocationRequest;
-
-    private double fusedLatitude = 0.0;
-    private double fusedLongitude = 0.0;
-
     public static final String FOREGROUND = "ru.baikalweb.gruz.foreground.SendLocation";
     private static int NOTIFICATION_ID = 3313;
+    private NotificationManager mNotificationManager;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private double fusedLatitude = 0.0;
+    private double fusedLongitude = 0.0;
     private Socket mSocket;
 
     @Override
@@ -102,7 +99,8 @@ public class SendLocation extends Service implements LocationListener {
         String str = "В работе";
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setContentTitle(APP_NAME).setContentText(str).setTicker(str).setWhen(System.currentTimeMillis());
+                .setContentTitle(APP_NAME).setContentText(str).setTicker(str).setWhen(System.currentTimeMillis())
+                .setChannelId(getResources().getString(R.string.default_notification_channel_id));
         Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, startIntent, 0);
         builder.setContentIntent(contentIntent);
@@ -213,19 +211,19 @@ public class SendLocation extends Service implements LocationListener {
         Log.d(REACT_CLASS, "Lng: " + getFusedLongitude());
     }
 
-    public void setFusedLatitude(double lat) {
-        fusedLatitude = lat;
-    }
-
-    public void setFusedLongitude(double lon) {
-        fusedLongitude = lon;
-    }
-
     public double getFusedLatitude() {
         return fusedLatitude;
     }
 
+    public void setFusedLatitude(double lat) {
+        fusedLatitude = lat;
+    }
+
     public double getFusedLongitude() {
         return fusedLongitude;
+    }
+
+    public void setFusedLongitude(double lon) {
+        fusedLongitude = lon;
     }
 }
