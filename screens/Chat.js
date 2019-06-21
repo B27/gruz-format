@@ -5,158 +5,184 @@ import { GiftedChat, Send } from 'react-native-gifted-chat';
 import { toJS } from 'mobx';
 import NetworkRequests from '../mobx/NetworkRequests';
 import { URL } from '../constants';
+import io from 'socket.io-client';
+import AsyncStorage from '@react-native-community/async-storage';
 //const socket = (async()=>{await getChatSocket('5ce66399dcc0097d8b95dc17')})();
 
-let connected = false;
 const TAGdidMount = '~Chat.js componentDidMount() ~';
 const TAGidToName = '~Chat.js idToName() ~';
+let socket;
 
 @inject('store')
 @observer
 class Chat extends React.Component {
-    state = {
-        messages: []
-    };
+	state = {
+		messages: [],
+		chatHistory: []
+	};
 
-    static navigationOptions = {
-        title: 'Чат с диспетчером'
-    };
+	static navigationOptions = {
+		title: 'Чат с диспетчером'
+	};
 
-    workersChatData = []; // имена и аватарки людей в чате
+	workersChatData = []; // имена и аватарки людей в чате
 
-    setMessage(id, text, sender, name, avatar) {
-        return {
-            _id: id,
-            text: text,
-            user: {
-                _id: sender,
-                name: name,
-                avatar: avatar
-            }
-        };
-    }
+	setMessage(id, text, sender, name, avatar) {
+		return {
+			_id: id,
+			text: text,
+			user: {
+				_id: sender,
+				name: name,
+				avatar: avatar
+			}
+		};
+	}
 
-    componentDidMount = async () => {
-        let storeDispatcher = toJS(this.props.store.dispatcher);
-        console.log(TAGdidMount, 'dispatcher from store:', storeDispatcher);
+	componentDidMount = async () => {
+		this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+			(async () => {
+				console.log('WILL FOCUS');
 
-        let disp = this.workersChatData.find(item => item.id === storeDispatcher._id);
-        console.log(TAGdidMount, 'dispatcher in workersChatData:', disp);
+				socket = io(URL + '/chat', {
+					query: {
+						token: await AsyncStorage.getItem('token'),
+						order_id: this.props.store.orderIdOnWork
+					}
+				});
+				//console.log(TAGdidMount, 'socketChat.connected from store:', socket.connected);
 
-        if (!disp) {
-            console.log(TAGdidMount, 'add dispatcher to workersChatData');
-            this.workersChatData.push({
-                id: storeDispatcher._id,
-                name: storeDispatcher.name,
-                avatar: require('../images/camera.png')
-            });
-        }
+				socket.on('history', async result => {
+					console.log(TAGdidMount, 'callback socket.on "history" called');
 
-        await this.props.store.startChatSocket(this.props.store.orderIdOnWork);
-        console.log(TAGdidMount, 'socketChat.connected from store:', this.props.store.socketChat.connected);
+					//console.log(result);
+					this.setState({ chatHistory: [] });
+					for (const item of result) {
+						const { text, sender } = item;
+						const { name, avatar } = await this.idToName(sender);
+						this.addChatMessage(this.setMessage(Math.random(), text, sender, name, avatar));
+					}
+				});
 
-        if (!connected) {
-            this.props.store.socketChat.on('history', async result => {
-                console.log(TAGdidMount, 'callback socket.on "history" called');
+				socket.on('chat message', async result => {
+					const { sender, text } = result;
+					const { name, avatar } = await this.idToName(sender);
+					this.addChatMessage(this.setMessage(Math.random(), text, sender, name, avatar));
+					//console.log(result);
+				});
+			})();
+		});
+		let storeDispatcher = toJS(this.props.store.dispatcher);
+		console.log(TAGdidMount, 'dispatcher from store:', storeDispatcher);
 
-                //console.log(result);
-                this.props.store.chatHistory = [];
-                for (const item of result) {
-                    const { text, sender } = item;
-                    const { name, avatar } = await this.idToName(sender);
-                    this.props.store.addChatMessage(this.setMessage(Math.random(), text, sender, name, avatar));
-                }
-            });
+		let disp = this.workersChatData.find(item => item.id === storeDispatcher._id);
+		console.log(TAGdidMount, 'dispatcher in workersChatData:', disp);
 
-            this.props.store.socketChat.on('chat message', async result => {
-                const { sender, text } = result;
-                const { name, avatar } = await this.idToName(sender);
-                this.props.store.addChatMessage(this.setMessage(Math.random(), text, sender, name, avatar));
-                //console.log(result);
-            });
-            connected = true;
-        }
-    };
+		if (!disp) {
+			console.log(TAGdidMount, 'add dispatcher to workersChatData');
+			this.workersChatData.push({
+				id: storeDispatcher._id,
+				name: storeDispatcher.name,
+				avatar: require('../images/camera.png')
+			});
+		}
 
-    idToName = async id => {
-        //workerChatData
-        console.log(TAGidToName, 'call worker idToName with id:', id);
+		//await this.props.store.startChatSocket(this.props.store.orderIdOnWork);
+	};
 
-        let workerData = this.workersChatData.find(item => item.id === id);
-        let name = null;
-        let avatar = null;
+	componentWillUnmount() {
+		if (this.willFocusSubscription) {
+			this.willFocusSubscription.remove();
+		}
+		socket.disconnect();
+	}
 
-        if (workerData) {
-            name = workerData.name;
-            avatar = workerData.avatar;
-        } else {
-            try {
-                const { data: newWorkerData } = await NetworkRequests.getWorker(id);
-                console.log(TAGidToName, 'newWorkerData', newWorkerData);
-                this.workersChatData.push({
-                    id: newWorkerData._id,
-                    name: newWorkerData.name,
-                    avatar: URL + newWorkerData.photos.user
-                });
+	addChatMessage(message) {
+		console.log('[MESASAGE]', message);
+		this.setState({ chatHistory: [message, ...this.state.chatHistory] });
+	}
 
-                name = newWorkerData.name;
-                avatar = URL + newWorkerData.photos.user;
-            } catch (error) {
-                console.log(TAGidToName, error);
-            }
-        }
+	idToName = async id => {
+		//workerChatData
+		console.log(TAGidToName, 'call worker idToName with id:', id);
 
-        return { name, avatar };
-    };
+		let workerData = this.workersChatData.find(item => item.id === id);
+		let name = null;
+		let avatar = null;
 
-    render() {
-        const arr = [...this.props.store.chatHistory];
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                    backgroundColor: '#FFFFFF',
-                    padding: 8
-                }}
-                key={this.props.id}
-            >
-                <GiftedChat
-                    messages={arr}
-                    onSend={messages => this.onSend(messages)}
-                    user={{
-                        _id: this.props.store.userId
-                    }}
-                    alwaysShowSend={true}
-                    renderSend={this.renderSend}
-                    placeholder='Введите сообщение...'
-                    renderUsernameOnMessage={true}
-                />
-            </View>
-        );
-    }
+		if (workerData) {
+			name = workerData.name;
+			avatar = workerData.avatar;
+		} else {
+			try {
+				const { data: newWorkerData } = await NetworkRequests.getWorker(id);
+				console.log(TAGidToName, 'newWorkerData', newWorkerData);
+				this.workersChatData.push({
+					id: newWorkerData._id,
+					name: newWorkerData.name,
+					avatar: URL + newWorkerData.photos.user
+				});
 
-    renderSend(props) {
-        return (
-            <Send {...props}>
-                <Text style={{ marginBottom: 10, fontSize: 16 }}>Отправить</Text>
-            </Send>
-        );
-    }
+				name = newWorkerData.name;
+				avatar = URL + newWorkerData.photos.user;
+			} catch (error) {
+				console.log(TAGidToName, error);
+			}
+		}
 
-    onSend(messages = []) {
-        messages.forEach(message => {
-            //console.log(message);
+		return { name, avatar };
+	};
 
-            this.props.store.socketChat.emit('chat message', message.text);
-        });
+	render() {
+		const arr = [...this.state.chatHistory];
+		return (
+			<View
+				style={{
+					flex: 1,
+					flexDirection: 'column',
+					justifyContent: 'flex-start',
+					backgroundColor: '#FFFFFF',
+					padding: 8
+				}}
+				key={this.props.id}
+			>
+				<GiftedChat
+					messages={arr}
+					onSend={messages => this.onSend(messages)}
+					user={{
+						_id: this.props.store.userId
+					}}
+					alwaysShowSend={true}
+					renderSend={this.renderSend}
+					placeholder='Введите сообщение...'
+					renderUsernameOnMessage={true}
+				/>
+			</View>
+		);
+	}
 
-        this.props.store.chatHistory = GiftedChat.append([...this.props.store.chatHistory], messages).map(v => ({
-            ...v,
-            createdAt: undefined
-        }));
-    }
+	renderSend(props) {
+		return (
+			<Send {...props}>
+				<Text style={{ marginBottom: 10, fontSize: 16 }}>Отправить</Text>
+			</Send>
+		);
+	}
+
+	onSend(messages = []) {
+		messages.forEach(message => {
+			//console.log(message);
+
+			socket.emit('chat message', message.text);
+		});
+
+		this.setState({
+			chatHistory: GiftedChat.append([...this.state.chatHistory], messages).map(v => ({
+				...v,
+				createdAt: undefined
+			}))
+		});
+	}
 }
 
 export default Chat;

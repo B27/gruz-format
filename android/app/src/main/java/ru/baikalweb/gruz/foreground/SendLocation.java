@@ -114,7 +114,7 @@ public class SendLocation extends Service implements LocationListener {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                Log.d(REACT_CLASS, "This device is supported. Please download google play services");
+                Log.d(REACT_CLASS, "This device is supported. ---Please download google play services");
             } else {
                 Log.d(REACT_CLASS, "This device is not supported.");
                 // finish();
