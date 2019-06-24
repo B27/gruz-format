@@ -2,16 +2,18 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
-import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import React, { Fragment } from 'react';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import registerForPushNotificationAsync from '../components/registerForPushNotificationsAsync';
-import { setNavigationToNotifListener } from '../utils/NotificationListener';
+import { prepareNotificationListener } from '../utils/NotificationListener';
+import styles from '../styles';
 
+const TAG = '~AuthLoadingScreen~';
 @inject('store')
 class AuthLoadingScreen extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+    state = {
+        error: ''
+    };
 
     componentDidMount() {
         this._bootstrapAsync();
@@ -19,13 +21,15 @@ class AuthLoadingScreen extends React.Component {
 
     _bootstrapAsync = async () => {
         const { store, navigation } = this.props;
+        console.log(TAG, 'bootstrapAsync');
 
-        setNavigationToNotifListener(navigation);
+        this.setState({ error: '' });
 
-        console.log('AuthLoadingScreen bootstrapAsync');
+        prepareNotificationListener(navigation);
+
         const userToken = await AsyncStorage.getItem('token');
+        console.log(TAG, 'user token: ', userToken);
 
-        console.log('user token: ', userToken);
         const userId = await AsyncStorage.getItem('userId');
         this.props.store.setUserId(userId);
 
@@ -36,19 +40,12 @@ class AuthLoadingScreen extends React.Component {
                 Authorization: 'Bearer ' + userToken
             };
 
-            registerForPushNotificationAsync();
             try {
-                await store.getUserInfo();
-            } catch (error) {
-                // TODO добавить вывод ошибки пользователю
-                console.log('Ошибка при получении данных, проверьте подключение к сети');
-                return;
-            }
+                await Promise.all([registerForPushNotificationAsync(), store.getUserInfo()]);
 
-            if (store.orderIdOnWork) {
-                console.log('User on work, order id:', store.orderIdOnWork);
+                if (store.orderIdOnWork) {
+                    console.log(TAG, 'user has an order in work, order id:', store.orderIdOnWork);
 
-                try {
                     await store.pullFulfilingOrderInformation();
 
                     const workersData = toJS(store.order).workers.data;
@@ -64,16 +61,12 @@ class AuthLoadingScreen extends React.Component {
                     } else {
                         screenNeedToGo = 'OrderDetail';
                     }
-                } catch (error) {
-                    console.log('start  log');
-                    console.log(error);
-                    // TODO добавить вывод ошибки пользователю
-                    console.log('end log');
-                    console.log('Ошибка при получении данных о выполняемом заказе, проверьте подключение к сети');
-                    return;
+                } else {
+                    screenNeedToGo = 'Main';
                 }
-            } else {
-                screenNeedToGo = 'Main';
+            } catch (error) {
+                this.setState({ error: error.toString() });
+                return;
             }
         }
 
@@ -83,8 +76,16 @@ class AuthLoadingScreen extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <ActivityIndicator size={60} color='#FFC234' />
-                {/* <StatusBar barStyle='default' /> */}
+                {this.state.error ? (
+                    <Fragment>
+                        <Text style={{ textAlign: 'center', fontSize: 16 }}>{this.state.error}</Text>
+                        <TouchableOpacity style={styles.buttonBottom} onPress={this._bootstrapAsync}>
+                            <Text style={styles.text}>Обновить</Text>
+                        </TouchableOpacity>
+                    </Fragment>
+                ) : (
+                    <ActivityIndicator size={60} color='#FFC234' />
+                )}
             </View>
         );
     }

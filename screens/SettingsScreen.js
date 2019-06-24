@@ -8,8 +8,9 @@ import { Text, TextInput, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
+import NetworkRequests from '../mobx/NetworkRequests';
 
-const TAG = '~SettingsScreen~'
+const TAG = '~SettingsScreen~';
 @inject('store')
 @observer
 class SettingsScreen extends React.Component {
@@ -20,9 +21,19 @@ class SettingsScreen extends React.Component {
         confirmPassword: '',
         colorMessage: 'red'
     };
+
     static navigationOptions = {
         title: 'Настройки'
     };
+
+    timeoutsSet = new Set();
+
+    componentWillUnmount() {
+        for (let timeout of this.timeoutsSet) {
+            clearTimeout(timeout);
+        }
+        this.timeoutsSet.clear();
+    }
 
     render() {
         return (
@@ -71,24 +82,18 @@ class SettingsScreen extends React.Component {
 
     _signOutAsync = async () => {
         try {
-            await axios.post('/push_token', { token: null });
+            await NetworkRequests.clearPushToken();
             await AsyncStorage.clear();
             this.props.navigation.navigate('SignIn');
         } catch (error) {
-            if (error.response) {
-                console.log(TAG, 'Error post /push_token', error.response.status, error.response.data.message);
-            } else {
-                console.log(TAG, 'Error:', error);
-            }
-            this.setState({ message: 'Ошибка сети', colorMessage: 'red' })
-            setTimeout(() => {this.setState({ message: ''})}, 2000);
+            this._showErrorMessage(error.toString(), 'red');
         }
     };
 
     _submitPassword = async () => {
         const id = await AsyncStorage.getItem('userId');
         if (this.state.currentPassword === '' || this.state.newPassword === '' || this.state.confirmPassword === '') {
-            this.setState({ message: 'Все поля должны быть заполнены', colorMessage: 'red' });
+            this._showErrorMessage('Все поля должны быть заполнены', 'red');
         } else {
             if (this.state.newPassword === this.state.confirmPassword) {
                 const pass = await AsyncStorage.getItem('password');
@@ -98,13 +103,22 @@ class SettingsScreen extends React.Component {
                             password: this.state.newPassword
                         });
                         console.log(res.data);
-                        this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+                        this._showErrorMessage('Данные успешно сохранены', 'green');
                     } catch (error) {
                         console.log(error);
                     }
-                } else this.setState({ message: 'Вы ввели неверный пароль', colorMessage: 'red' });
-            } else this.setState({ message: 'Пароли не совпадают', colorMessage: 'red' });
+                } else this._showErrorMessage('Вы ввели неверный пароль', 'red');
+            } else this._showErrorMessage('Пароли не совпадают', 'red');
         }
+    };
+
+    _showErrorMessage = (message, color) => {
+        this.setState({ message: message, colorMessage: color });
+        this.timeoutsSet.add(
+            setTimeout(() => {
+                this.setState({ message: '' });
+            }, 3000)
+        );
     };
 }
 

@@ -113,12 +113,22 @@ class ObservableStore {
                 // console.log('User Info >>>> ', response.data);
             });
         } catch (error) {
-            if (error.response) {
-                console.log(`get /worker/${userId} error: `, error.response.status, error.response.data.message);
+            if (error.isAxiosError) {
+                if (error.response) {
+                    console.log(
+                        TAG,
+                        `get /worker/${userId} error: `,
+                        error.response.status,
+                        error.response.data.message
+                    );
+                    throw `Ошибка ${error.response.status},  ${error.response.data.message}`;
+                }
+                if (error.message.includes('Network Error')) {
+                    throw 'Ошибка, проверьте подключение к сети';
+                }
             } else {
-                console.log(`get /worker/${userId} error: `, error);
+                throw `Внутренняя ошибка, ${error}`;
             }
-            throw error;
         }
     }
 

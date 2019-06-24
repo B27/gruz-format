@@ -9,6 +9,8 @@ import LoadingButton from '../components/LoadingButton';
 import bgImage from '../images/background.png';
 import styles from '../styles';
 
+const TAG = '~SignInScreen.js~';
+
 class SignInScreen extends React.Component {
     state = {
         phone: '',
@@ -21,6 +23,16 @@ class SignInScreen extends React.Component {
     static navigationOptions = {
         header: null
     };
+
+    timeoutsSet = new Set();
+
+    componentWillUnmount() {
+        for (let timeout of this.timeoutsSet) {
+            clearTimeout(timeout);
+        }
+        this.timeoutsSet.clear();
+    }
+
     //flow
     render() {
         return (
@@ -79,22 +91,22 @@ class SignInScreen extends React.Component {
     }
 
     goToRegistartionScreen = () => {
-        console.log('SignInScreen goToRegistartionScreen');
+        console.log(TAG, 'goToRegistartionScreen');
 
         this.props.navigation.navigate('RegisterPerson');
     };
 
     _signInAsync = async () => {
-        this.setState({ message: '' });
+        this._showErrorMessage('');
         if (!this.state.phone || !this.state.password) {
-            this.setState({ message: 'Введите логин и пароль' });
+            this._showErrorMessage('Введите логин и пароль');
         } else {
             try {
                 const response = await axios.post('/login', {
                     login: this.state.phone,
                     password: this.state.password
                 });
-                console.log(response.data);
+                console.log(TAG, response.data);
 
                 let promiseArr = [];
                 promiseArr.push(AsyncStorage.setItem('password', md5(this.state.password)));
@@ -109,22 +121,25 @@ class SignInScreen extends React.Component {
 
                 this.props.navigation.navigate('AuthLoading');
             } catch (error) {
-                if (error.response) {
-                    console.log(
-                        'Error axios in SignInScreen post /login',
-                        error.response.status,
-                        error.response.data.message
-                    );
-                    switch (error.response.status) {
-                        case 404:
-                            this.setState({ message: 'Пользователь не найден' });
-                            break;
-                        case 403:
-                            this.setState({ message: 'Введён неверный пароль' });
-                            break;
+                if (error.isAxiosError) {
+                    if (error.response) {
+                        console.log(TAG, 'error post /login', error.response.status, error.response.data.message);
+                        switch (error.response.status) {
+                            case 404:
+                                this._showErrorMessage('Пользователь не найден');
+                                break;
+                            case 403:
+                                this._showErrorMessage('Введён неверный пароль');
+                                break;
+                        }
+                    }
+                    if (error.message.includes('Network Error')) {
+                        console.log(TAG, 'error network');
+                        this._showErrorMessage('Ошибка, проверьте подключение к сети');
                     }
                 } else {
-                    console.log('Error in SignInScreen');
+                    console.log(TAG, 'other error', error);
+                    this._showErrorMessage(`Внутренняя ошибка, ${error}`);
                 }
             }
         }
@@ -136,6 +151,15 @@ class SignInScreen extends React.Component {
         } else {
             this.setState({ showPass: true, press: false });
         }
+    };
+
+    _showErrorMessage = message => {
+        this.setState({ message: message });
+        this.timeoutsSet.add(
+            setTimeout(() => {
+                this.setState({ message: '' });
+            }, 3000)
+        );
     };
 }
 

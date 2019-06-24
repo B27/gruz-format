@@ -67,6 +67,6 @@ function gotoAuthLoading() {
     _navigation.navigate('AuthLoading');
 }
 
-export function setNavigationToNotifListener(navigation) {
+export function prepareNotificationListener(navigation) {
     _navigation = navigation;
 }

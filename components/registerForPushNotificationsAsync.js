@@ -12,17 +12,23 @@ export default async function registerForPushNotificationsAsync() {
         console.log(TAG, 'token for push notifications received:', notifToken);
     } catch (error) {
         console.log(TAG, 'error getting token', error);
-        return;
+        throw 'Error getting token';
     }
 
     try {
         await axios.post('/push_token', { token: notifToken });
         console.log(TAG, 'send token to server succesful');
     } catch (error) {
-        if (error.response) {
-            console.log(TAG, 'Error post /push_token', error.response.status, error.response.data.message);
+        if (error.isAxiosError) {
+            if (error.response) {
+                console.log(TAG, 'Error post /push_token', error.response.status, error.response.data.message);
+                throw `Ошибка ${error.response.status},  ${error.response.data.message}`;
+            }
+            if (error.message.includes('Network Error')) {
+                throw 'Ошибка, проверьте подключение к сети';
+            }
         } else {
-            console.log(TAG, 'Error:', error);
+            throw `Внутренняя ошибка, ${error}`;
         }
     }
 }

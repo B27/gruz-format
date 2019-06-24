@@ -55,12 +55,17 @@ async function getOrder(id) {
         response = await axios.get(`/order/${id}`);
         //console.log(TAG, 'getOrder response.data:', response.data);
     } catch (error) {
-        if (error.response) {
-            console.log(TAG, 'Error in getOrder:', error.response.status, error.response.data.message);
+        if (error.isAxiosError) {
+            if (error.response) {
+                console.log(TAG, `error get /order/${id}`, error.response.status, error.response.data.message);
+                throw `Ошибка ${error.response.status},  ${error.response.data.message}`;
+            }
+            if (error.message.includes('Network Error')) {
+                throw 'Ошибка, проверьте подключение к сети';
+            }
         } else {
-            console.log(TAG, 'Error in getOrder:', error);
+            throw `Внутренняя ошибка, ${error}`;
         }
-        throw error;
     }
 
     return response;
@@ -98,4 +103,22 @@ async function completeOrder(data) {
     }
 }
 
-export default { cancelOrder, getDispatcher, startOrder, getOrder, getWorker, completeOrder };
+async function clearPushToken() {
+    try {
+        await axios.post('/push_token', { token: null });
+    } catch (error) {
+        if (error.isAxiosError) {
+            if (error.response) {
+                console.log(TAG, 'Error post /push_token', error.response.status, error.response.data.message);
+                throw `Ошибка ${error.response.status},  ${error.response.data.message}`;
+            }
+            if (error.message.includes('Network Error')) {
+                throw 'Ошибка, проверьте подключение к сети';
+            }
+        } else {
+            throw `Внутренняя ошибка, ${error}`;
+        }
+    }
+}
+
+export default { cancelOrder, getDispatcher, startOrder, getOrder, getWorker, completeOrder, clearPushToken };
