@@ -17,12 +17,9 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.messaging.RemoteMessage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
-import java.util.Map;
-
-import ru.baikalweb.gruz.birdge.EventHelper;
+import ru.baikalweb.gruz.bridge.EventHelper;
 
 
 public class MainActivity extends ReactActivity {

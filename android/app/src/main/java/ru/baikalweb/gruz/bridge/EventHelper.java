@@ -1,4 +1,4 @@
-package ru.baikalweb.gruz.birdge;
+package ru.baikalweb.gruz.bridge;
 
 import android.app.Activity;
 import android.app.Service;
