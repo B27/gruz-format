@@ -1,12 +1,13 @@
 import { Alert } from 'react-native';
 import NetworkRequests from '../mobx/NetworkRequests';
+import Store from '../mobx/Store';
 
 let _navigation = null;
 
 const TAG = '~NotificationListener~';
 
 export default async function NotificationListener(params) {
-    const [type, order, title, body] = params;
+    const [type, orderId, title, body] = params;
 
     console.log(TAG, 'Notification recieved, params: ', params);
 
@@ -17,10 +18,10 @@ export default async function NotificationListener(params) {
     if (title && body) {
         if (_navigation) {
             if (type == 'accept') {
-                console.log(TAG, `type == ${type}, order id`, order);
+                console.log(TAG, `type == ${type}, order id`, orderId);
 
                 let newBody = 'Нажмите ОК для перехода к деталям заказа';
-                showAlert(title, newBody, { okFn: gotoOrderPreview(order), cancel: true });
+                showAlert(title, newBody, { okFn: gotoOrderPreview(orderId), cancel: true });
             } else {
                 console.log(TAG, `type == ${type}`);
                 gotoAuthLoading();
@@ -31,12 +32,16 @@ export default async function NotificationListener(params) {
         }
     } else {
         if (type == 'accept' && _navigation) {
-            gotoOrderPreview(order)();
-            console.log(TAG, 'call gotoOrderPreview(order)()');
+            console.log(TAG, 'setOrderPreview in store');
+            // Если пользователь переходит через уведомление, то компоненты React создаются заново
+            // метод жизненного цикла Activity - onResume (в нём посылается событие onMessageRecieved)
+            // вызывается раньше создания компонетов
+            // поэтому здесь устанавливается переменная в store и на момент когда смонтируется AuthLoadingScreen
+            // будет известно, перешёл ли пользователь из уведомления
+            Store.setOrderPreview(orderId);
         } else {
             console.log(TAG, '_navigation is null');
         }
-        //  Alert.alert('Вы перешли через уведомление', type + order);
     }
 }
 
@@ -56,10 +61,10 @@ function showAlert(title, msg, { okFn, cancel }) {
 
 gotoOrderPreview = order_id => async () => {
     try {
-        const res = await NetworkRequests.getOrder(order_id);
-        _navigation.navigate('OrderPreview', { order: res.data });
+        const { data } = await NetworkRequests.getOrder(order_id);
+        _navigation.navigate('OrderPreview', { order: data });
     } catch (error) {
-        console.log('gotoOrderPreview', error);
+        console.log('gotoOrderPreview error', error);
     }
 };
 

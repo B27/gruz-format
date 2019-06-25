@@ -7,6 +7,7 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import registerForPushNotificationAsync from '../components/registerForPushNotificationsAsync';
 import { prepareNotificationListener } from '../utils/NotificationListener';
 import styles from '../styles';
+import NetworkRequests from '../mobx/NetworkRequests';
 
 const TAG = '~AuthLoadingScreen~';
 @inject('store')
@@ -34,6 +35,7 @@ class AuthLoadingScreen extends React.Component {
         this.props.store.setUserId(userId);
 
         let screenNeedToGo = 'Auth';
+        let params = undefined;
 
         if (userToken) {
             axios.defaults.headers = {
@@ -64,13 +66,23 @@ class AuthLoadingScreen extends React.Component {
                 } else {
                     screenNeedToGo = 'Main';
                 }
+
+                // если пользователь перешёл из уведомления, то переменная в store
+                // будет = id заказа для предпросмотра
+                if (store.orderPreview) {
+                    const { data } = await NetworkRequests.getOrder(store.orderPreview);
+                    params = { order: data };
+                    console.log(TAG, 'params in getOrder()', params);
+                    screenNeedToGo = 'OrderPreview';
+                    store.setOrderPreview(null);
+                }
             } catch (error) {
                 this.setState({ error: error.toString() });
                 return;
             }
         }
 
-        navigation.navigate(screenNeedToGo);
+        navigation.navigate(screenNeedToGo, params);
     };
 
     render() {

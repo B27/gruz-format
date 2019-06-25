@@ -6,6 +6,7 @@ import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';
 
 class ObservableStore {
+    orderPreview = null;
     lastOrderPullTime = null;
     @observable.shallow orders = [];
     @observable.shallow workers = [];
@@ -229,6 +230,10 @@ class ObservableStore {
             this.refreshImage = this.refreshImage + 1;
         });
         console.log('refresh Image: ' + this.refreshImage);
+    }
+
+    setOrderPreview(orderId) {
+        this.orderPreview = orderId;
     }
 }
 
