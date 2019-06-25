@@ -54,7 +54,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".foreground.SendLocation" />
+        <service android:name=".foreground.SendLocationService" />
     </application>
 
 </manifest>

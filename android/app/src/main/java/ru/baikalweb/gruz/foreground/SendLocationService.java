@@ -34,10 +34,10 @@ import io.socket.client.Socket;
 import ru.baikalweb.gruz.MainActivity;
 import ru.baikalweb.gruz.R;
 
-public class SendLocation extends Service implements LocationListener {
+public class SendLocationService extends Service implements LocationListener {
     public static final String APP_NAME = "Формат.Груз";
-    public static final String REACT_CLASS = "ReactNativeJS";
-    public static final String FOREGROUND = "ru.baikalweb.gruz.foreground.SendLocation";
+    public static final String REACT_CLASS = "SendLocationService";
+    public static final String FOREGROUND = "ru.baikalweb.gruz.foreground.SendLocationService";
     private static int NOTIFICATION_ID = 3313;
     private NotificationManager mNotificationManager;
     private GoogleApiClient mGoogleApiClient;
@@ -75,7 +75,7 @@ public class SendLocation extends Service implements LocationListener {
             opts.query = "token=" + intent.getStringExtra("token");
             mSocket = IO.socket("https://gruz.bw2api.ru/socket", opts);
             mSocket.connect();
-            mSocket.emit("set work", true);
+//            mSocket.emit("set work", true);
         } catch (URISyntaxException e) {
             Log.d(REACT_CLASS, e.toString());
         }
@@ -150,7 +150,7 @@ public class SendLocation extends Service implements LocationListener {
     public void stopFusedLocation() {
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
-            mSocket.emit("set work", false);
+//            mSocket.emit("set work", false);
         }
     }
 

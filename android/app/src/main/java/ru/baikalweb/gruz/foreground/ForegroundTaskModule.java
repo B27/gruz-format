@@ -10,23 +10,7 @@ import com.facebook.react.bridge.ReactMethod;
 
 import javax.annotation.Nonnull;
 
-import android.support.annotation.Nullable;
-
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-
-import java.util.HashMap;
-import java.util.Map;
-import android.util.Log;
-import com.facebook.react.bridge.Promise;
 import android.content.Intent;
-import android.app.PendingIntent;
-import android.graphics.BitmapFactory;
-
-import ru.baikalweb.gruz.foreground.SendLocation;
 
 public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "ReactNativeJS";
@@ -54,9 +38,9 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     public void startService(String token, Promise promise) {
         Log.d(REACT_CLASS, "startService");
         try {
-            Intent intent = new Intent(SendLocation.FOREGROUND);
+            Intent intent = new Intent(SendLocationService.FOREGROUND);
             intent.putExtra("token", token);
-            intent.setClass(this.getReactApplicationContext(), SendLocation.class);
+            intent.setClass(this.getReactApplicationContext(), SendLocationService.class);
             //startService(intent);
             Log.d(REACT_CLASS, token);
             //intent.putExtra("token", cb());
@@ -77,8 +61,8 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     public void stopService(Promise promise) {
         Log.d(REACT_CLASS, "stopService");
         try {
-            Intent intent = new Intent(SendLocation.FOREGROUND);
-            intent.setClass(this.getReactApplicationContext(), SendLocation.class);
+            Intent intent = new Intent(SendLocationService.FOREGROUND);
+            intent.setClass(this.getReactApplicationContext(), SendLocationService.class);
             this.getReactApplicationContext().stopService(intent);
             //Intent intent = new Intent(GeoLocationService.FOREGROUND);
             //intent.setClass(this.getReactApplicationContext(), GeoLocationService.class);
