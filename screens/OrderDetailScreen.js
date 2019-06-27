@@ -1,11 +1,13 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Alert, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AppState, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
 import OrderCard from '../components/OrderCard';
 import styles from '../styles';
+
+const TAG = '~OrderDetailScreen.js~';
 
 @inject('store')
 @observer
@@ -19,20 +21,82 @@ class OrderDetailScreen extends React.Component {
     };
 
     componentDidMount() {
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
-            const { lastOrderPullTime } = this.props.store;
-            const timeDiff = Date.now() - lastOrderPullTime;
-            if (timeDiff > 5 * 60 * 1000) {
-                this._onRefresh();
-            }
-        });
+        AppState.addEventListener('change', this._handleAppStateChange);
+
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', this._orderRefresher);
     }
 
     componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange);
+
         if (this.willFocusSubscription) {
             this.willFocusSubscription.remove();
         }
     }
+
+    _orderRefresher = () => {
+        console.log(TAG, 'willFocus');
+        const { lastOrderPullTime } = this.props.store;
+        const timeDiff = Date.now() - lastOrderPullTime;
+        if (timeDiff > /*  5 * 60 * */ 1000) {
+            console.log(TAG, 'time to refresh');
+            this._onRefresh();
+        }
+    };
+
+    _onRefresh = async () => {
+        this.setState({ refreshing: true });
+        try {
+            await this.props.store.pullFulfilingOrderInformation();
+        } catch (error) {
+            // TODO добавить вывод ошибки пользователю
+            console.log('onRefresh OrderDetailScreen error', error);
+        }
+        this.setState({ refreshing: false });
+    };
+
+    _handleAppStateChange = nextAppState => {
+        console.log(TAG, 'state changed', nextAppState);
+        if (nextAppState === 'active') {
+            console.log(TAG, 'App has come to the foreground!');
+            this._orderRefresher();
+        }
+    };
+
+    _cancelOrderPress = () => {
+        Alert.alert(
+            'Вы уверены, что хотите отменить заказ ?',
+            'За отказ вам будет выставлена минимальная оценка.',
+            [
+                {
+                    text: 'ОТМЕНА',
+                    style: 'cancel'
+                },
+                {
+                    text: 'ОК',
+                    onPress: this._cancelOrder
+                }
+            ],
+            { cancelable: true }
+        );
+    };
+
+    _cancelOrder = async () => {
+        try {
+            await this.props.store.cancelFulfillingOrder();
+            this.props.navigation.navigate('Main');
+        } catch (error) {
+            console.log('error in OrderDetailScreen cancelOrder', error);
+        }
+    };
+
+    _completeOrderPress = () => {
+        this.props.navigation.navigate('OrderComplete');
+    };
+
+    _chatPress = () => {
+        this.props.navigation.navigate('OrderChat');
+    };
 
     render() {
         const { workers: workersObservable, order, dispatcher } = this.props.store;
@@ -159,52 +223,6 @@ class OrderDetailScreen extends React.Component {
             </Fragment>
         );
     }
-
-    _onRefresh = async () => {
-        this.setState({ refreshing: true });
-        try {
-            await this.props.store.pullFulfilingOrderInformation();
-        } catch (error) {
-            // TODO добавить вывод ошибки пользователю
-            console.log('onRefresh OrderDetailScreen error', error);
-        }
-        this.setState({ refreshing: false });
-    };
-
-    _cancelOrderPress = () => {
-        Alert.alert(
-            'Вы уверены, что хотите отменить заказ ?',
-            'За отказ вам будет выставлена минимальная оценка.',
-            [
-                {
-                    text: 'ОТМЕНА',
-                    style: 'cancel'
-                },
-                {
-                    text: 'ОК',
-                    onPress: this._cancelOrder
-                }
-            ],
-            { cancelable: true }
-        );
-    };
-
-    _cancelOrder = async () => {
-        try {
-            await this.props.store.cancelFulfillingOrder();
-            this.props.navigation.navigate('Main');
-        } catch (error) {
-            console.log('error in OrderDetailScreen cancelOrder', error);
-        }
-    };
-
-    _completeOrderPress = () => {
-        this.props.navigation.navigate('OrderComplete');
-    };
-
-    _chatPress = () => {
-        this.props.navigation.navigate('OrderChat');
-    };
 }
 
 export default OrderDetailScreen;
