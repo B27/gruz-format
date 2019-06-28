@@ -38,7 +38,7 @@ import ru.baikalweb.gruz.R;
 
 public class SendLocationService extends Service implements LocationListener {
     public static final String APP_NAME = "Формат.Груз";
-    public static final String REACT_CLASS = "SendLocationService";
+    public static final String TAG = "SendLocationService";
     public static final String FOREGROUND = "ru.baikalweb.gruz.foreground.SendLocationService";
     private static int NOTIFICATION_ID = 3313;
     private NotificationManager mNotificationManager;
@@ -51,41 +51,42 @@ public class SendLocationService extends Service implements LocationListener {
     @Override
     @TargetApi(Build.VERSION_CODES.M)
     public void onCreate() {
-        Log.d(REACT_CLASS, "onCreate");
+        Log.d(TAG, "onCreate");
 
         super.onCreate();
-
     }
 
     @Override
     public void onDestroy() {
-        Log.d(REACT_CLASS, "onDestroy");
+        Log.d(TAG, "onDestroy");
         stopFusedLocation();
         super.onDestroy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(REACT_CLASS, "onStartCommand, calling startForeground");
+        Log.d(TAG, "onStartCommand, calling startForeground");
         startForeground(NOTIFICATION_ID, getCompatNotification());
         Context context = getApplicationContext();
         SharedPreferences sharedPref = context.getSharedPreferences("db", Context.MODE_PRIVATE);
-        if(intent.getExtras() != null){
-            SharedPreferences.Editor ed = sharedPref.edit();
-            ed.putString("token", intent.getStringExtra("token"));
-            ed.apply();
+        if (intent != null) {
+            if (intent.getExtras() != null) {
+                SharedPreferences.Editor ed = sharedPref.edit();
+                ed.putString("token", intent.getStringExtra("token"));
+                ed.apply();
+            }
+        } else {
+            Log.d(TAG, "intent is null");
         }
-        // Log.d(REACT_CLASS, "IN SENDLOCATION: " + intent.getStringExtra("token"));
-        try {
 
-            Log.d(REACT_CLASS, "IN SENDLOCATION - token: " + intent.getStringExtra("token"));
+        try {
             IO.Options opts = new IO.Options();
             opts.query = "token=" + sharedPref.getString("token", "");
             mSocket = IO.socket("https://gruz.bw2api.ru/socket", opts);
             mSocket.connect();
 //            mSocket.emit("set work", true);
         } catch (URISyntaxException e) {
-            Log.d(REACT_CLASS, e.toString());
+            Log.d(TAG, e.toString());
         }
 
         if (checkPlayServices()) {
@@ -102,7 +103,7 @@ public class SendLocationService extends Service implements LocationListener {
     }
 
     private Notification getCompatNotification() {
-        Log.d(REACT_CLASS, "getCompatNotification");
+        Log.d(TAG, "getCompatNotification");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         String str = "В работе";
         builder.setSmallIcon(R.mipmap.ic_launcher)
@@ -120,9 +121,9 @@ public class SendLocationService extends Service implements LocationListener {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                Log.d(REACT_CLASS, "This device is supported. ---Please download google play services");
+                Log.d(TAG, "This device is supported. ---Please download google play services");
             } else {
-                Log.d(REACT_CLASS, "This device is not supported.");
+                Log.d(TAG, "This device is not supported.");
                 // finish();
             }
             return false;
@@ -212,11 +213,11 @@ public class SendLocationService extends Service implements LocationListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(REACT_CLASS, "data to send: " + obj);
+        Log.d(TAG, "data to send: " + obj);
 
         mSocket.emit("geo data", obj.toString());
-        Log.d(REACT_CLASS, "Lat: " + getFusedLatitude());
-        Log.d(REACT_CLASS, "Lng: " + getFusedLongitude());
+        Log.d(TAG, "Lat: " + getFusedLatitude());
+        Log.d(TAG, "Lng: " + getFusedLongitude());
     }
 
     public double getFusedLatitude() {
