@@ -1,5 +1,7 @@
 package ru.baikalweb.gruz.foreground;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.facebook.react.bridge.Callback;
@@ -38,6 +40,8 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     public void startService(String token, Promise promise) {
         Log.d(REACT_CLASS, "startService");
         try {
+            //Context context = getActivity();
+            //SharedPreferences sharedPreferences = getPreferences("db", Context.MODE_PRIVATE);
             Intent intent = new Intent(SendLocationService.FOREGROUND);
             intent.putExtra("token", token);
             intent.setClass(this.getReactApplicationContext(), SendLocationService.class);

@@ -5,7 +5,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
@@ -66,13 +68,19 @@ public class SendLocationService extends Service implements LocationListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(REACT_CLASS, "onStartCommand, calling startForeground");
         startForeground(NOTIFICATION_ID, getCompatNotification());
-
+        Context context = getApplicationContext();
+        SharedPreferences sharedPref = context.getSharedPreferences("db", Context.MODE_PRIVATE);
+        if(intent.getExtras() != null){
+            SharedPreferences.Editor ed = sharedPref.edit();
+            ed.putString("token", intent.getStringExtra("token"));
+            ed.apply();
+        }
         // Log.d(REACT_CLASS, "IN SENDLOCATION: " + intent.getStringExtra("token"));
         try {
 
-            Log.d(REACT_CLASS, "IN SENDLOCATION: " + intent.getStringExtra("token"));
+            Log.d(REACT_CLASS, "IN SENDLOCATION - token: " + intent.getStringExtra("token"));
             IO.Options opts = new IO.Options();
-            opts.query = "token=" + intent.getStringExtra("token");
+            opts.query = "token=" + sharedPref.getString("token", "");
             mSocket = IO.socket("https://gruz.bw2api.ru/socket", opts);
             mSocket.connect();
 //            mSocket.emit("set work", true);
