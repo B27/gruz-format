@@ -31,9 +31,14 @@ export default async function NotificationListener(params) {
             console.log(TAG, '_navigation is null');
         }
     } else {
-        if (type == 'accept' && _navigation) {
-            console.log(TAG, 'call gotoOrderPreview(order)()');
-            gotoOrderPreview(orderId)();
+        if (_navigation) {
+            if (type == 'accept') {
+                console.log(TAG, 'call gotoOrderPreview(order)()');
+                gotoOrderPreview(orderId)();
+            } else {
+                console.log(TAG, 'call gotoAuthLoading()');
+                gotoAuthLoading();
+            }
         } else {
             console.log(TAG, '_navigation is null');
         }

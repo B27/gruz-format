@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, NativeModules, TouchableOpacity, View } from 'react-native';
 import registerForPushNotificationAsync from '../components/registerForPushNotificationsAsync';
 import { prepareNotificationListener } from '../utils/NotificationListener';
 import styles from '../styles';
@@ -46,6 +46,9 @@ class AuthLoadingScreen extends React.Component {
 
                 if (store.orderIdOnWork) {
                     console.log(TAG, 'user has an order in work, order id:', store.orderIdOnWork);
+
+                    console.log(TAG, 'start foreground service');
+                    NativeModules.ForegroundTaskModule.startService(userToken);
 
                     await store.pullFulfilingOrderInformation();
 
