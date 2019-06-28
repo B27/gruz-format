@@ -3,6 +3,7 @@ package ru.baikalweb.gruz;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ public class MainActivity extends ReactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -70,14 +70,15 @@ public class MainActivity extends ReactActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (getIntent().getExtras() != null) {
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent fired");
 
-            Bundle data = getIntent().getExtras();
+        Bundle data = intent.getExtras();
 
-            for (String key : getIntent().getExtras().keySet()) {
-                Object value = getIntent().getExtras().get(key);
+        if (data != null) {
+            for (String key : data.keySet()) {
+                Object value = data.get(key);
                 Log.d(TAG, "Key: " + key + " Value: " + value);
             }
 

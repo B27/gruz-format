@@ -32,13 +32,8 @@ export default async function NotificationListener(params) {
         }
     } else {
         if (type == 'accept' && _navigation) {
-            console.log(TAG, 'setOrderPreview in store');
-            // Если пользователь переходит через уведомление, то компоненты React создаются заново
-            // метод жизненного цикла Activity - onResume (в нём посылается событие onMessageRecieved)
-            // вызывается раньше создания компонетов
-            // поэтому здесь устанавливается переменная в store и на момент когда смонтируется AuthLoadingScreen
-            // будет известно, перешёл ли пользователь из уведомления
-            Store.setOrderPreview(orderId);
+            console.log(TAG, 'call gotoOrderPreview(order)()');
+            gotoOrderPreview(orderId)();
         } else {
             console.log(TAG, '_navigation is null');
         }

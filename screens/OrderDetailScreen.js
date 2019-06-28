@@ -38,7 +38,7 @@ class OrderDetailScreen extends React.Component {
         console.log(TAG, 'willFocus');
         const { lastOrderPullTime } = this.props.store;
         const timeDiff = Date.now() - lastOrderPullTime;
-        if (timeDiff > /*  5 * 60 * */ 1000) {
+        if (timeDiff > 5 * 60 * 1000) {
             console.log(TAG, 'time to refresh');
             this._onRefresh();
         }

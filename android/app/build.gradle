@@ -175,4 +175,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
+// Run adb reverse for metro client
+task runAdbReverse(type: Exec) {
+    commandLine 'adb', 'reverse', 'tcp:8081', 'tcp:8081'
+}
+
 apply plugin: 'com.google.gms.google-services'
