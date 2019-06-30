@@ -56,7 +56,7 @@ function showAlert(title, msg, { okFn, cancel }) {
         buttons.reverse(); // кнопка отмены должна быть слева
     }
 
-    Alert.alert(title, msg, buttons);
+    Alert.alert(title, msg, buttons, { cancelable: false });
 }
 
 gotoOrderPreview = order_id => async () => {
