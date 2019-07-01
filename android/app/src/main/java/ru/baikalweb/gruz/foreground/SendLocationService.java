@@ -60,6 +60,7 @@ public class SendLocationService extends Service implements LocationListener {
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
         stopFusedLocation();
+        mSocket.disconnect();
         super.onDestroy();
     }
 
@@ -213,11 +214,11 @@ public class SendLocationService extends Service implements LocationListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "data to send: " + obj);
+     //   Log.d(TAG, "data to send: " + obj);
 
         mSocket.emit("geo data", obj.toString());
-        Log.d(TAG, "Lat: " + getFusedLatitude());
-        Log.d(TAG, "Lng: " + getFusedLongitude());
+      //  Log.d(TAG, "Lat: " + getFusedLatitude());
+     //   Log.d(TAG, "Lng: " + getFusedLongitude());
     }
 
     public double getFusedLatitude() {
