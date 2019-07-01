@@ -10,6 +10,8 @@ import styles from '../styles';
 
 // const LOCATION_TASK_NAME = 'background-location-task';
 
+const TAG = '~MainScreen~';
+
 YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
 ]);
@@ -19,71 +21,110 @@ YellowBox.ignoreWarnings([
 class MainScreen extends React.Component {
     state = {
         notification: {},
-        workingStatus: false,
         refreshing: false,
         message: ''
     };
 
-    componentDidMount = async () => {
-        // this._notificationSubscription = Notifications.addListener(this._handleNotification);
-        // await this.props.store.updateUserInfo()
-        // await store.getOrders();
-
-        // const socket = await getSocket();
-        // if (!socket || !socket.connected) {
-        //     setTimeout(()=>this.setState({message: 'Нет соединения с сервером'}), 2000)
-        // } else this.setState({message: ''})
-
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
-            this.setState({ message: '' });
-        });
-    };
+    timeoutsSet = new Set();
 
     componentWillUnmount() {
-        if (this.willFocusSubscription) {
-            this.willFocusSubscription.remove();
+        for (let timeout of this.timeoutsSet) {
+            clearTimeout(timeout);
         }
+        this.timeoutsSet.clear();
     }
 
-    // _getLocationAsync = async () => {
-    // 	let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    // 	if (status !== 'granted') {
-    // 		this.setState({
-    // 			errorMessage: 'Permission to access location was denied'
-    // 		});
-    // 	}
-    // 	//let location = await Location.getCurrentPositionAsync({});
+    _topUpBalance = () => {
+        this.props.navigation.navigate('Balance');
+    };
 
-    // 	await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-    // 		accuracy: Location.Accuracy.High
-    // 	});
-    // };
+    _keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой строки нужен key типа String
 
-    // _handleNotification = async notification => {
-    // 	if (notification.origin === 'selected' && notification.data.type === 'accept') {
-    // 		const res = await Axios.get(`/order/${notification.data.order_id}`);
+    _onChangeSwitchValue = async () => {
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-    // 		//this.setState({ notification: notification, order: res.data });
-    // 		//const data = this.state.notification.data;
-    // 		// console.log('origin: ' + this.state.notification.origin);
-    // 		// console.log('data: ' + (data && data.order_id));
-    // 		this.props.navigation.navigate('OrderPreview', { order: res.data });
-    // 	} else if (notification.origin === 'received' && notification.data.type === 'reject') {
-    // 		console.log('Заказ отменен');
+        if (status !== 'granted') {
+            Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');
+            return;
+        }
 
-    // 		this.props.navigation.navigate('AuthLoading');
-    // 	} else if (notification.origin === 'received' && notification.data.type === 'kicked') {
-    // 		console.log('Вас выпилили из заказа');
+        if (this.props.store.isDriver && this.props.store.veh_width === '' && !this.props.store.onWork) {
+            this._showErrorMessage('Заполните данные об автомобиле');
+            return;
+        }
 
-    // 		this.props.navigation.navigate('AuthLoading');
-    // 	}
-    // 	//console.log(notification.origin, notification.data.type);
-    // };
+        if (this.props.store.balance < 0) {
+            this._showErrorMessage('Вы не можете выполнять заказы при отрицательном балансе. Пополните баланс');
+            return;
+        }
 
-    // static navigationOptions = ({ navigation }) => ({
-    //     headerLeft: <MenuIcon navigationProps={navigation} />,
-    //     headerLeftContainerStyle: { paddingLeft: 8 }
-    // });
+        if (!this.props.store.onWork) {
+            if (!Platform.OS === 'android') {
+                console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
+            } else {
+                this.props.store.setOnWork(!this.props.store.onWork);
+
+                await NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'));
+                this._onRefresh();
+            }
+        } else {
+            this.props.store.setOnWork(!this.props.store.onWork);
+            await NativeModules.ForegroundTaskModule.stopService();
+            this._onRefresh();
+        }
+    };
+
+    _onPressOrderItemButton = order => {
+        this.props.navigation.navigate('OrderPreview', { order });
+    };
+
+    _onRefresh = async () => {
+        //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+
+        try {
+            if (this.props.store.onWork) {
+                const { store } = this.props;
+                //  this.fetchData();
+                this.setState({ refreshing: true });
+
+                const UserInfoPromise = store.updateUserInfo();
+                const OrdersPromise = store.getOrders();
+
+                await Promise.all([UserInfoPromise, OrdersPromise]);
+
+                this.setState({ refreshing: false });
+            } else {
+                await this.props.store.updateUserInfo();
+                this.props.store.clearOrders();
+            }
+        } catch (error) {
+            console.log(TAG, error);
+            this._showErrorMessage(error.toString());
+        }
+
+        this.setState({ refreshing: false });
+    };
+
+    _showErrorMessage = message => {
+        this.setState({ message: message });
+        this.timeoutsSet.add(
+            setTimeout(() => {
+                this.setState({ message: '' });
+            }, 3000)
+        );
+    };
+
+    _renderItem = ({ item }) => (
+        <OrderCard
+            order={item}
+            time={item.start_time}
+            addresses={item.locations}
+            description={item.comment}
+            cardStyle={styles.cardMargins}
+            onPressButton={this._onPressOrderItemButton}
+            buttonName='ПРИНЯТЬ'
+        />
+    );
 
     render() {
         const { store } = this.props;
@@ -124,82 +165,6 @@ class MainScreen extends React.Component {
             />
         );
     }
-
-    _topUpBalance = () => {
-        this.props.navigation.navigate('Balance');
-    };
-
-    _keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой строки нужен key типа String
-
-    _onChangeSwitchValue = async () => {
-        const { status } = await Permissions.askAsync(Permissions.LOCATION);
-
-        if (status !== 'granted') {
-            Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');
-            return;
-        }
-
-        if (this.props.store.isDriver && this.props.store.veh_width === '') {
-            this.setState({ message: 'Заполните данные об автомобиле' });
-            return;
-        }
-
-        if (this.props.store.balance < 0) {
-            this.setState({ message: 'Вы не можете выполнять заказы при отрицательном балансе. Пополните баланс' });
-            return;
-        }
-
-        if (!this.props.store.onWork) {
-            if (!Platform.OS === 'android') {
-                console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
-            } else {
-                this.props.store.setOnWork(!this.props.store.onWork);
-
-                await NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'));
-                this._onRefresh();
-            }
-        } else {
-            this.props.store.setOnWork(!this.props.store.onWork);
-            await NativeModules.ForegroundTaskModule.stopService();
-            this._onRefresh();
-        }
-    };
-
-    _onPressOrderItemButton = order => {
-        this.props.navigation.navigate('OrderPreview', { order });
-    };
-
-    _onRefresh = async () => {
-        //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
-        this.setState({ message: '' });
-        if (this.props.store.onWork) {
-            const { store } = this.props;
-            //  this.fetchData();
-            this.setState({ refreshing: true });
-
-            const UserInfoPromise = store.updateUserInfo();
-            const OrdersPromise = store.getOrders();
-
-            await Promise.all([UserInfoPromise, OrdersPromise]);
-
-            this.setState({ refreshing: false });
-        } else {
-            await this.props.store.updateUserInfo();
-            this.props.store.clearOrders();
-        }
-    };
-
-    _renderItem = ({ item }) => (
-        <OrderCard
-            order={item}
-            time={item.start_time}
-            addresses={item.locations}
-            description={item.comment}
-            cardStyle={styles.cardMargins}
-            onPressButton={this._onPressOrderItemButton}
-            buttonName='ПРИНЯТЬ'
-        />
-    );
 }
 
 export default MainScreen;
