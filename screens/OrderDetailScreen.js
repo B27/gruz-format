@@ -1,3 +1,4 @@
+import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
 import { Alert, AppState, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -13,12 +14,15 @@ const TAG = '~OrderDetailScreen.js~';
 @observer
 class OrderDetailScreen extends React.Component {
     state = {
+        message: false,
         refreshing: false
     };
 
     static navigationOptions = {
         title: 'Выполнение заказа'
     };
+
+    timeoutsSet = new Set();
 
     componentDidMount() {
         AppState.addEventListener('change', this._handleAppStateChange);
@@ -32,10 +36,14 @@ class OrderDetailScreen extends React.Component {
         if (this.willFocusSubscription) {
             this.willFocusSubscription.remove();
         }
+
+        for (let timeout of this.timeoutsSet) {
+            clearTimeout(timeout);
+        }
+        this.timeoutsSet.clear();
     }
 
     _orderRefresher = () => {
-        console.log(TAG, 'willFocus');
         const { lastOrderPullTime } = this.props.store;
         const timeDiff = Date.now() - lastOrderPullTime;
         if (timeDiff > 5 * 60 * 1000) {
@@ -49,8 +57,8 @@ class OrderDetailScreen extends React.Component {
         try {
             await this.props.store.pullFulfilingOrderInformation();
         } catch (error) {
-            // TODO добавить вывод ошибки пользователю
-            console.log('onRefresh OrderDetailScreen error', error);
+            console.log(TAG, error);
+            this._showErrorMessage(error.toString());
         }
         this.setState({ refreshing: false });
     };
@@ -86,7 +94,8 @@ class OrderDetailScreen extends React.Component {
             await this.props.store.cancelFulfillingOrder();
             this.props.navigation.navigate('Main');
         } catch (error) {
-            console.log('error in OrderDetailScreen cancelOrder', error);
+            console.log(TAG, error);
+            this._showErrorMessage(error.toString());
         }
     };
 
@@ -98,10 +107,19 @@ class OrderDetailScreen extends React.Component {
         this.props.navigation.navigate('OrderChat');
     };
 
+    _showErrorMessage = message => {
+        this.setState({ message: message });
+        this.timeoutsSet.add(
+            setTimeout(() => {
+                this.setState({ message: false });
+            }, 3000)
+        );
+    };
+
     render() {
         const { workers: workersObservable, order, dispatcher } = this.props.store;
 
-        const workers = workersObservable.slice();
+        const workers = toJS(workersObservable);
 
         const driver = workers.find(worker => worker.isDriver);
         const movers = workers.filter(worker => !worker.isDriver);
@@ -110,6 +128,9 @@ class OrderDetailScreen extends React.Component {
                 <ScrollView
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh} />}
                 >
+                    {this.state.message && (
+                        <Text style={{ color: 'red', textAlign: 'center', fontSize: 16 }}>{this.state.message}</Text>
+                    )}
                     <OrderCard
                         fullAddress
                         expandAlways

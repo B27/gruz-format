@@ -40,7 +40,7 @@ SafeAreaView.setStatusBarHeight(StatusBar.currentHeight);
 
 const yellowHeader = {
     headerStyle: {
-        backgroundColor: '#FFC234',
+        backgroundColor: '#FFC234'
     }
 };
 
@@ -192,7 +192,6 @@ const AuthStack = createStackNavigator(
             headerStyle: {
                 backgroundColor: '#FFC234',
                 textAlign: 'center',
-                height: 0.1 * height,
                 textAlign: 'center'
             }
         }

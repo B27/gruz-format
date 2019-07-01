@@ -152,6 +152,10 @@ class ObservableStore {
     @action async pullFulfilingOrderInformation(id) {
         if (!id) {
             id = this.orderIdOnWork;
+        } else {
+            runInAction(() => {
+                this.orderIdOnWork = id;
+            });
         }
 
         const { data: order } = await NetworkRequests.getOrder(id);
