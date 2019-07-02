@@ -27,11 +27,16 @@ class MainScreen extends React.Component {
 
     timeoutsSet = new Set();
 
+    componentDidMount() {
+        this.componentIsMount = true;
+    }
+
     componentWillUnmount() {
         for (let timeout of this.timeoutsSet) {
             clearTimeout(timeout);
         }
         this.timeoutsSet.clear();
+        this.componentIsMount = false;
     }
 
     _topUpBalance = () => {
@@ -80,27 +85,30 @@ class MainScreen extends React.Component {
 
     _onRefresh = async () => {
         //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
+        const { store } = this.props;
 
         try {
-            if (this.props.store.onWork) {
-                const { store } = this.props;
+            if (store.onWork) {
                 //  this.fetchData();
                 this.setState({ refreshing: true });
 
-                const UserInfoPromise = store.updateUserInfo();
-                const OrdersPromise = store.getOrders();
-
-                await Promise.all([UserInfoPromise, OrdersPromise]);
+                await Promise.all([store.updateUserInfo(), store.getOrders()]);
             } else {
-                await this.props.store.updateUserInfo();
-                this.props.store.clearOrders();
+                await store.updateUserInfo();
+                store.clearOrders();
             }
         } catch (error) {
             console.log(TAG, error);
             this._showErrorMessage(error.toString());
         }
 
-        this.setState({ refreshing: false });
+        if (store.orderIdOnWork) {
+            this.props.navigation.navigate('AuthLoading');
+        }
+
+        if (this.componentIsMount) {
+            this.setState({ refreshing: false });
+        }
     };
 
     _showErrorMessage = message => {

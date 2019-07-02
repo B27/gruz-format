@@ -6,6 +6,8 @@ import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';
 import networkErrorHandler from '../utils/networkErrorHandler';
 
+const TAG = '~Store.js~';
+
 class ObservableStore {
     lastOrderPullTime = null;
     @observable.shallow orders = [];
@@ -59,6 +61,7 @@ class ObservableStore {
             this.balance = (+response.data.balance).toFixed(2);
             this.name = response.data.name;
             this.isDriver = response.data.isDriver;
+            this.orderIdOnWork = response.data.order;
             //this.onWork = response.data.onWork;
             this.avatar = URL + response.data.photos.user;
             //console.log('avatar ', this.avatar);

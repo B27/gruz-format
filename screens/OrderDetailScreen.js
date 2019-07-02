@@ -28,6 +28,7 @@ class OrderDetailScreen extends React.Component {
 
     componentDidMount() {
         AppState.addEventListener('change', this._handleAppStateChange);
+        this.componentIsMount = true;
         NotificationListener.setRefreshCallback(this._onRefresh);
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', this._orderRefresher);
     }
@@ -44,6 +45,8 @@ class OrderDetailScreen extends React.Component {
             clearTimeout(timeout);
         }
         this.timeoutsSet.clear();
+
+        this.componentIsMount = false;
     }
 
     _orderRefresher = () => {
@@ -57,6 +60,7 @@ class OrderDetailScreen extends React.Component {
 
     _onRefresh = async () => {
         this.setState({ refreshing: true });
+
         try {
             await this.props.store.pullFulfilingOrderInformation();
             this._checkOrderChanges();
@@ -64,7 +68,10 @@ class OrderDetailScreen extends React.Component {
             console.log(TAG, error);
             this._showErrorMessage(error.toString());
         }
-        this.setState({ refreshing: false });
+
+        if (this.componentIsMount) {
+            this.setState({ refreshing: false });
+        }
     };
 
     _handleAppStateChange = nextAppState => {
@@ -118,17 +125,19 @@ class OrderDetailScreen extends React.Component {
         const workers = toJS(this.props.store.workers);
         const userId = toJS(this.props.store.userId);
 
-        console.log(TAG, 'order', order);
+        console.log(TAG, 'order status', order.status);
         console.log(TAG, 'workers', workers);
         console.log(TAG, 'userId', userId);
 
         if (order.status === 'rejected') {
-            showAlert('Отмена заказа', 'Заказ над котором вы работаете был отменён', { okFn: undefined });
+            console.log(TAG, 'order rejected');
+            showAlert('Отмена заказа', 'Заказ над которым вы работаете был отменён', { okFn: undefined });
             this.props.navigation.navigate('AuthLoading');
             return;
         }
 
-        if (!workers.filter(worker => worker.id == userId)) {
+        if (!workers.filter(worker => worker.id == userId).length) {
+            console.log(TAG, 'user not in order');
             showAlert('Исключение из заказа', 'Вы были исключены из заказа', { okFn: undefined });
             this.props.navigation.navigate('AuthLoading');
             return;
