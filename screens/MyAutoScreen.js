@@ -27,7 +27,8 @@ class MyAutoScreen extends React.Component {
             { name: 'Рефрижератор (крытый)', isOpen: false },
             { name: 'Термобудка (крытый)', isOpen: false },
             { name: 'Кран. борт', isOpen: true },
-            { name: 'Тент (крытый)', isOpen: false }
+            { name: 'Тент (крытый)', isOpen: false },
+            { name: 'Открытый борт', isOpen: true }
         ],
 
         colorMessage: 'red'
@@ -69,6 +70,104 @@ class MyAutoScreen extends React.Component {
         }
     }
 
+    _closeModals = () => {
+        this.setState({
+            choiceModalVisible: false
+        });
+    };
+
+    _openModalImage = num => () => {
+        this.setState({
+            choiceModalVisible: true,
+            imageNum: num
+        });
+    };
+
+    _pickFromCamera = async () => {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        if (status === 'granted') {
+            this.setState({ choiceModalVisible: false });
+            const { cancelled, uri } = await ImagePicker.launchCameraAsync({
+                mediaTypes: 'Images',
+                quality: 0.3
+            });
+            if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
+        }
+    };
+
+    _selectPicture = async () => {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status === 'granted') {
+            this.setState({ choiceModalVisible: false });
+            const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: 'Images',
+                quality: 0.3
+            });
+            if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
+        }
+    };
+
+    _nextScreen = async () => {
+        if (
+            !this.state.vehicle0 ||
+            !this.state.vehicle1 ||
+            !this.state.vehicle2 ||
+            this.state.veh_frameType === 'Тип кузова' ||
+            this.state.veh_is_open === null ||
+            this.state.veh_loadingCap === null ||
+            this.state.veh_length === null ||
+            this.state.veh_width === null ||
+            this.state.veh_height === null
+        ) {
+            this.setState({ message: 'Все поля должны быть заполнены', colorMessage: 'red' });
+            return;
+        }
+
+        const id = await AsyncStorage.getItem('userId');
+
+        try {
+            const res = await axios.patch('/worker/' + id, {
+                veh_is_open: this.state.veh_is_open,
+                veh_height: this.state.veh_is_open ? '4' : this.state.veh_height,
+                veh_width: this.state.veh_width,
+                veh_length: this.state.veh_length,
+                veh_loadingCap: this.state.veh_loadingCap,
+                veh_frameType: this.state.veh_frameType
+            });
+
+            console.log(res.data);
+            const data = new FormData();
+            console.log('PHOTOOOOOOOS: ', this.state.vehicle0, this.state.vehicle1, this.state.vehicle2);
+
+            data.append('vehicle0', {
+                uri: this.state.vehicle0,
+                type: 'image/jpeg',
+                name: 'image.jpg'
+            });
+            data.append('vehicle1', {
+                uri: this.state.vehicle1,
+                type: 'image/jpeg',
+                name: 'image.jpg'
+            });
+            data.append('vehicle2', {
+                uri: this.state.vehicle2,
+                type: 'image/jpeg',
+                name: 'image.jpg'
+            });
+            //ImageCacheManager.clearCache();
+
+            console.log(data);
+
+            await axios.patch('/worker/upload/' + id, data);
+            //await AsyncStorage.setItem("phoneNum", this.state.phone);
+            this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+            await this.props.store.refreshImages();
+            //this.props.navigation.navigate('EditCar');
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     render() {
         return (
             <View>
@@ -90,10 +189,10 @@ class MyAutoScreen extends React.Component {
                 ) : (
                     <ScrollView contentContainerStyle={styles.registrationScreen}>
                         <ChoiceCameraRoll
-                            pickFromCamera={this.pickFromCamera}
-                            selectPicture={this.selectPicture}
+                            pickFromCamera={this._pickFromCamera}
+                            selectPicture={this._selectPicture}
                             visible={this.state.choiceModalVisible}
-                            closeModal={this.closeModals}
+                            closeModal={this._closeModals}
                         />
                         <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
                         <View style={styles.inputContainer}>
@@ -150,21 +249,23 @@ class MyAutoScreen extends React.Component {
                                 onChangeText={veh_width => this.setState({ veh_width })}
                                 value={this.state.veh_width ? this.state.veh_width.toString() : ''}
                             />
-                            <NumericInput
-                                style={styles.input}
-                                placeholder='Высота (м)'
-                                onChangeText={veh_height => this.setState({ veh_height })}
-                                value={this.state.veh_height ? this.state.veh_height.toString() : ''}
-                            />
+                            {!this.state.veh_is_open && (
+                                <NumericInput
+                                    style={styles.input}
+                                    placeholder='Высота (м)'
+                                    onChangeText={veh_height => this.setState({ veh_height })}
+                                    value={this.state.veh_height ? this.state.veh_height.toString() : ''}
+                                />
+                            )}
                             <Text style={styles.descriptionTwo}>Фотографии:</Text>
                             <View style={styles.photoButtonContainer}>
-                                <ImageChooser openModal={this.openModalImage(0)} img={this.state.vehicle0} />
-                                <ImageChooser openModal={this.openModalImage(1)} img={this.state.vehicle1} />
-                                <ImageChooser openModal={this.openModalImage(2)} img={this.state.vehicle2} />
+                                <ImageChooser openModal={this._openModalImage(0)} img={this.state.vehicle0} />
+                                <ImageChooser openModal={this._openModalImage(1)} img={this.state.vehicle1} />
+                                <ImageChooser openModal={this._openModalImage(2)} img={this.state.vehicle2} />
                             </View>
                         </View>
 
-                        <LoadingButton style={styles.buttonBottom} onPress={this.nextScreen}>
+                        <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
                             СОХРАНИТЬ
                         </LoadingButton>
                     </ScrollView>
@@ -172,102 +273,6 @@ class MyAutoScreen extends React.Component {
             </View>
         );
     }
-
-    nextScreen = async () => {
-        if (
-            !this.state.vehicle0 ||
-            !this.state.vehicle1 ||
-            !this.state.vehicle2 ||
-            this.state.veh_frameType === 'Тип кузова' ||
-            this.state.veh_is_open === null ||
-            this.state.veh_loadingCap === null ||
-            this.state.veh_length === null ||
-            this.state.veh_width === null ||
-            this.state.veh_height === null
-        ) {
-            this.setState({ message: 'Все поля должны быть заполнены', colorMessage: 'red' });
-        } else {
-            const id = await AsyncStorage.getItem('userId');
-            try {
-                const res = await axios.patch('/worker/' + id, {
-                    veh_is_open: this.state.veh_is_open,
-                    veh_height: this.state.veh_height,
-                    veh_width: this.state.veh_width,
-                    veh_length: this.state.veh_length,
-                    veh_loadingCap: this.state.veh_loadingCap,
-                    veh_frameType: this.state.veh_frameType
-                });
-
-                console.log(res.data);
-                const data = new FormData();
-                console.log('PHOTOOOOOOOS: ', this.state.vehicle0, this.state.vehicle1, this.state.vehicle2);
-
-                data.append('vehicle0', {
-                    uri: this.state.vehicle0,
-                    type: 'image/jpeg',
-                    name: 'image.jpg'
-                });
-                data.append('vehicle1', {
-                    uri: this.state.vehicle1,
-                    type: 'image/jpeg',
-                    name: 'image.jpg'
-                });
-                data.append('vehicle2', {
-                    uri: this.state.vehicle2,
-                    type: 'image/jpeg',
-                    name: 'image.jpg'
-                });
-                //ImageCacheManager.clearCache();
-
-                console.log(data);
-
-                await axios.patch('/worker/upload/' + id, data);
-                //await AsyncStorage.setItem("phoneNum", this.state.phone);
-                this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
-                await this.props.store.refreshImages();
-                //this.props.navigation.navigate('EditCar');
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    };
-
-    closeModals = () => {
-        this.setState({
-            choiceModalVisible: false
-        });
-    };
-
-    openModalImage = num => () => {
-        this.setState({
-            choiceModalVisible: true,
-            imageNum: num
-        });
-    };
-
-    pickFromCamera = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        if (status === 'granted') {
-            this.setState({ choiceModalVisible: false });
-            const { cancelled, uri } = await ImagePicker.launchCameraAsync({
-                mediaTypes: 'Images',
-                quality: 0.3
-            });
-            if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
-        }
-    };
-
-    selectPicture = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (status === 'granted') {
-            this.setState({ choiceModalVisible: false });
-            const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: 'Images',
-                quality: 0.3
-            });
-            if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
-        }
-    };
 }
 
 export default MyAutoScreen;
