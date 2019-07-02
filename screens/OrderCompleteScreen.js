@@ -9,210 +9,232 @@ import StarRating from '../components/StarRating';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
 
+const TAG = '~OrderCompleteScreen.js~';
 @inject('store')
 @observer
 class OrderCompleteScreen extends React.Component {
-	state = {
-		sumText: '',
-		buttonDisabled: false
-	};
+    state = {
+        sumText: '',
+        buttonDisabled: false,
+        message: false
+    };
 
-	static navigationOptions = {
-		title: 'Завершение заказа'
-	};
+    static navigationOptions = {
+        title: 'Завершение заказа'
+    };
 
-	componentDidMount() {
-		const { workers: workersObservable, dispatcher, userId } = this.props.store;
+    starsSet = new Set(); // id пользователей для которых не стоит оценка
+    requestData = { sum: null, data: [] }; // данные для отправки на сервер
+    timeoutsSet = new Set();
 
-		const workers = workersObservable.slice().filter(worker => worker.id != userId);
-		this.starsSet.add(dispatcher._id);
-		workers.forEach(worker => {
-			this.starsSet.add(worker.id);
-		});
-	}
+    componentDidMount() {
+        const { workers: workersObservable, dispatcher, userId } = this.props.store;
 
-	starsSet = new Set(); // id пользователей для которых не стоит оценка
-	requestData = { sum: null, data: [] }; // данные для отправки на сервер
+        const workers = workersObservable.slice().filter(worker => worker.id != userId);
+        this.starsSet.add(dispatcher._id);
+        workers.forEach(worker => {
+            this.starsSet.add(worker.id);
+        });
+    }
 
-	render() {
-		const { workers: workersObservable, dispatcher, userId } = this.props.store;
+    componentWillUnmount() {
+        for (let timeout of this.timeoutsSet) {
+            clearTimeout(timeout);
+        }
+        this.timeoutsSet.clear();
+    }
 
-		const workers = workersObservable.slice();
+    _onChangeStarRating = (workerId, rating) => {
+        let workerRating = { worker_id: workerId, rating: rating };
+        let data = this.requestData.data;
 
-		const driver = workers.find(worker => worker.isDriver && worker.id != userId);
-		const movers = workers.filter(worker => !worker.isDriver && worker.id != userId);
-		return (
-			<Fragment>
-				<ScrollView>
-					<NumericInput
-						style={styles.inputSumComplete}
-						placeholder='Полученная вами сумма в рублях'
-						onChangeText={this._onChangeSum}
-						value={this.state.sumText}
-					/>
-					<ExpandCardBase
-						expandAlways
-						OpenComponent={<Text style={styles.cardExecutorH2}>Исполнители</Text>}
-						HiddenComponent={
-							<Fragment>
-								<View style={styles.cardDescription}>
-									{dispatcher && (
-										<View>
-											<Text style={styles.executorTextDisp}>Диспетчер:</Text>
-											<View style={styles.executorsRow}>
-												<View>
-													<IconCam
-														name={'camera'}
-														color={'#FFC234'}
-														size={50}
-														style={styles.orderIcon}
-													/>
-												</View>
-												<View>
-													<Text>{dispatcher.name}</Text>
-													<StarRating
-														id={dispatcher._id}
-														onChange={this._onChangeStarRating}
-													/>
-												</View>
-											</View>
-										</View>
-									)}
-									{driver && (
-										<View>
-											<Text style={styles.executorText}>Водитель:</Text>
-											<View style={styles.executorsRow}>
-												<View>
-													{driver.avatar ? (
-														<Image
-															style={styles.executorImage}
-															source={{ uri: driver.avatar }}
-														/>
-													) : (
-														<IconCam
-															name={'camera'}
-															color={'#FFC234'}
-															size={50}
-															style={styles.orderIcon}
-														/>
-													)}
-												</View>
-												<View>
-													<Text>{driver.name}</Text>
-													<StarRating id={driver.id} onChange={this._onChangeStarRating} />
-												</View>
-											</View>
-										</View>
-									)}
-									{movers.length != 0 && (
-										<View>
-											<Text style={styles.executorText}>
-												{movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
-											</Text>
-											{movers.map(mover => (
-												<View key={mover.id} style={styles.executorsRow}>
-													<View>
-														{mover.avatar ? (
-															<Image
-																style={styles.executorImage}
-																source={{ uri: mover.avatar }}
-															/>
-														) : (
-															<IconCam
-																name={'camera'}
-																color={'#FFC234'}
-																size={50}
-																style={styles.orderIcon}
-															/>
-														)}
-													</View>
-													<View>
-														<Text>{mover.name}</Text>
-														<StarRating id={mover.id} onChange={this._onChangeStarRating} />
-													</View>
-												</View>
-											))}
-										</View>
-									)}
-								</View>
-							</Fragment>
-						}
-						cardStyle={[styles.cardMargins, styles.spaceBottom]}
-					/>
-				</ScrollView>
-				<View style={styles.absoluteButtonContainer}>
-					<View style={styles.buttonContainer}>
-						<TouchableOpacity style={styles.buttonCancel} onPress={this._cancelPress}>
-							<Text style={styles.buttonText}>ОТМЕНА</Text>
-						</TouchableOpacity>
-						<LoadingButton
-							blackText
-							style={styles.buttonConfirm}
-							disabled={this.state.buttonDisabled}
-							onPress={this._confirmPress}
-						>
-							ГОТОВО
-						</LoadingButton>
-					</View>
-				</View>
-			</Fragment>
-		);
-	}
+        if (this.starsSet.delete(workerId)) {
+            this.requestData.data = [...data, workerRating];
+        } else {
+            this.requestData.data = data.map(wrkRtng => {
+                console.log(wrkRtng.worker_id == workerId);
+                return wrkRtng.worker_id == workerId ? workerRating : wrkRtng;
+            });
+        }
 
-	_onChangeStarRating = (workerId, rating) => {
-		let workerRating = { worker_id: workerId, rating: rating };
-		let data = this.requestData.data;
+        console.log('starsRating set _onChangeStarRating:', this.starsSet);
 
-		if (this.starsSet.delete(workerId)) {
-			this.requestData.data = [...data, workerRating];
-		} else {
-			this.requestData.data = data.map(wrkRtng => {
-				console.log(wrkRtng.worker_id == workerId);
-				return wrkRtng.worker_id == workerId ? workerRating : wrkRtng;
-			});
-		}
+        console.log('request data _onChangeStarRating:', this.requestData);
+    };
 
-		console.log('starsRating set _onChangeStarRating:', this.starsSet);
+    _onChangeSum = text => {
+        this.setState({ sumText: text });
+    };
 
-		console.log('request data _onChangeStarRating:', this.requestData);
-	};
+    _cancelPress = () => {
+        this.props.navigation.goBack();
+    };
 
-	_onChangeSum = text => {
-		this.setState({ sumText: text });
-	};
+    _confirmPress = async () => {
+        if (this.starsSet.size) {
+            this._showErrorMessage('Оцените всех участников заказа');
+            console.log('not all rated');
+            return;
+        }
 
-	_cancelPress = () => {
-		this.props.navigation.goBack();
-	};
+        if (!this.state.sumText) {
+            this._showErrorMessage('Укажите полученную вами сумму');
+            console.log('get sum not entered');
+            return;
+        }
 
-	_confirmPress = async () => {
-		if (this.starsSet.size != 0) {
-			// TODO добавить вывод польователю
-			console.log('Оцените всех участников заказа');
-			return;
-		}
-		if (!this.state.sumText) {
-			// TODO добавить вывод польователю
-			console.log('Укажите полученную ваму сумму');
-			return;
-		}
+        const requestData = { ...this.requestData, sum: +this.state.sumText };
 
-		const requestData = { ...this.requestData, sum: +this.state.sumText };
+        this.setState({
+            buttonDisabled: true
+        });
 
-		this.setState({
-			buttonDisabled: true
-		});
+        try {
+            await NetworkRequests.completeOrder(requestData);
+            this.props.navigation.navigate('AuthLoading');
+        } catch (error) {
+            this.setState({
+                buttonDisabled: false
+            });
+            this._showErrorMessage(error);
+            console.log(TAG, error);
+        }
+    };
 
-		try {
-			await NetworkRequests.completeOrder(requestData);
-			this.props.navigation.navigate('AuthLoading');
-		} catch (error) {
-			this.setState({
-				buttonDisabled: false
-			});
-			console.log('Ошибка в OrderCompleteScreen');
-		}
-	};
+    _showErrorMessage = message => {
+        this.setState({ message: message });
+        this.timeoutsSet.add(
+            setTimeout(() => {
+                this.setState({ message: false });
+            }, 3000)
+        );
+    };
+
+    render() {
+        const { workers: workersObservable, dispatcher, userId } = this.props.store;
+
+        const workers = workersObservable.slice();
+
+        const driver = workers.find(worker => worker.isDriver && worker.id != userId);
+        const movers = workers.filter(worker => !worker.isDriver && worker.id != userId);
+        return (
+            <Fragment>
+                <ScrollView>
+                    {this.state.message && <Text style={styles.errorMessage}>{this.state.message}</Text>}
+                    <NumericInput
+                        style={styles.inputSumComplete}
+                        placeholder='Полученная вами сумма в рублях'
+                        onChangeText={this._onChangeSum}
+                        value={this.state.sumText}
+                    />
+                    <ExpandCardBase
+                        expandAlways
+                        OpenComponent={<Text style={styles.cardExecutorH2}>Исполнители</Text>}
+                        HiddenComponent={
+                            <Fragment>
+                                <View style={styles.cardDescription}>
+                                    {dispatcher && (
+                                        <View>
+                                            <Text style={styles.executorTextDisp}>Диспетчер:</Text>
+                                            <View style={styles.executorsRow}>
+                                                <View>
+                                                    <IconCam
+                                                        name={'camera'}
+                                                        color={'#FFC234'}
+                                                        size={50}
+                                                        style={styles.orderIcon}
+                                                    />
+                                                </View>
+                                                <View>
+                                                    <Text>{dispatcher.name}</Text>
+                                                    <StarRating
+                                                        id={dispatcher._id}
+                                                        onChange={this._onChangeStarRating}
+                                                    />
+                                                </View>
+                                            </View>
+                                        </View>
+                                    )}
+                                    {driver && (
+                                        <View>
+                                            <Text style={styles.executorText}>Водитель:</Text>
+                                            <View style={styles.executorsRow}>
+                                                <View>
+                                                    {driver.avatar ? (
+                                                        <Image
+                                                            style={styles.executorImage}
+                                                            source={{ uri: driver.avatar }}
+                                                        />
+                                                    ) : (
+                                                        <IconCam
+                                                            name={'camera'}
+                                                            color={'#FFC234'}
+                                                            size={50}
+                                                            style={styles.orderIcon}
+                                                        />
+                                                    )}
+                                                </View>
+                                                <View>
+                                                    <Text>{driver.name}</Text>
+                                                    <StarRating id={driver.id} onChange={this._onChangeStarRating} />
+                                                </View>
+                                            </View>
+                                        </View>
+                                    )}
+                                    {movers.length != 0 && (
+                                        <View>
+                                            <Text style={styles.executorText}>
+                                                {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
+                                            </Text>
+                                            {movers.map(mover => (
+                                                <View key={mover.id} style={styles.executorsRow}>
+                                                    <View>
+                                                        {mover.avatar ? (
+                                                            <Image
+                                                                style={styles.executorImage}
+                                                                source={{ uri: mover.avatar }}
+                                                            />
+                                                        ) : (
+                                                            <IconCam
+                                                                name={'camera'}
+                                                                color={'#FFC234'}
+                                                                size={50}
+                                                                style={styles.orderIcon}
+                                                            />
+                                                        )}
+                                                    </View>
+                                                    <View>
+                                                        <Text>{mover.name}</Text>
+                                                        <StarRating id={mover.id} onChange={this._onChangeStarRating} />
+                                                    </View>
+                                                </View>
+                                            ))}
+                                        </View>
+                                    )}
+                                </View>
+                            </Fragment>
+                        }
+                        cardStyle={[styles.cardMargins, styles.spaceBottom]}
+                    />
+                </ScrollView>
+                <View style={styles.absoluteButtonContainer}>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelPress}>
+                            <Text style={styles.buttonText}>ОТМЕНА</Text>
+                        </TouchableOpacity>
+                        <LoadingButton
+                            blackText
+                            style={styles.buttonConfirm}
+                            disabled={this.state.buttonDisabled}
+                            onPress={this._confirmPress}
+                        >
+                            ГОТОВО
+                        </LoadingButton>
+                    </View>
+                </View>
+            </Fragment>
+        );
+    }
 }
 
 export default OrderCompleteScreen;

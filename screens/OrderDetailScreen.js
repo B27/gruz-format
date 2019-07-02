@@ -165,9 +165,7 @@ class OrderDetailScreen extends React.Component {
                 <ScrollView
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh} />}
                 >
-                    {this.state.message && (
-                        <Text style={{ color: 'red', textAlign: 'center', fontSize: 16 }}>{this.state.message}</Text>
-                    )}
+                    {this.state.message && <Text style={styles.errorMessage}>{this.state.message}</Text>}
                     <OrderCard
                         fullAddress
                         expandAlways

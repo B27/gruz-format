@@ -139,9 +139,7 @@ class MainScreen extends React.Component {
                 ListHeaderComponent={
                     <View>
                         <View style={styles.mainTopBackground}>
-                            <Text style={{ color: 'red', textAlign: 'center', fontSize: 16 }}>
-                                {this.state.message}
-                            </Text>
+                            <Text style={styles.errorMessage}>{this.state.message}</Text>
                             <Text style={styles.mainFontUserName}>{store.name}</Text>
                             <Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
                             {/* <Context.Consumer>

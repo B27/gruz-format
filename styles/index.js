@@ -559,6 +559,12 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         marginRight: 12
+    },
+
+    errorMessage: {
+        color: 'red',
+        textAlign: 'center',
+        fontSize: 16
     }
 });
 export default styles;
