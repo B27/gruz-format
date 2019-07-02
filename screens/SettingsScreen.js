@@ -69,7 +69,7 @@ class SettingsScreen extends React.Component {
 				</LoadingButton>
 
 				<LoadingButton
-					yellowButton
+					blackText
 					style={[styles.buttonConfirm, { width: styles.buttonConfirm.width * 2 }]}
 					onPress={this._signOutAsync}
 				>

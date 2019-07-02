@@ -40,7 +40,6 @@ class EditUserScreen extends React.Component {
         message: '',
         cities: [],
         list: [],
-        userId: null,
         isDriver: false
     };
     static navigationOptions = {

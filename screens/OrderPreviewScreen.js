@@ -60,7 +60,7 @@ class OrderPreview extends React.Component {
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
                     <View style={styles.buttonContainerAlone}>
-                        <LoadingButton yellowButton style={styles.buttonConfirmAlone} onPress={this._acceptOrder}>
+                        <LoadingButton blackText style={styles.buttonConfirmAlone} onPress={this._acceptOrder}>
                             ПРИНЯТЬ
                         </LoadingButton>
                     </View>

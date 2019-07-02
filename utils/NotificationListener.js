@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import NetworkRequests from '../mobx/NetworkRequests';
-import Store from '../mobx/Store';
+import showAlert from './showAlert';
 
 let _navigation = null;
 
@@ -15,48 +15,31 @@ export default async function NotificationListener(params) {
     // Когда приложение в фоне или закрыто, firebase отправляет уведомление в трей
     // по нажатии на уведомление в MainActivity в методе onResume отсылается event
     // с type и order, title и body не приходят
-    if (title && body) {
-        if (_navigation) {
-            if (type == 'accept') {
-                console.log(TAG, `type == ${type}, order id`, orderId);
 
-                let newBody = 'Нажмите ОК для перехода к деталям заказа';
-                showAlert(title, newBody, { okFn: gotoOrderPreview(orderId), cancel: true });
-            } else {
-                console.log(TAG, `type == ${type}`);
-                gotoAuthLoading();
-                showAlert(title, body, { okFn: undefined });
-            }
+    const recievedInForeground = title && body;
+    const acceptNotification = type == 'accept';
+
+    if (acceptNotification && !_navigation) {
+        console.log(TAG, '_navigation is null');
+        return;
+    }
+
+    if (recievedInForeground) {
+        if (acceptNotification) {
+            console.log(TAG, `type == ${type}, order id`, orderId);
+
+            let newBody = 'Нажмите ОК для перехода к деталям заказа';
+            showAlert(title, newBody, { okFn: gotoOrderPreview(orderId), cancel: true });
         } else {
-            console.log(TAG, '_navigation is null');
+            console.log(TAG, `type == ${type}`);
+            _refreshCallback();
         }
     } else {
-        if (_navigation) {
-            if (type == 'accept') {
-                console.log(TAG, 'call gotoOrderPreview(order)()');
-                gotoOrderPreview(orderId)();
-            } else {
-                console.log(TAG, 'call gotoAuthLoading()');
-                gotoAuthLoading();
-            }
-        } else {
-            console.log(TAG, '_navigation is null');
+        if (acceptNotification) {
+            console.log(TAG, 'call gotoOrderPreview(order)()');
+            gotoOrderPreview(orderId)();
         }
     }
-}
-
-function showAlert(title, msg, { okFn, cancel }) {
-    let buttons = [{ text: 'OK', onPress: okFn }];
-
-    if (cancel) {
-        buttons.push({
-            text: 'Отмена',
-            style: 'cancel'
-        });
-        buttons.reverse(); // кнопка отмены должна быть слева
-    }
-
-    Alert.alert(title, msg, buttons, { cancelable: false });
 }
 
 gotoOrderPreview = order_id => async () => {
@@ -68,10 +51,10 @@ gotoOrderPreview = order_id => async () => {
     }
 };
 
-function gotoAuthLoading() {
-    _navigation.navigate('AuthLoading');
-}
-
 export function prepareNotificationListener(navigation) {
     _navigation = navigation;
+}
+
+export function setRefreshCallback(callback) {
+    _refreshCallback = callback;
 }

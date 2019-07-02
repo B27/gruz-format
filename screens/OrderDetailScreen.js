@@ -7,6 +7,8 @@ import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
 import OrderCard from '../components/OrderCard';
 import styles from '../styles';
+import * as NotificationListener from '../utils/NotificationListener';
+import showAlert from '../utils/showAlert';
 
 const TAG = '~OrderDetailScreen.js~';
 
@@ -26,12 +28,13 @@ class OrderDetailScreen extends React.Component {
 
     componentDidMount() {
         AppState.addEventListener('change', this._handleAppStateChange);
-
+        NotificationListener.setRefreshCallback(this._onRefresh);
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', this._orderRefresher);
     }
 
     componentWillUnmount() {
         AppState.removeEventListener('change', this._handleAppStateChange);
+        NotificationListener.setRefreshCallback(null);
 
         if (this.willFocusSubscription) {
             this.willFocusSubscription.remove();
@@ -56,6 +59,7 @@ class OrderDetailScreen extends React.Component {
         this.setState({ refreshing: true });
         try {
             await this.props.store.pullFulfilingOrderInformation();
+            this._checkOrderChanges();
         } catch (error) {
             console.log(TAG, error);
             this._showErrorMessage(error.toString());
@@ -67,7 +71,7 @@ class OrderDetailScreen extends React.Component {
         console.log(TAG, 'state changed', nextAppState);
         if (nextAppState === 'active') {
             console.log(TAG, 'App has come to the foreground!');
-            this._orderRefresher();
+            this._onRefresh();
         }
     };
 
@@ -105,6 +109,30 @@ class OrderDetailScreen extends React.Component {
 
     _chatPress = () => {
         this.props.navigation.navigate('OrderChat');
+    };
+
+    _checkOrderChanges = () => {
+        console.log(TAG, 'check order changes');
+
+        const order = toJS(this.props.store.order);
+        const workers = toJS(this.props.store.workers);
+        const userId = toJS(this.props.store.userId);
+
+        console.log(TAG, 'order', order);
+        console.log(TAG, 'workers', workers);
+        console.log(TAG, 'userId', userId);
+
+        if (order.status === 'rejected') {
+            showAlert('Отмена заказа', 'Заказ над котором вы работаете был отменён', { okFn: undefined });
+            this.props.navigation.navigate('AuthLoading');
+            return;
+        }
+
+        if (!workers.filter(worker => worker.id == userId)) {
+            showAlert('Исключение из заказа', 'Вы были исключены из заказа', { okFn: undefined });
+            this.props.navigation.navigate('AuthLoading');
+            return;
+        }
     };
 
     _showErrorMessage = message => {

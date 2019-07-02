@@ -146,7 +146,7 @@ class OrderCompleteScreen extends React.Component {
 							<Text style={styles.buttonText}>ОТМЕНА</Text>
 						</TouchableOpacity>
 						<LoadingButton
-							yellowButton
+							blackText
 							style={styles.buttonConfirm}
 							disabled={this.state.buttonDisabled}
 							onPress={this._confirmPress}
