@@ -133,6 +133,7 @@ public class SendLocationService extends Service implements LocationListener {
     }
 
     public void startFusedLocation() {
+        Log.d(TAG, "startFusedLocation");
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API)
                     .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -142,13 +143,13 @@ public class SendLocationService extends Service implements LocationListener {
 
                         @Override
                         public void onConnected(Bundle connectionHint) {
-
+                            Log.d(TAG, "startFusedLocation / onConnected");
                         }
                     }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
 
                         @Override
                         public void onConnectionFailed(ConnectionResult result) {
-
+                            Log.d(TAG, "startFusedLocation / onConnectedFailed " + result);
                         }
                     }).build();
             mGoogleApiClient.connect();
@@ -168,7 +169,7 @@ public class SendLocationService extends Service implements LocationListener {
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(10000); // every second
-
+        Log.d(TAG, "registerRequestUpdate");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -189,16 +190,19 @@ public class SendLocationService extends Service implements LocationListener {
     }
 
     public boolean isGoogleApiClientConnected() {
+        Log.d(TAG, "isGoogleApiClientConnected");
         return mGoogleApiClient != null && mGoogleApiClient.isConnected();
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged");
         setFusedLatitude(location.getLatitude());
         setFusedLongitude(location.getLongitude());
 
         // Toast.makeText(getApplicationContext(), "NEW LOCATION RECEIVED",
         // Toast.LENGTH_LONG).show();
+        Log.d(TAG, "startFusedLocation");
         JSONObject obj = new JSONObject();
         JSONArray coords = new JSONArray();
         try {
@@ -214,11 +218,11 @@ public class SendLocationService extends Service implements LocationListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-     //   Log.d(TAG, "data to send: " + obj);
+        Log.d(TAG, "data to send: " + obj);
 
         mSocket.emit("geo data", obj.toString());
-      //  Log.d(TAG, "Lat: " + getFusedLatitude());
-     //   Log.d(TAG, "Lng: " + getFusedLongitude());
+        Log.d(TAG, "Lat: " + getFusedLatitude());
+        Log.d(TAG, "Lng: " + getFusedLongitude());
     }
 
     public double getFusedLatitude() {
