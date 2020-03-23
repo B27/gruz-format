@@ -10,6 +10,7 @@ import LocalImage from '../components/LocalImage';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
+import showAlert from "../utils/showAlert";
 
 @inject('store')
 @observer
@@ -48,8 +49,18 @@ class MyInfoScreen extends React.Component {
             this.setState({ message: '' });
             (async () => {
                 try {
-                    (async () =>
-                        this.setState({
+                    const res = await axios.get('/cities/1000/1')
+                    const cities = [
+                        { name: 'Город', id: 1 },
+                        ...res.data.map(({ name, id }) => ({
+                            name,
+                            id
+                        }))
+                    ]
+                    await this.setState({cities})
+                    console.log('[MyInfoScreen].() cities', this.state.cities)
+                    /*(async () =>
+                        await this.setState({
                             cities: [
                                 { name: 'Город', id: 1 },
                                 ...(await axios.get('/cities/1000/1')).data.map(({ name, id }) => ({
@@ -57,12 +68,26 @@ class MyInfoScreen extends React.Component {
                                     id
                                 }))
                             ]
-                        }))();
+                        }))();*/
                 } catch (err) {
                     console.log(err);
                 }
+                try {
+                    await this.props.store.getUserInfo();
+                } catch (error) {
+                    // TODO добавить вывод ошибки пользователю
+                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');
+                    if(error.response){
+                        showAlert('Ошибка', 'Ошибка при обновлении данных\n'+error.response.data.message, { okFn: undefined });
+                    } else {
+                        showAlert('Ошибка', 'Ошибка при обновлении данных', error.toString(), {okFn: undefined});
+                    }
+                    return;
+                }
+                await this.setState({...this.props.store, phone:this.props.store.login} );
+                console.log('[MyInfoScreen].() cityId', this.state.cityId)
             })();
-            (async () => {
+            /*(async () => {
                 try {
                     await this.props.store.getUserInfo();
                 } catch (error) {
@@ -70,8 +95,9 @@ class MyInfoScreen extends React.Component {
                     console.log('Ошибка при получении новых данных, проверьте подключение к сети');
                     return;
                 }
-                this.setState(this.props.store);
-            })();
+                await this.setState(this.props.store);
+                console.log('[MyInfoScreen].() cityId', this.state.cityId)
+            })();*/
         });
 
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -165,16 +191,16 @@ class MyInfoScreen extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.inputContainer}>
+
+                    {/* [var_name]: "phone" */}
                     <TextInput
                         style={styles.input}
                         placeholder='Номер телефона'
                         placeholderTextColor='grey'
-                        onChangeText={phone => this.setState({ phone })}
+                        onChangeText={phone => this.setState({ phone: phone.replace(/[ \(\)]/g,'') })}
                         value={this.state.phone}
+                        fullWidth
                     />
-
-                    {/* [var_name]: "phone" */}
-
                     <TextInput
                         style={styles.input}
                         placeholder='Имя'
@@ -209,8 +235,8 @@ class MyInfoScreen extends React.Component {
                     >
                         <Picker
                             selectedValue={this.state.cityId}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({
+                            onValueChange={async (itemValue, itemIndex) =>
+                                await this.setState({
                                     cityId: itemValue
                                 })
                             }
@@ -282,36 +308,43 @@ class MyInfoScreen extends React.Component {
         if (this.state.birthDate !== undefined && this.state.birthDate !== 'Дата рождения') {
             const date = this.state.birthDate;
             // console.log(date + ' ----------------------');
-            return `${this.state.birthDate.getDate()}.${this.state.birthDate.getMonth()}.${this.state.birthDate.getFullYear()}`;
+            return `${this.state.birthDate.getDate()}.${this.state.birthDate.getMonth()+1}.${this.state.birthDate.getFullYear()}`;
         } else {
             return;
         }
     };
+
+    isValidFields = async (city) => {
+        if (typeof this.state.pictureUri === 'number') return 'Загрузите свое фото!'
+        if (this.state.firstname === '' ) return 'Заполните имя'
+        if (this.state.lastName === '' ) return 'Заполните фамилию'
+        if (this.state.patronymic === '' ) return 'Заполните отчество'
+        if (this.state.phone === '' ) return 'Заполните номер'
+        if (this.state.phone.length !== 11 ) return 'Ваш номер должен содержать ровно 11 символов'
+        if (  !/^8/g.test(this.state.phone) ) return 'Ваш номер должен начинаться с 8'
+        if (this.state.birthDate === 'Дата рождения' ) return 'Укажите дату рождения'
+        if (this.state.height === '' ) return 'Укажите свой вес'
+        if (this.state.weight === '' ) return 'Укажите свой рост'
+        if (city === '' ) return 'Укажите город'
+        if (this.state.cityId === '') return 'Укажите город'
+        if (this.state.street === '' ) return 'Заполните улицу проживания'
+        if (this.state.house === '' ) return 'Заполните дом проживания'
+        if (this.state.flat === '') return 'Заполните номер квартиры'
+        return null
+    }
+
     _nextScreen = async () => {
         //console.log(this.state);
         this.setState({ message: '' });
 
         const id = await AsyncStorage.getItem('userId');
         const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
-        if (
-            typeof this.state.avatar === 'number' ||
-            this.state.lastName === '' ||
-            this.state.firstName === '' ||
-            this.state.patronymic === '' ||
-            this.state.phone === '' ||
-            this.state.birthDate === 'Дата рождения' ||
-            this.state.height === '' ||
-            this.state.weight === '' ||
-            this.state.cityId === '' ||
-            city === '' ||
-            this.state.street === '' ||
-            this.state.house === '' ||
-            this.state.flat === ''
-        ) {
-            this.setState({ message: 'Все поля должны быть заполнены', colorMessage: 'red' });
+        const error = await this.isValidFields(city)
+        if (error !== null) {
+            this.setState({ message: error, colorMessage: 'red' });
         } else {
             try {
-                const res = await axios.patch('/worker/' + id, {
+                let res = await axios.patch('/worker/' + id, {
                     name: `${this.state.lastName} ${this.state.firstName} ${this.state.patronymic}`,
                     login: this.state.phone,
                     phoneNum: this.state.phone,
@@ -322,6 +355,7 @@ class MyInfoScreen extends React.Component {
                     weight: this.state.weight,
                     isDriver: this.state.isDriver
                 });
+
                 //console.log(res.data);
 
                 const data = new FormData();
@@ -332,14 +366,35 @@ class MyInfoScreen extends React.Component {
                     type: 'image/jpeg',
                     name: 'image.jpg'
                 });
+
                 // console.log(data);
 
-                await axios.patch('/worker/upload/' + id, data);
+                res = await axios.patch('/worker/upload/' + id, data);
+
+
                 await this.props.store.refreshImages();
 
-                this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+                await this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+
+                showAlert('Успешно!', 'Ваши данные сохраненны!', { okFn: undefined });
+
             } catch (error) {
                 console.log(error);
+                Object.keys(error).forEach(value => {console.log(error[value])})
+                if(error.response){
+
+                    if(error.response.data.message.indexOf('duplicate key error') !== -1) {
+                        showAlert('Ошибка при изменении данных', 'Пользователь с таким номером телефона уже зарегистрирован', {okFn: undefined});
+                    } else {
+                        showAlert('Ошибка при изменении данных', 'Ошибка при обновлении данных\n'+error.response.data.message, { okFn: undefined });
+                    }
+
+
+
+                } else {
+                    showAlert('Ошибка', 'Ошибка при обновлении данных', {okFn: undefined});
+                }
+
             }
         }
     };

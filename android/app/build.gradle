@@ -104,8 +104,8 @@ android {
         applicationId "ru.baikalweb.gruz"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.0.7"
+        versionCode 13
+        versionName "1.2.3"
     }
     signingConfigs {
         release {
@@ -152,6 +152,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-play-sound')
     implementation project(':@react-native-community_async-storage')
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
@@ -161,6 +162,7 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation "android.arch.work:work-runtime:1.0.1"
     implementation('io.socket:socket.io-client:1.0.0') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'

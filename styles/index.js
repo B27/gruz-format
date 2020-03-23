@@ -110,6 +110,8 @@ const styles = StyleSheet.create({
         //        flex: 1
     },
 
+
+
     policy: {
         marginHorizontal: 45,
         flexDirection: 'row',
@@ -157,6 +159,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 
+    buttonAddWorker: {
+        width: '100%',
+        height: 30,
+        borderWidth: 1,
+        borderRadius: 5,
+        backgroundColor: 'white',
+        justifyContent: 'center'
+    },
+
+    buttonDeleteWorker: {
+        width: 30,
+        height: 30,
+        borderWidth: 1,
+        borderRadius: 25,
+        justifyContent: 'center',
+        marginLeft: 5,
+
+
+    },
+
     buttonBottom: {
         width: WIDTH / 2,
         height: 45,
@@ -169,6 +191,12 @@ const styles = StyleSheet.create({
 
     text: {
         color: '#FFC234',
+        fontSize: 16,
+        textAlign: 'center'
+    },
+
+    redText: {
+        color: '#ff3737',
         fontSize: 16,
         textAlign: 'center'
     },
@@ -230,14 +258,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 
-    camButton: {
-        backgroundColor: '#FFC234',
-        marginBottom: 15,
-        width: 45,
-        height: 45,
-        borderRadius: 25,
-        justifyContent: 'center'
-    },
+
 
     choiceCameraRoll: {
         height: 200,
@@ -300,12 +321,24 @@ const styles = StyleSheet.create({
         paddingTop: 40
     },
 
+    plusSevenText: {
+        fontSize: 28,
+        textAlign: 'center',
+        color: '#4D443F',
+        fontWeight: '100',
+        width:'20%'
+
+    },
+
+
     drawerUserName: {
         flex: 2,
         textAlign: 'center',
         fontSize: 24,
         paddingLeft: 6
     },
+
+
 
     drawerTopItem: {
         flexDirection: 'row',
@@ -409,6 +442,13 @@ const styles = StyleSheet.create({
         padding: 10
     },
 
+    telephone: {
+        textAlign: 'center',
+        margin: 4,
+        fontSize: 24,
+        justifyContent: 'flex-start',
+    },
+
     orderChevronIcon: {
         alignSelf: 'flex-start'
     },
@@ -482,6 +522,7 @@ const styles = StyleSheet.create({
     mainFontUserType: {
         fontSize: 24,
         textAlign: 'center',
+        paddingTop: 24,
         color: '#4D443F',
         fontWeight: '100',
         paddingBottom: 42
@@ -563,6 +604,12 @@ const styles = StyleSheet.create({
 
     errorMessage: {
         color: 'red',
+        textAlign: 'center',
+        fontSize: 16
+    },
+
+    notificationMessage: {
+        color: '#A67911',
         textAlign: 'center',
         fontSize: 16
     }

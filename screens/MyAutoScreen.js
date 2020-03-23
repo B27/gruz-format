@@ -5,7 +5,7 @@ import * as Permissions from 'expo-permissions';
 import { inject, observer } from 'mobx-react/native';
 import { Picker } from 'native-base';
 import React from 'react';
-import { Keyboard, ScrollView, Text, View } from 'react-native';
+import {Keyboard, ScrollView, Text, TextInput, View} from 'react-native';
 import ImageChooser from '../components/ImageChooser';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
@@ -30,7 +30,7 @@ class MyAutoScreen extends React.Component {
             { name: 'Тент (крытый)', isOpen: false },
             { name: 'Открытый борт', isOpen: true }
         ],
-
+        veh_stateCarNumber: '',
         colorMessage: 'red'
     };
 
@@ -48,11 +48,12 @@ class MyAutoScreen extends React.Component {
                 } catch (error) {
                     // TODO добавить вывод ошибки пользователю
                     console.log(error);
-                    console.log('awdwadawdОшибка при получении новых данных, проверьте подключение к сети');
+                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');
                     return;
                 }
 
-                this.setState({ ...this.props.store, message: '' });
+                await this.setState({ ...this.props.store, message: '' });
+                console.log('[MyAutoScreen].() this.props.store', this.state)
             })();
         });
 
@@ -117,7 +118,8 @@ class MyAutoScreen extends React.Component {
             this.state.veh_loadingCap === null ||
             this.state.veh_length === null ||
             this.state.veh_width === null ||
-            this.state.veh_height === null
+            this.state.veh_height === null ||
+            !this.state.veh_stateCarNumber
         ) {
             this.setState({ message: 'Все поля должны быть заполнены', colorMessage: 'red' });
             return;
@@ -132,7 +134,8 @@ class MyAutoScreen extends React.Component {
                 veh_width: this.state.veh_width,
                 veh_length: this.state.veh_length,
                 veh_loadingCap: this.state.veh_loadingCap,
-                veh_frameType: this.state.veh_frameType
+                veh_frameType: this.state.veh_frameType,
+                veh_stateCarNumber: this.state.veh_stateCarNumber
             });
 
             console.log(res.data);
@@ -229,7 +232,13 @@ class MyAutoScreen extends React.Component {
                                     })}
                                 </Picker>
                             </View>
-
+                            <TextInput
+                                style={styles.input}
+                                placeholder='Гос. номер'
+                                placeholderTextColor='grey'
+                                value={this.state.veh_stateCarNumber}
+                                onChangeText={veh_stateCarNumber => this.setState({ veh_stateCarNumber })}
+                            />
                             <NumericInput
                                 style={styles.input}
                                 placeholder='Грузоподъёмность (т)'

@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { Provider } from 'mobx-react/native';
 import React from 'react';
-import { View } from 'react-native';
+import { View, NativeModules } from 'react-native';
 import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
 import NotificationListener from './utils/NotificationListener';
 import UniversalEventEmitter from './utils/UniversalEventEmitter';
+import { URL } from './constants';
 
-axios.defaults.baseURL = 'https://gruz.bw2api.ru'; /* 'http://192.168.1.4:3008'; */
+axios.defaults.baseURL = URL; /* 'http://192.168.1.4:3008'; */
 const TAG = '~App.js~';
 
 export default class App extends React.Component {

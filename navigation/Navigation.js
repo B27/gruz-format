@@ -12,13 +12,15 @@ import { MenuIcon } from '../components/MenuIcon';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
 import BalanceScreen from '../screens/BalanceScreen';
 import ChatScreen from '../screens/Chat';
-import DocumentsScreen from '../screens/DocumentsScreen';
-import EditCarScreen from '../screens/EditCarScreen';
-import EditUserScreen from '../screens/EditUserScreen';
+import SignUpDocumentsScreen from '../screens/SignUpDocumentsScreen';
+
+import SignUpCarScreen from '../screens/SignUpCarScreen';
+import SignUpUserScreen from '../screens/SignUpUserScreen';
 import InstructionScreen from '../screens/InstructionScreen';
 import MainScreen from '../screens/MainScreen';
 import MyAutoScreen from '../screens/MyAutoScreen';
 import MyInfoScreen from '../screens/MyInfoScreen';
+import MyDocsScreen from '../screens/MyDocumentsScreen';
 import OrderCompleteScreen from '../screens/OrderCompleteScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import OrderPreviewScreen from '../screens/OrderPreviewScreen';
@@ -99,6 +101,20 @@ const MyCarStack = createStackNavigator(
     }
 );
 
+const MyDocsStack = createStackNavigator(
+    {
+        MyDoc: {
+            screen: MyDocsScreen,
+            navigationOptions: yellowHeaderWithHamburger
+        }
+    },
+    {
+        defaultNavigationOptions: {
+            headerTitle: 'Мои документы'
+        }
+    }
+);
+
 const SettingsStack = createStackNavigator({
     Settings: {
         screen: SettingsScreen,
@@ -149,6 +165,14 @@ const AppStack = createDrawerNavigator(
             }
         },
 
+        Page6:{
+            screen: MyDocsStack,
+            navigationOptions: {
+                drawerLabel: 'Мои документы',
+                drawerIcon: <IconMenuItem name='briefcase' />
+            }
+        },
+
         Page3: {
             screen: SettingsStack,
             navigationOptions: {
@@ -156,6 +180,8 @@ const AppStack = createDrawerNavigator(
                 drawerIcon: <IconMenuItem name='gear' />
             }
         },
+
+
 
         Page4: {
             screen: InstructionsStack,
@@ -183,16 +209,15 @@ const AuthStack = createStackNavigator(
     {
         //стэк аутентификации
         SignIn: SignInScreen,
-        RegisterPerson: EditUserScreen,
-        Documents: DocumentsScreen,
-        EditCar: EditCarScreen
+        RegisterPerson: SignUpUserScreen,
+        Documents: SignUpDocumentsScreen,
+        EditCar: SignUpCarScreen
     },
     {
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: '#FFC234',
                 textAlign: 'center',
-                textAlign: 'center'
             }
         }
     }

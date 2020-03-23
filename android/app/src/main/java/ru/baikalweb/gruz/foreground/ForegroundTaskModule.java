@@ -14,6 +14,9 @@ import javax.annotation.Nonnull;
 
 import android.content.Intent;
 
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "ReactNativeJS";
 
@@ -37,13 +40,15 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod 
-    public void startService(String token, Promise promise) {
+    public void startService(String token, String message, Promise promise) {
         Log.d(REACT_CLASS, "startService");
+
         try {
             //Context context = getActivity();
             //SharedPreferences sharedPreferences = getPreferences("db", Context.MODE_PRIVATE);
             Intent intent = new Intent(SendLocationService.FOREGROUND);
             intent.putExtra("token", token);
+            intent.putExtra("message", message);
             intent.setClass(this.getReactApplicationContext(), SendLocationService.class);
             //startService(intent);
             Log.d(REACT_CLASS, token);

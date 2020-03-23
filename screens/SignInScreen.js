@@ -51,11 +51,12 @@ class SignInScreen extends React.Component {
                 <View style={styles.inputBlock}>
                     <View style={styles.inputContainer}>
                         <Icon name={'person'} size={28} color='#FFC234' style={styles.inputIcon} />
+
                         <TextInput
                             style={styles.inputWithIcon}
                             placeholder='Номер телефона'
                             placeholderTextColor='grey'
-                            onChangeText={phone => this.setState({ phone })}
+                            onChangeText={async phone => {await this.setState({ phone: phone.replace(/[ \(\)]/g,'') })}}
                         />
                     </View>
 

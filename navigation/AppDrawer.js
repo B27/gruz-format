@@ -40,13 +40,24 @@ class CustomDrawerContentComponent extends React.Component {
 	};
 	showName = () => {
 	//	console.log('avatar' + this.props.store.avatar);
+		let str = ''
+		if(this.props.store.lastName.length >= 1 &&
+			this.props.store.firstName.length >= 1 &&
+			this.props.store.patronymic.length >= 1){
+			str = `${this.props.store.firstName[0]}. ${this.props.store.patronymic[0]}. ${this.props.store.lastName}`
+		} else if(this.props.store.firstName.length >= 1){
+			str = this.props.store.firstName
+		} else {
+			str = 'Неизвестный'
+		}
 
-		const arr = this.props.store.name.split(' ');
+
+		/*const arr = this.props.store.name.split(' ');
 		let str = '';
 		str += arr[0];
 		for (let i = 1; i < arr.length; i++) {
 			str += ` ${arr[i][0]}.`;
-		}
+		}*/
 		return str;
 	};
 

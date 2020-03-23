@@ -47,6 +47,7 @@ public class SendLocationService extends Service implements LocationListener {
     private double fusedLatitude = 0.0;
     private double fusedLongitude = 0.0;
     private Socket mSocket;
+    private String message = "В работе";
 
     @Override
     @TargetApi(Build.VERSION_CODES.M)
@@ -67,23 +68,23 @@ public class SendLocationService extends Service implements LocationListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand, calling startForeground");
-        startForeground(NOTIFICATION_ID, getCompatNotification());
         Context context = getApplicationContext();
         SharedPreferences sharedPref = context.getSharedPreferences("db", Context.MODE_PRIVATE);
         if (intent != null) {
             if (intent.getExtras() != null) {
                 SharedPreferences.Editor ed = sharedPref.edit();
                 ed.putString("token", intent.getStringExtra("token"));
+                ed.putString("message", intent.getStringExtra("message"));
                 ed.apply();
             }
         } else {
             Log.d(TAG, "intent is null");
         }
-
+        startForeground(NOTIFICATION_ID, getCompatNotification(sharedPref.getString("message", "Поиск заказов")));
         try {
             IO.Options opts = new IO.Options();
             opts.query = "token=" + sharedPref.getString("token", "");
-            mSocket = IO.socket("https://gruz.bw2api.ru/socket", opts);
+            mSocket = IO.socket("https://api.gruzformat.ru/socket", opts);
             mSocket.connect();
 //            mSocket.emit("set work", true);
         } catch (URISyntaxException e) {
@@ -103,10 +104,10 @@ public class SendLocationService extends Service implements LocationListener {
         return null;
     }
 
-    private Notification getCompatNotification() {
+    private Notification getCompatNotification(String message) {
         Log.d(TAG, "getCompatNotification");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        String str = "В работе";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "onWork");
+        String str = message;
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(APP_NAME).setContentText(str).setTicker(str).setWhen(System.currentTimeMillis())
@@ -167,12 +168,13 @@ public class SendLocationService extends Service implements LocationListener {
 
     public void registerRequestUpdate(final LocationListener listener) {
         mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(10000); // every second
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setInterval(60000 * 10); // every 10 mins
         Log.d(TAG, "registerRequestUpdate");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "postDelayed");
                 try {
                     LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,
                             listener);
@@ -186,7 +188,7 @@ public class SendLocationService extends Service implements LocationListener {
                     registerRequestUpdate(listener);
                 }
             }
-        }, 1000);
+        }, 10000);
     }
 
     public boolean isGoogleApiClientConnected() {

@@ -3,6 +3,7 @@ package ru.baikalweb.gruz;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.soundapp.SoundModulePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -10,6 +11,7 @@ import com.facebook.soloader.SoLoader;
 
 
 import ru.baikalweb.gruz.foreground.ForegroundTaskPackage;
+import ru.baikalweb.gruz.foreground.WorkManagerPackage;
 import ru.baikalweb.gruz.generated.BasePackageList;
 
 
@@ -43,12 +45,14 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new SoundModulePackage(),
                     new AsyncStoragePackage(),
                     new RNCWebViewPackage(),
                     new RNGestureHandlerPackage(),
                     new ModuleRegistryAdapter(mModuleRegistryProvider),
                     new RNFirebasePushTokenPackage(),
-                    new ForegroundTaskPackage()
+                    new ForegroundTaskPackage(),
+                    new WorkManagerPackage()
             );
         }
 

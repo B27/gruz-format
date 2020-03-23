@@ -19,6 +19,7 @@ async function getDispatcher(id) {
 async function startOrder(id) {
     try {
         const userId = await AsyncStorage.getItem('userId');
+        console.log('[NetworkRequests].startOrder() userId', userId)
         let response = await axios.patch(`/order/workers/${id}/${userId}`);
         console.log(TAG, 'startOrder response.status:', response.status, response.data.msg);
     } catch (error) {
@@ -89,6 +90,24 @@ async function clearPushToken() {
     }
 }
 
+async function addThirdPartyWorker(userId, orderIdOnWork){
+    try {
+        await axios.post(`/order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
+    } catch (error) {
+        await networkErrorHandler(TAG, error, `post /order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
+        throw error
+    }
+}
+
+async function deleteThirdPartyWorker(userId, orderIdOnWork){
+    try {
+        const res = await axios.delete(`/order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
+        console.log('[NetworkRequests].deleteThirdPartyWorker() res', res)
+    } catch (error) {
+        networkErrorHandler(TAG, error, `patch /order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
+    }
+}
+
 export default {
     cancelOrder,
     getDispatcher,
@@ -97,5 +116,7 @@ export default {
     getOpenOrders,
     getWorker,
     completeOrder,
-    clearPushToken
+    clearPushToken,
+    addThirdPartyWorker,
+    deleteThirdPartyWorker,
 };

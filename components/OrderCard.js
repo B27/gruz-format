@@ -4,16 +4,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ExpandCardBase from './ExpandCardBase';
 import styles from '../styles';
 import moment from 'moment';
+import { inject, observer } from 'mobx-react/native';
 
+@inject('store')
+@observer
 class OrderCard extends React.Component {
     _onPressButton = () => {
         this.props.onPressButton(this.props.order);
     };
 
     render() {
-        const { cardStyle, buttonName, description, addresses = [], time, order, expandAlways, fullAddress } = this.props;
+        const { orderType, cardStyle, buttonName, description, addresses = [], time, order, expandAlways, fullAddress } = this.props;
         let orderId = order ? order._id : 'id';
-
         return (
             <ExpandCardBase
                 expandAlways={expandAlways}
@@ -24,7 +26,11 @@ class OrderCard extends React.Component {
                     <Fragment>
                         <View style={styles.orderRow}>
                             <Icon name='clock-outline' color='#FFC234' size={20} style={styles.orderIcon} />
-                            <Text style={styles.clockText}>{formatDate(time)}</Text>
+                            <Text style={styles.textInput}>{formatDate(time)}</Text>
+                        </View>
+                        <View style={styles.orderRow}>
+                            <Icon name='account-multiple' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Text style={styles.clockText}>{orderType}</Text>
                         </View>
                         <View style={styles.orderRow}>
                             <Icon name='map-marker' color='#FFC234' size={20} style={styles.orderIcon} />

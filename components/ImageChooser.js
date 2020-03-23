@@ -16,13 +16,16 @@ const styleTestTouchableOpacity = {
 	alignItems: 'center'
 	//alignContent: "flex-start"
 };
-const styleImage = { borderRadius: 15, width: 70, height: 70 };
+const styleImage = { borderRadius: 15, width: 70, height: 70};
 
-const ImageChooser = observer(({ openModal, img }) => {
+const ImageChooser = observer(({ openModal, img, classStyle }) => {
     let pictureUri = img;
     console.log('КАРТИНКА ОБНОВИЛАСЬ: ' + store.refreshImage);
     
 	if (!img) pictureUri = require('../images/camera.png');
+
+
+
 
 	if (typeof pictureUri === 'number') {
 		return (
@@ -32,7 +35,7 @@ const ImageChooser = observer(({ openModal, img }) => {
 		);
 	} else {
 		return (
-			<TouchableOpacity style={styleTestTouchableOpacity} onPress={openModal}>
+			<TouchableOpacity style={ styleTestTouchableOpacity} onPress={openModal}>
 				<Image
 					source={{
 						uri: pictureUri + '?' + store.refreshImage
