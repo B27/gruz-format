@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "577084900163",
-    "firebase_url": "https://gruz-format.firebaseio.com",
-    "project_id": "gruz-format",
-    "storage_bucket": "gruz-format.appspot.com"
+    "project_number": "783196408387",
+    "firebase_url": "https://gruzformattest.firebaseio.com",
+    "project_id": "gruzformattest",
+    "storage_bucket": "gruzformattest.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:577084900163:android:562ead89725aa869",
+        "mobilesdk_app_id": "1:783196408387:android:bcd73c2a2944a5ad8a62f6",
         "android_client_info": {
           "package_name": "ru.baikalweb.gruz"
         }
       },
       "oauth_client": [
         {
-          "client_id": "577084900163-924p2vulohtpng7e7i02dokigfmlvq31.apps.googleusercontent.com",
+          "client_id": "783196408387-nkgmf0vtn0uoiqrdcmu9an6pfrspoa2j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCzoJ1F9PwTgeljR8igTAzAkautycXa5uA"
+          "current_key": "AIzaSyDFZ0q4KbJsxl59NRvavN2H7daCZhlwoW4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "577084900163-924p2vulohtpng7e7i02dokigfmlvq31.apps.googleusercontent.com",
+              "client_id": "783196408387-nkgmf0vtn0uoiqrdcmu9an6pfrspoa2j.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
