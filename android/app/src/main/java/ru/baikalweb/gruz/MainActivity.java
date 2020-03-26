@@ -5,8 +5,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
@@ -33,13 +36,7 @@ public class MainActivity extends ReactActivity {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create channel to show notifications.
-            String channelId = getString(R.string.default_notification_channel_id);
-            String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_HIGH));
+            createNotificationChannels();
         }
 
 
@@ -67,6 +64,34 @@ public class MainActivity extends ReactActivity {
                     GoogleApiAvailability.getInstance().getErrorDialog(this, code, 1);
             dlg.show();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createNotificationChannels() {
+        // Create channel to show notifications.
+        String defaultChannelId = getString(R.string.default_notification_channel_id);
+        String defaultChannelName = getString(R.string.default_notification_channel_name);
+
+        String newOrderChannelId = getString(R.string.new_order_notification_channel_id);
+        String newOrderChannelName = getString(R.string.new_order_notification_channel_name);
+
+        NotificationManager notificationManager =
+                getSystemService(NotificationManager.class);
+
+        NotificationChannel defaultChannel = new NotificationChannel(defaultChannelId,
+                defaultChannelName, NotificationManager.IMPORTANCE_DEFAULT);
+
+        NotificationChannel newOrderChannel = new NotificationChannel(newOrderChannelId,
+                newOrderChannelName, NotificationManager.IMPORTANCE_HIGH);
+        Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.new_order);
+        AudioAttributes attr = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build();
+        newOrderChannel.setSound(soundUri, attr);
+
+        notificationManager.createNotificationChannel(defaultChannel);
+        notificationManager.createNotificationChannel(newOrderChannel);
     }
 
     @Override

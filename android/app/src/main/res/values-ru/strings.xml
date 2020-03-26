@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Формат.Груз - Исполнитель</string>
-    <string name="default_notification_channel_name" translatable="true">Заказы</string>
+    <string name="default_notification_channel_name" translatable="true">Статусы выполнения заказа</string>
+    <string name="new_order_notification_channel_name" translatable="true">Новый заказ</string>
 </resources>
