@@ -1,7 +1,7 @@
 import { Alert } from 'react-native';
 import NetworkRequests from '../mobx/NetworkRequests';
 import showAlert from './showAlert';
-import {PlaySound} from "react-native-play-sound";
+import { PlaySound } from 'react-native-play-sound';
 
 let _navigation = null;
 
@@ -39,12 +39,12 @@ export default async function NotificationListener(params) {
         if (acceptNotification) {
             console.log(TAG, 'call gotoOrderPreview(order)()');
             //PlaySound('new_order')
-            await gotoOrderPreview(orderId);
+            gotoOrderPreview(orderId)();
         }
     }
 }
 
-async function gotoOrderPreview(order_id) {
+gotoOrderPreview = order_id => async () => {
     try {
         const { data } = await NetworkRequests.getOrder(order_id);
         _navigation.navigate('OrderPreview', { order: data });
