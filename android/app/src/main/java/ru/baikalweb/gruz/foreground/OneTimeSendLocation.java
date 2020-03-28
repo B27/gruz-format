@@ -56,7 +56,11 @@ public class OneTimeSendLocation extends Service implements LocationListener {
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
         stopFusedLocation();
-        if(mSocket.connected()) mSocket.disconnect();
+        if (mSocket != null) {
+            if (mSocket.connected()) {
+                mSocket.disconnect();
+            }
+        }
         super.onDestroy();
     }
 
@@ -84,7 +88,7 @@ public class OneTimeSendLocation extends Service implements LocationListener {
         } catch (URISyntaxException e) {
             Log.d(TAG, e.toString());
         }
-        Log.d(TAG, "checkPlayServices():"+ checkPlayServices());
+        Log.d(TAG, "checkPlayServices():" + checkPlayServices());
         if (checkPlayServices()) {
             startFusedLocation();
             registerRequestUpdate(this);
