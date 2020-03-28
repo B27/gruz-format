@@ -1,7 +1,6 @@
 import { Alert } from 'react-native';
 import NetworkRequests from '../mobx/NetworkRequests';
 import showAlert from './showAlert';
-import { PlaySound } from 'react-native-play-sound';
 
 let _navigation = null;
 
@@ -28,7 +27,6 @@ export default async function NotificationListener(params) {
     if (recievedInForeground) {
         if (acceptNotification) {
             console.log(TAG, `type == ${type}, order id`, orderId);
-            //PlaySound('new_order')
             let newBody = 'Нажмите ОК для перехода к деталям заказа';
             showAlert(title, newBody, { okFn: gotoOrderPreview(orderId), cancel: true });
         } else {
@@ -38,7 +36,6 @@ export default async function NotificationListener(params) {
     } else {
         if (acceptNotification) {
             console.log(TAG, 'call gotoOrderPreview(order)()');
-            //PlaySound('new_order')
             gotoOrderPreview(orderId)();
         }
     }
