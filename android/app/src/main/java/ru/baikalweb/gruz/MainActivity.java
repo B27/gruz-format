@@ -23,6 +23,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
+import java.util.ArrayList;
+
 import ru.baikalweb.gruz.bridge.EventHelper;
 
 
@@ -68,30 +70,68 @@ public class MainActivity extends ReactActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotificationChannels() {
-        // Create channel to show notifications.
-        String defaultChannelId = getString(R.string.default_notification_channel_id);
-        String defaultChannelName = getString(R.string.default_notification_channel_name);
+        ArrayList<NotificationChannel> channelsList = new ArrayList<>();
 
-        String newOrderChannelId = getString(R.string.new_order_notification_channel_id);
-        String newOrderChannelName = getString(R.string.new_order_notification_channel_name);
+        Uri ordersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.orders);
+        Uri othersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.others);
 
-        NotificationManager notificationManager =
-                getSystemService(NotificationManager.class);
-
-        NotificationChannel defaultChannel = new NotificationChannel(defaultChannelId,
-                defaultChannelName, NotificationManager.IMPORTANCE_DEFAULT);
-
-        NotificationChannel newOrderChannel = new NotificationChannel(newOrderChannelId,
-                newOrderChannelName, NotificationManager.IMPORTANCE_HIGH);
-        Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.new_order);
         AudioAttributes attr = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                 .build();
-        newOrderChannel.setSound(soundUri, attr);
 
-        notificationManager.createNotificationChannel(defaultChannel);
-        notificationManager.createNotificationChannel(newOrderChannel);
+
+        NotificationChannel defaultCh = new NotificationChannel(
+                getString(R.string.new_message_ncid),
+                getString(R.string.new_message_ncn),
+                NotificationManager.IMPORTANCE_LOW
+        );
+        defaultCh.setDescription(getString(R.string.default_ncd));
+        channelsList.add(defaultCh);
+
+        NotificationChannel newOrderCh = new NotificationChannel(
+                getString(R.string.new_order_ncid),
+                getString(R.string.new_order_ncn),
+                NotificationManager.IMPORTANCE_HIGH);
+        newOrderCh.setSound(ordersSound, attr);
+        channelsList.add(newOrderCh);
+
+        NotificationChannel kickFromOrderCh = new NotificationChannel(
+                getString(R.string.kick_from_order_ncid),
+                getString(R.string.kick_from_order_ncn),
+                NotificationManager.IMPORTANCE_HIGH);
+        kickFromOrderCh.setSound(ordersSound, attr);
+        channelsList.add(kickFromOrderCh);
+
+        NotificationChannel rejectOrderCh = new NotificationChannel(
+                getString(R.string.kick_from_order_ncid),
+                getString(R.string.kick_from_order_ncn),
+                NotificationManager.IMPORTANCE_HIGH
+        );
+        rejectOrderCh.setSound(ordersSound, attr);
+        channelsList.add(rejectOrderCh);
+
+        NotificationChannel inactiveUserCh = new NotificationChannel(
+                getString(R.string.inactive_user_ncid),
+                getString(R.string.inactive_user_ncn),
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+        inactiveUserCh.setSound(othersSound, attr);
+        channelsList.add(inactiveUserCh);
+
+        NotificationChannel newMessageCh = new NotificationChannel(
+                getString(R.string.new_message_ncid),
+                getString(R.string.new_message_ncn),
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+        newMessageCh.setSound(ordersSound, attr);
+        channelsList.add(newMessageCh);
+
+
+        NotificationManager notificationManager =
+                getSystemService(NotificationManager.class);
+
+        notificationManager.createNotificationChannels(channelsList);
     }
 
     @Override

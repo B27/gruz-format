@@ -49,7 +49,8 @@ class AuthLoadingScreen extends React.Component {
             NativeModules.WorkManager.stopWorkManager();
             NativeModules.WorkManager.startWorkManager(userToken);
             try {
-                await Promise.all([registerForPushNotificationAsync(), store.getUserInfo()]);
+                registerForPushNotificationAsync();
+                await store.getUserInfo();
 
                 if (store.orderIdOnWork) {
                     console.log(TAG, 'user has an order in work, order id:', store.orderIdOnWork);
@@ -85,7 +86,7 @@ class AuthLoadingScreen extends React.Component {
                     screenNeedToGo = 'SignIn';
                 } else {
                     this.setState({ error: error.toString() });
-                    this.props.navigation.navigate('SignIn');
+                    // this.props.navigation.navigate('SignIn');
                     return;
                 }
             }

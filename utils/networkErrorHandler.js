@@ -3,7 +3,7 @@ import Store from "../mobx/Store"
 
 
 
-export default async function networkErrorHandler(TAG, error, route) {
+export default function networkErrorHandler(TAG, error, route) {
     console.log('[networkErrorHandler]:', TAG, route, error);
     //const userId = Store.userId
     if (error.isAxiosError) {

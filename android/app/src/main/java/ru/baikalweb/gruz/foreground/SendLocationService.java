@@ -106,12 +106,11 @@ public class SendLocationService extends Service implements LocationListener {
 
     private Notification getCompatNotification(String message) {
         Log.d(TAG, "getCompatNotification");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "onWork");
-        String str = message;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.default_ncid));
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setContentTitle(APP_NAME).setContentText(str).setTicker(str).setWhen(System.currentTimeMillis())
-                .setChannelId(getResources().getString(R.string.default_notification_channel_id));
+                .setContentTitle(APP_NAME).setContentText(message).setTicker(message).setWhen(System.currentTimeMillis())
+                .setChannelId(getResources().getString(R.string.default_ncid));
         Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, startIntent, 0);
         builder.setContentIntent(contentIntent);

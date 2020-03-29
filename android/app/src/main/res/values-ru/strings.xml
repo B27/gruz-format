@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Формат.Груз - Исполнитель</string>
-    <string name="default_notification_channel_name" translatable="true">Статусы выполнения заказа</string>
-    <string name="new_order_notification_channel_name" translatable="true">Новый заказ</string>
+
+    <string name="default_ncn" translatable="true">Статусы выполнения заказа</string>
+    <string name="new_order_ncn" translatable="true">Новый заказ</string>
+    <string name="kick_from_order_ncn">Удаление из заказа</string>
+    <string name="reject_order_ncn">Отмена заказа</string>
+    <string name="inactive_user_ncn">Вы некативны</string>
+    <string name="new_message_ncn">Новое сообщение</string>
+    <string name="default_ncd">Уведомления сервиса переднего плана для отправки геолокации</string>
 </resources>
