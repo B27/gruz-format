@@ -95,7 +95,7 @@ class AuthLoadingScreen extends React.Component {
 
     _signOutAsync = async () => {
         try {
-            await NetworkRequests.clearPushToken();
+			await NativeModules.RNFirebasePushToken.deleteInstanceId();
             await AsyncStorage.clear();
             await NativeModules.ForegroundTaskModule.stopService();
             this.props.navigation.navigate('SignIn');

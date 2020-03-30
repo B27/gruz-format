@@ -37,6 +37,8 @@ target 'FormatGruz' do
 
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
 
+  pod 'RNDefaultPreference', :path => '../node_modules/react-native-default-preference'
+
   target 'FormatGruzTests' do
     inherit! :search_paths
   end

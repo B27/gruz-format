@@ -4,11 +4,10 @@ import axios from 'axios';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { Text, TextInput, View, NativeModules } from 'react-native';
+import { NativeModules, Text, TextInput, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
-import NetworkRequests from '../mobx/NetworkRequests';
 
 const TAG = '~SettingsScreen~';
 @inject('store')
@@ -82,7 +81,7 @@ class SettingsScreen extends React.Component {
 
 	_signOutAsync = async () => {
 		try {
-			await NetworkRequests.clearPushToken();
+			await NativeModules.RNFirebasePushToken.deleteInstanceId();
 			await AsyncStorage.clear();
 			await NativeModules.ForegroundTaskModule.stopService();
 			this.props.navigation.navigate('SignIn');

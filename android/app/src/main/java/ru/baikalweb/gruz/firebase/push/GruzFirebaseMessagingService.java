@@ -1,5 +1,7 @@
 package ru.baikalweb.gruz.firebase.push;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.facebook.react.bridge.WritableNativeArray;
@@ -36,5 +38,18 @@ public class GruzFirebaseMessagingService extends FirebaseMessagingService {
 
             EventHelper.sendEvent("onMessageReceived", this, params);
         }
+    }
+
+    @Override
+    public void onNewToken(String token) {
+        Log.d(TAG, "onNewToken recieved: " + token);
+
+        // стандартное название файла в библиотеке react-native-default-preference: "react-native"
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("react-native", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString("pushToken", token);
+
+        editor.apply();
     }
 }

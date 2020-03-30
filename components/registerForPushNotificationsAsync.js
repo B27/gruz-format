@@ -1,23 +1,20 @@
 import axios from 'axios';
-import { NativeModules } from 'react-native';
+import DefaultPreference from 'react-native-default-preference';
 
 const TAG = '~registerForPushNotificationsAsync~';
 
 export default async function registerForPushNotificationsAsync() {
-    // Get the token that uniquely identifies this device
-    let notifToken;
+    const pushToken = await DefaultPreference.get('pushToken');
 
-    try {
-        ({ pushToken: notifToken } = await NativeModules.RNFirebasePushToken.getToken());
-        console.log(TAG, 'token for push notifications received:', notifToken);
-    } catch (error) {
-        console.log(TAG, 'error getting token', error);
+    if (!pushToken) {
+        console.log(TAG, 'push token empty, return');
         return;
     }
 
     try {
-        await axios.post('/push_token', { token: notifToken });
+        await axios.post('/push_token', { token: pushToken });
         console.log(TAG, 'send token to server succesful');
+        await DefaultPreference.clear('pushToken');
     } catch (error) {
         if (error.isAxiosError) {
             if (error.response) {

@@ -27,11 +27,17 @@ export default async function NotificationListener(params) {
     if (recievedInForeground) {
         if (acceptNotification) {
             console.log(TAG, `type == ${type}, order id`, orderId);
-            let newBody = 'Нажмите ОК для перехода к деталям заказа';
-            showAlert(title, newBody, { okFn: gotoOrderPreview(orderId), cancel: true });
+            
+            // Иногда уведомления могут приходить когда пользователь разлогинился (удаляется FirebaseIinstanceId)
+            // Наибольшая вероятность получить уведомление когда он разлогинится оффлайн
+            const userAuthorized = await AsyncStorage.getItem('token');
+            if (userAuthorized) {
+                let newBody = 'Нажмите ОК для перехода к деталям заказа';
+                showAlert(title, newBody, { okFn: gotoOrderPreview(orderId), cancel: true });
+            }
         } else {
             console.log(TAG, `type == ${type}`);
-            _refreshCallback();
+            _refreshCallback && _refreshCallback();
         }
     } else {
         if (acceptNotification) {
