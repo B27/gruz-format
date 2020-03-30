@@ -5,6 +5,7 @@ import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
 import { ActivityIndicator, Text, NativeModules, TouchableOpacity, View, Alert } from 'react-native';
 import registerForPushNotificationAsync from '../components/registerForPushNotificationsAsync';
+import LoadingButton from '../components/LoadingButton';
 import { prepareNotificationListener } from '../utils/NotificationListener';
 import styles from '../styles';
 import NetworkRequests from '../mobx/NetworkRequests';
@@ -55,8 +56,6 @@ class AuthLoadingScreen extends React.Component {
                 if (store.orderIdOnWork) {
                     console.log(TAG, 'user has an order in work, order id:', store.orderIdOnWork);
 
-
-
                     await store.pullFulfilingOrderInformation();
 
                     const workersData = toJS(store.order).workers.data;
@@ -67,9 +66,8 @@ class AuthLoadingScreen extends React.Component {
                         sumEntered = false;
                     }
                     NativeModules.ForegroundTaskModule.stopService();
-                    NativeModules.ForegroundTaskModule.startService(userToken, "В работе");
+                    NativeModules.ForegroundTaskModule.startService(userToken, 'В работе');
                     if (store.order.status === 'ended' && sumEntered) {
-
                         screenNeedToGo = 'WaitCompleteOrder';
                     } else {
                         console.log(TAG, 'start foreground service');
@@ -95,19 +93,38 @@ class AuthLoadingScreen extends React.Component {
         navigation.navigate(screenNeedToGo);
     };
 
+    _signOutAsync = async () => {
+        try {
+            await NetworkRequests.clearPushToken();
+            await AsyncStorage.clear();
+            await NativeModules.ForegroundTaskModule.stopService();
+            this.props.navigation.navigate('SignIn');
+        } catch (error) {
+            this.setState({ error: error.toString() });
+        }
+    };
+
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 60 }}>
                 {this.state.error ? (
                     <Fragment>
                         <Text style={{ textAlign: 'center', fontSize: 16 }}>{this.state.error}</Text>
+                        <View style={{ height: 40 }} />
                         <TouchableOpacity style={styles.buttonBottom} onPress={this._bootstrapAsync}>
                             <Text style={styles.text}>Обновить</Text>
                         </TouchableOpacity>
+                        <LoadingButton
+                            blackText
+                            style={[styles.buttonConfirm, { width: styles.buttonConfirm.width * 2 }]}
+                            onPress={this._signOutAsync}
+                        >
+                            Выйти из аккаунта
+                        </LoadingButton>
                     </Fragment>
                 ) : (
-                        <ActivityIndicator size={60} color='#FFC234' />
-                    )}
+                    <ActivityIndicator size={60} color='#FFC234' />
+                )}
             </View>
         );
     }

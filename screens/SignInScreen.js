@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import netInfo from '@react-native-community/netinfo';
 import axios from 'axios';
 import md5 from 'md5';
 import React from 'react';
@@ -56,7 +57,9 @@ class SignInScreen extends React.Component {
                             style={styles.inputWithIcon}
                             placeholder='Номер телефона'
                             placeholderTextColor='grey'
-                            onChangeText={async phone => {await this.setState({ phone: phone.replace(/[ \(\)]/g,'') })}}
+                            onChangeText={async phone => {
+                                await this.setState({ phone: phone.replace(/[ \(\)]/g, '') });
+                            }}
                         />
                     </View>
 
@@ -136,7 +139,12 @@ class SignInScreen extends React.Component {
                     }
                     if (error.message.includes('Network Error')) {
                         console.log(TAG, 'error network');
-                        this._showErrorMessage('Ошибка, проверьте подключение к сети');
+                        const state = await netInfo.fetch();
+                        if (state.isInternetReachable) {
+                            this._showErrorMessage('Ошибка, сервер недоступен');
+                        } else {
+                            this._showErrorMessage('Ошибка, проверьте подключение к сети');
+                        }
                     }
                 } else {
                     console.log(TAG, 'other error', error);

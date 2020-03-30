@@ -10,7 +10,7 @@ async function getDispatcher(id) {
         response = await axios.get(`/dispatcher/${id}`);
         console.log(TAG, 'getDispatcher response.data: ', response.data);
     } catch (error) {
-        networkErrorHandler(TAG, error, `get /dispatcher/${id}`);
+        await networkErrorHandler(TAG, error, `get /dispatcher/${id}`);
     }
 
     return response;
@@ -23,7 +23,7 @@ async function startOrder(id) {
         let response = await axios.patch(`/order/workers/${id}/${userId}`);
         console.log(TAG, 'startOrder response.status:', response.status, response.data.msg);
     } catch (error) {
-        networkErrorHandler(TAG, error, `patch /order/workers/${id}/${userId}`);
+        await networkErrorHandler(TAG, error, `patch /order/workers/${id}/${userId}`);
     }
 }
 
@@ -32,7 +32,7 @@ async function cancelOrder() {
         let response = await axios.post(`/order/cancel_work`);
         console.log(TAG, 'cancelOrder response.status:', response.status);
     } catch (error) {
-        networkErrorHandler(TAG, error, `post /order/cancel_work`);
+        await networkErrorHandler(TAG, error, `post /order/cancel_work`);
     }
 }
 
@@ -42,7 +42,7 @@ async function getOrder(id) {
         response = await axios.get(`/order/${id}`);
         //console.log(TAG, 'getOrder response.data:', response.data);
     } catch (error) {
-        networkErrorHandler(TAG, error, `get /order/${id}`);
+        await networkErrorHandler(TAG, error, `get /order/${id}`);
     }
 
     return response;
@@ -54,7 +54,7 @@ async function getOpenOrders() {
         response = await axios.get(`/order/open/60/1`);
         //console.log(TAG, 'getOrder response.data:', response.data);
     } catch (error) {
-        networkErrorHandler(TAG, error, `get /order/open/60/1`);
+        await networkErrorHandler(TAG, error, `get /order/open/60/1`);
     }
 
     return response;
@@ -65,7 +65,7 @@ async function getWorker(id) {
     try {
         response = await axios.get(`/worker/${id}`);
     } catch (error) {
-        networkErrorHandler(TAG, error, `get /worker/${id}`);
+        await networkErrorHandler(TAG, error, `get /worker/${id}`);
     }
 
     return response;
@@ -78,7 +78,7 @@ async function completeOrder(data) {
         console.log(TAG, 'completeOrder response.data:', response.data);
         console.log(TAG, 'completeOrder response.status:', response.status);
     } catch (error) {
-        networkErrorHandler(TAG, error, 'post /order/end_work');
+        await networkErrorHandler(TAG, error, 'post /order/end_work');
     }
 }
 
@@ -86,7 +86,7 @@ async function clearPushToken() {
     try {
         await axios.post('/push_token', { token: null });
     } catch (error) {
-        networkErrorHandler(TAG, error, 'post /push_token');
+        await networkErrorHandler(TAG, error, 'post /push_token');
     }
 }
 
@@ -95,7 +95,6 @@ async function addThirdPartyWorker(userId, orderIdOnWork){
         await axios.post(`/order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
     } catch (error) {
         await networkErrorHandler(TAG, error, `post /order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
-        throw error
     }
 }
 
@@ -104,7 +103,7 @@ async function deleteThirdPartyWorker(userId, orderIdOnWork){
         const res = await axios.delete(`/order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
         console.log('[NetworkRequests].deleteThirdPartyWorker() res', res)
     } catch (error) {
-        networkErrorHandler(TAG, error, `patch /order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
+        await networkErrorHandler(TAG, error, `patch /order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
     }
 }
 

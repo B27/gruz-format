@@ -82,8 +82,8 @@ public class MainActivity extends ReactActivity {
 
 
         NotificationChannel defaultCh = new NotificationChannel(
-                getString(R.string.new_message_ncid),
-                getString(R.string.new_message_ncn),
+                getString(R.string.default_ncid),
+                getString(R.string.default_ncn),
                 NotificationManager.IMPORTANCE_LOW
         );
         defaultCh.setDescription(getString(R.string.default_ncd));
@@ -104,8 +104,8 @@ public class MainActivity extends ReactActivity {
         channelsList.add(kickFromOrderCh);
 
         NotificationChannel rejectOrderCh = new NotificationChannel(
-                getString(R.string.kick_from_order_ncid),
-                getString(R.string.kick_from_order_ncn),
+                getString(R.string.reject_order_ncid),
+                getString(R.string.reject_order_ncn),
                 NotificationManager.IMPORTANCE_HIGH
         );
         rejectOrderCh.setSound(ordersSound, attr);
@@ -124,7 +124,7 @@ public class MainActivity extends ReactActivity {
                 getString(R.string.new_message_ncn),
                 NotificationManager.IMPORTANCE_DEFAULT
         );
-        newMessageCh.setSound(ordersSound, attr);
+        newMessageCh.setSound(othersSound, attr);
         channelsList.add(newMessageCh);
 
 
