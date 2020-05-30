@@ -4,9 +4,9 @@ import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
 import { ActivityIndicator, Text, NativeModules, TouchableOpacity, View, Alert } from 'react-native';
-import registerForPushNotificationAsync from '../components/registerForPushNotificationsAsync';
+import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import LoadingButton from '../components/LoadingButton';
-import { prepareNotificationListener } from '../utils/NotificationListener';
+import { prepareNotificationListener, execPendingNotificationListener } from '../utils/NotificationListener';
 import styles from '../styles';
 import NetworkRequests from '../mobx/NetworkRequests';
 import * as Permissions from 'expo-permissions';
@@ -50,7 +50,7 @@ class AuthLoadingScreen extends React.Component {
             NativeModules.WorkManager.stopWorkManager();
             NativeModules.WorkManager.startWorkManager(userToken);
             try {
-                registerForPushNotificationAsync();
+                registerForPushNotificationsAsync();
                 await store.getUserInfo();
 
                 if (store.orderIdOnWork) {
@@ -91,6 +91,7 @@ class AuthLoadingScreen extends React.Component {
         }
 
         navigation.navigate(screenNeedToGo);
+        execPendingNotificationListener();
     };
 
     _signOutAsync = async () => {

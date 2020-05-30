@@ -25,6 +25,8 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 import ru.baikalweb.gruz.bridge.EventHelper;
 
 
@@ -37,7 +39,7 @@ public class MainActivity extends ReactActivity {
         super.onCreate(savedInstanceState);
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannels();
         }
 
@@ -156,6 +158,7 @@ public class MainActivity extends ReactActivity {
         }
     }
 
+
     /**
      * Returns the name of the main component registered from JavaScript. This is
      * used to schedule rendering of the component.
@@ -171,6 +174,27 @@ public class MainActivity extends ReactActivity {
             @Override
             protected ReactRootView createRootView() {
                 return new RNGestureHandlerEnabledRootView(MainActivity.this);
+            }
+
+            @Nullable
+            @Override
+            protected Bundle getLaunchOptions() {
+                Bundle data = getPlainActivity().getIntent().getExtras();
+                Bundle initialProps = null;
+
+                if (data != null) {
+                    for (String key : data.keySet()) {
+                        Object value = data.get(key);
+                        Log.d(TAG, "Key: " + key + " Value: " + value);
+                    }
+
+                    initialProps = new Bundle();
+
+                    initialProps.putString("type", data.getString("type"));
+                    initialProps.putString("order_id", data.getString("order_id"));
+                }
+
+                return initialProps;
             }
         };
     }

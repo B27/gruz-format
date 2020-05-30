@@ -1,8 +1,10 @@
 import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import NetworkRequests from '../mobx/NetworkRequests';
 import showAlert from './showAlert';
 
 let _navigation = null;
+let _pendingParams = null;
 
 const TAG = '~NotificationListener~';
 
@@ -58,6 +60,17 @@ gotoOrderPreview = order_id => async () => {
 
 export function prepareNotificationListener(navigation) {
     _navigation = navigation;
+}
+
+export async function execPendingNotificationListener() {
+    if (_pendingParams) {
+        await NotificationListener(_pendingParams); 
+        _pendingParams = null;
+    }
+}
+
+export function setPendingNotificationParams(params) {
+    _pendingParams = params;
 }
 
 export function setRefreshCallback(callback) {

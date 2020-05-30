@@ -4,7 +4,7 @@ import React from 'react';
 import { View, NativeModules } from 'react-native';
 import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
-import NotificationListener from './utils/NotificationListener';
+import NotificationListener, { setPendingNotificationParams } from './utils/NotificationListener';
 import UniversalEventEmitter from './utils/UniversalEventEmitter';
 import { URL } from './constants';
 
@@ -19,6 +19,15 @@ export default class App extends React.Component {
                 'onMessageReceived',
                 NotificationListener
             );
+        }
+
+        const initType = this.props.type; 
+        const initOrderId = this.props.order_id;
+
+        console.log(TAG, 'start params', initType, initOrderId);
+
+        if (initType && initOrderId) {
+            setPendingNotificationParams([initType, initOrderId]);        
         }
     }
 
