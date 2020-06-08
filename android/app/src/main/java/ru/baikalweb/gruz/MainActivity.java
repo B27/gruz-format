@@ -74,8 +74,8 @@ public class MainActivity extends ReactActivity {
     private void createNotificationChannels() {
         ArrayList<NotificationChannel> channelsList = new ArrayList<>();
 
-        Uri ordersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notificationSound1);
-        Uri othersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notificationSound2);
+        Uri notificationSound1 = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification_sound_1);
+        Uri notificationSound2 = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification_sound_2);
 
         AudioAttributes attr = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION)
@@ -95,14 +95,14 @@ public class MainActivity extends ReactActivity {
                 getString(R.string.new_order_ncid),
                 getString(R.string.new_order_ncn),
                 NotificationManager.IMPORTANCE_HIGH);
-        newOrderCh.setSound(ordersSound, attr);
+        newOrderCh.setSound(notificationSound1, attr);
         channelsList.add(newOrderCh);
 
         NotificationChannel kickFromOrderCh = new NotificationChannel(
                 getString(R.string.kick_from_order_ncid),
                 getString(R.string.kick_from_order_ncn),
                 NotificationManager.IMPORTANCE_HIGH);
-        kickFromOrderCh.setSound(ordersSound, attr);
+        kickFromOrderCh.setSound(notificationSound1, attr);
         channelsList.add(kickFromOrderCh);
 
         NotificationChannel rejectOrderCh = new NotificationChannel(
@@ -110,7 +110,7 @@ public class MainActivity extends ReactActivity {
                 getString(R.string.reject_order_ncn),
                 NotificationManager.IMPORTANCE_HIGH
         );
-        rejectOrderCh.setSound(ordersSound, attr);
+        rejectOrderCh.setSound(notificationSound1, attr);
         channelsList.add(rejectOrderCh);
 
         NotificationChannel inactiveUserCh = new NotificationChannel(
@@ -118,7 +118,7 @@ public class MainActivity extends ReactActivity {
                 getString(R.string.inactive_user_ncn),
                 NotificationManager.IMPORTANCE_DEFAULT
         );
-        inactiveUserCh.setSound(othersSound, attr);
+        inactiveUserCh.setSound(notificationSound2, attr);
         channelsList.add(inactiveUserCh);
 
         NotificationChannel newMessageCh = new NotificationChannel(
@@ -126,7 +126,7 @@ public class MainActivity extends ReactActivity {
                 getString(R.string.new_message_ncn),
                 NotificationManager.IMPORTANCE_DEFAULT
         );
-        newMessageCh.setSound(othersSound, attr);
+        newMessageCh.setSound(notificationSound2, attr);
         channelsList.add(newMessageCh);
 
 

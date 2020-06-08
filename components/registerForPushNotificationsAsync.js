@@ -22,7 +22,7 @@ export default async function registerForPushNotificationsAsync(userHasPushToken
     let body = { token: pushToken };
     switch (Platform.OS) {
         case 'android':
-            body.appVersion = { android: 16, ios: 0 };
+            body.appVersion = { android: 17, ios: 0 };
             break;
 
         case 'ios':
