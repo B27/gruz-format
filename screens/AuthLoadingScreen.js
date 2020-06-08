@@ -50,8 +50,8 @@ class AuthLoadingScreen extends React.Component {
             NativeModules.WorkManager.stopWorkManager();
             NativeModules.WorkManager.startWorkManager(userToken);
             try {
-                registerForPushNotificationsAsync();
                 await store.getUserInfo();
+                registerForPushNotificationsAsync(store.hasPushToken);
 
                 if (store.orderIdOnWork) {
                     console.log(TAG, 'user has an order in work, order id:', store.orderIdOnWork);

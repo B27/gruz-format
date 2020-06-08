@@ -21,6 +21,7 @@ class ObservableStore {
     @observable onWork = false;
     @observable orderIdOnWork = '';
     @observable userId = '';
+    @observable hasPushToken = false;
 
     @observable avatar = '';
 
@@ -65,6 +66,7 @@ class ObservableStore {
             this.isDriver = response.data.isDriver;
             this.orderIdOnWork = response.data.order;
             this.docStatus = response.data.docStatus;
+            this.hasPushToken = !!response.data.push_token_id;
             //this.onWork = response.data.onWork;
             response.data.photos && (this.avatar = URL + response.data.photos.user);
             console.log('avatar ', this.avatar);
@@ -110,6 +112,7 @@ class ObservableStore {
             this.passportNumber = response.data.passportNumber;
             this.passportSeries = response.data.passportSeries;
             this.docStatus = response.data.docStatus;
+            this.hasPushToken = !!response.data.push_token_id;
             // this.height = response.data.height;
             // this.weight = response.data.weight;
 

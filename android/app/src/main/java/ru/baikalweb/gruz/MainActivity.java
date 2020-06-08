@@ -74,8 +74,8 @@ public class MainActivity extends ReactActivity {
     private void createNotificationChannels() {
         ArrayList<NotificationChannel> channelsList = new ArrayList<>();
 
-        Uri ordersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.orders);
-        Uri othersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.others);
+        Uri ordersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.sound1);
+        Uri othersSound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.sound2);
 
         AudioAttributes attr = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION)

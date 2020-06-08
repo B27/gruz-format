@@ -36,4 +36,23 @@ public class RNFirebasePushTokenModule extends ReactContextBaseJavaModule {
             }
         }).start();
     }
+
+    @ReactMethod
+    public void getToken(Promise promise) {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        promise.reject("getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+
+                    WritableMap map = Arguments.createMap();
+                    map.putString("pushToken", token);
+
+                    promise.resolve(map);
+                });
+    }
 }

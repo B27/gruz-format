@@ -1,5 +1,6 @@
 package ru.baikalweb.gruz.firebase.push;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -22,21 +23,33 @@ public class GruzFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         WritableNativeArray params = new WritableNativeArray();
+        Map<String, String> messageData = remoteMessage.getData();
 
         // Check if message contains a data payload and notification payload.
-        if (/*(remoteMessage.getData().size() > 0) &&*/ (remoteMessage.getNotification() != null)) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-
+        if ((messageData.size() > 0) || (remoteMessage.getNotification() != null)) {
             RemoteMessage.Notification notification = remoteMessage.getNotification();
-            Map<String, String> data = remoteMessage.getData();
 
-            params.pushString(data.get("type"));
-            params.pushString(data.get("order_id"));
+            String notificationType = messageData.get("type");
+
+            if (notificationType != null && notificationType.equals("removeNotificationByTag")) {
+                onRemoveMessageReceived(messageData);
+                return;
+            }
+
+            params.pushString(notificationType);
+            params.pushString(messageData.get("order_id"));
             params.pushString(notification.getTitle());
             params.pushString(notification.getBody());
 
             EventHelper.sendEvent("onMessageReceived", this, params);
+        }
+    }
+
+    private void onRemoveMessageReceived(Map<String, String> data) {
+        String tag = data.get("tag");
+        if (tag != null) {
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            manager.cancel(tag, 0);
         }
     }
 
