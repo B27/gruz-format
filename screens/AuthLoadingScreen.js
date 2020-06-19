@@ -3,19 +3,19 @@ import axios from 'axios';
 import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { ActivityIndicator, Text, NativeModules, TouchableOpacity, View, Alert } from 'react-native';
+import { ActivityIndicator, Platform, Text, NativeModules, TouchableOpacity, View, Alert } from 'react-native';
 import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import LoadingButton from '../components/LoadingButton';
 import { prepareNotificationListener, execPendingNotificationListener } from '../utils/NotificationListener';
 import styles from '../styles';
 import NetworkRequests from '../mobx/NetworkRequests';
-import * as Permissions from 'expo-permissions';
+import { PERMISSIONS, checkMultiple, requestMultiple, RESULTS } from 'react-native-permissions';
 
 const TAG = '~AuthLoadingScreen~';
 @inject('store')
 class AuthLoadingScreen extends React.Component {
     state = {
-        error: ''
+        error: '',
     };
 
     componentDidMount() {
@@ -27,9 +27,48 @@ class AuthLoadingScreen extends React.Component {
         console.log(TAG, 'bootstrapAsync');
 
         this.setState({ error: '' });
-        const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-        if (status !== 'granted') {
+        let permissionsGranted = true;
+
+        switch (Platform.OS) {
+            case 'android':
+                const requiredPermissions = [
+                    PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+                    PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+                    PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
+                ];
+
+                let statuses;
+                try {
+                    statuses = await checkMultiple(requiredPermissions);
+                } catch (error) {
+                    console.log(TAG, 'error while check permissions');
+                }
+
+                let permissionsForRequest = [];
+                requiredPermissions.forEach(permission => {
+                    if (statuses[permission] !== RESULTS.UNAVAILABLE && statuses[permission] !== RESULTS.GRANTED) {
+                        permissionsGranted = false;
+                        permissionsForRequest.push(permission);
+                    }
+                });
+
+                if (permissionsForRequest.length > 0) {
+                    try {
+                        statuses = await requestMultiple(permissionsForRequest);
+                    } catch (error) {
+                        console.log(TAG, 'error in request multiple permissions', error);
+                        this.setState({ error: 'Ошибка при запросе разрешений' });
+                        return;
+                    }
+                }
+                break;
+
+            case 'ios':
+                break;
+        }
+
+        if (!permissionsGranted) {
             Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');
             return;
         }
@@ -45,7 +84,7 @@ class AuthLoadingScreen extends React.Component {
 
         if (userToken) {
             axios.defaults.headers = {
-                Authorization: 'Bearer ' + userToken
+                Authorization: 'Bearer ' + userToken,
             };
             NativeModules.WorkManager.stopWorkManager();
             NativeModules.WorkManager.startWorkManager(userToken);
@@ -96,7 +135,7 @@ class AuthLoadingScreen extends React.Component {
 
     _signOutAsync = async () => {
         try {
-			await NativeModules.RNFirebasePushToken.deleteInstanceId();
+            await NativeModules.RNFirebasePushToken.deleteInstanceId();
             await AsyncStorage.clear();
             await NativeModules.ForegroundTaskModule.stopService();
             this.props.navigation.navigate('SignIn');
@@ -119,12 +158,13 @@ class AuthLoadingScreen extends React.Component {
                             blackText
                             style={[styles.buttonConfirm, { width: styles.buttonConfirm.width * 2 }]}
                             onPress={this._signOutAsync}
+                            // eslint-disable-next-line react-native/no-raw-text
                         >
                             Выйти из аккаунта
                         </LoadingButton>
                     </Fragment>
                 ) : (
-                    <ActivityIndicator size={60} color='#FFC234' />
+                    <ActivityIndicator size={60} color="#FFC234" />
                 )}
             </View>
         );

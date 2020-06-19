@@ -543,8 +543,8 @@ class SignUpUserScreen extends React.Component {
                     axios.defaults.headers = {
                         Authorization: 'Bearer ' + response.data.token
                     };
-                } catch (err) {
-                    console.log('ОШИБКА', err);
+                } catch (error) {
+                    console.log('ОШИБКА', error);
                     if(error.response){
                         showAlert('Регистрация успешна, но произошла ошибка ', 'Попробуйте сделать это позже\n'+error.response.data.message, { okFn: undefined });
                     } else {

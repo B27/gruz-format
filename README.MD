@@ -1,0 +1,1 @@
+react-native-permissions добавить на iOS
