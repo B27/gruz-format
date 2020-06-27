@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+// import * as ImagePicker from 'expo-image-picker';
+// import * as Permissions from 'expo-permissions';
 import React from 'react';
-import {CheckBox, Keyboard, Linking, ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import { CheckBox, Keyboard, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LoadingButton from '../components/LoadingButton';
 import LocalImage from '../components/LocalImage';
 import NumericInput from '../components/NumericInput';
@@ -60,14 +60,14 @@ class SignUpDocumentsScreen extends React.Component {
                         onlyNum
                         style={styles.input}
                         placeholder="Номер паспорта"
-                        onChangeText={passportNumber => this.setState({passportNumber})}
+                        onChangeText={passportNumber => this.setState({ passportNumber })}
                         value={this.state.passportNumber}
                     />
                     <NumericInput
                         onlyNum
                         style={styles.input}
                         placeholder="Серия паспорта"
-                        onChangeText={passportSeries => this.setState({passportSeries})}
+                        onChangeText={passportSeries => this.setState({ passportSeries })}
                         value={this.state.passportSeries}
                     />
                     <Text>Фотография первой страницы паспорта:</Text>
@@ -82,27 +82,36 @@ class SignUpDocumentsScreen extends React.Component {
                 <View style={styles.policy}>
                     <CheckBox
                         value={this.state.policy}
-                        onValueChange={() => this.setState({policy: !this.state.policy})}
+                        onValueChange={() => this.setState({ policy: !this.state.policy })}
                     />
-                    <View style={{flexDirection: 'column'}}>
+                    <View style={{ flexDirection: 'column' }}>
                         <Text>Я согласен на обработку моих персональных данных</Text>
                         <Text
-                            style={{color: '#c69523'}}
+                            style={{ color: '#c69523' }}
                             onPress={() => {
                                 Linking.openURL(this.state.policyURL);
-                            }}>
+                            }}
+                        >
                             Сублицензионное соглашение
                         </Text>
                     </View>
                 </View>
 
-                <Text style={{color: 'red'}}>{this.state.message}</Text>
+                <Text style={{ color: 'red' }}>{this.state.message}</Text>
                 {
-                    <LoadingButton style={styles.buttonBottom} onPress={this._passDocumentScreen}>
+                    <LoadingButton
+                        style={styles.buttonBottom}
+                        onPress={this._passDocumentScreen}
+                        // eslint-disable-next-line react-native/no-raw-text
+                    >
                         Пропустить
                     </LoadingButton>
                 }
-                <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
+                <LoadingButton
+                    style={styles.buttonBottom}
+                    onPress={this._nextScreen}
+                    // eslint-disable-next-line react-native/no-raw-text
+                >
                     ПРОДОЛЖИТЬ
                 </LoadingButton>
             </ScrollView>
@@ -121,7 +130,7 @@ class SignUpDocumentsScreen extends React.Component {
             try {
                 const res = await axios.post('/worker', dataToSend);
                 //console.log('REGISTRATION: ', res);
-                this.setState({userId: res.data._id});
+                this.setState({ userId: res.data._id });
                 console.log('[SignUpDocumentsScreen]._passDocumentScreen() state.userId', this.state.userId);
                 await AsyncStorage.setItem('userId', this.state.userId);
 
@@ -137,11 +146,11 @@ class SignUpDocumentsScreen extends React.Component {
                         showAlert(
                             'Ошибка при отправке данных',
                             'Попробуйте сделать это позже\n' + error.response.data.message,
-                            {okFn: undefined},
+                            { okFn: undefined },
                         );
                     }
                 } else {
-                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', {okFn: undefined});
+                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', { okFn: undefined });
                 }
                 return;
             }
@@ -162,7 +171,7 @@ class SignUpDocumentsScreen extends React.Component {
                 let passPic = null;
                 let passRegPic = null;
 
-                await this.uploadImages({passPic, passRegPic});
+                await this.uploadImages({ passPic, passRegPic });
                 console.log('[SignUpDocumentsScreen]._passDocumentScreen() images uploaded!');
                 this.props.navigation.navigate('AuthLoading');
             } catch (err) {
@@ -171,10 +180,10 @@ class SignUpDocumentsScreen extends React.Component {
                     showAlert(
                         'Ошибка при попытке авторизации',
                         'Попробуйте сделать это позже\n' + err.response.data.message,
-                        {okFn: undefined},
+                        { okFn: undefined },
                     );
                 } else {
-                    showAlert('Ошибка при попытке авторизации', 'Попробуйте залогиниться заново', {okFn: undefined});
+                    showAlert('Ошибка при попытке авторизации', 'Попробуйте залогиниться заново', { okFn: undefined });
                 }
                 this.props.navigation.navigate('SignIn');
             }
@@ -217,7 +226,7 @@ class SignUpDocumentsScreen extends React.Component {
                     okFn: undefined,
                 });
             } else {
-                showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже', {okFn: undefined});
+                showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже', { okFn: undefined });
             }
         }
     }
@@ -270,7 +279,7 @@ class SignUpDocumentsScreen extends React.Component {
                     console.log('Data to server: ', dataToSend);
                     const res = await axios.post('/worker', dataToSend);
                     //console.log('REGISTRATION: ', res);
-                    this.setState({userId: res.data._id});
+                    this.setState({ userId: res.data._id });
                     await AsyncStorage.setItem('userId', this.state.userId);
 
                     //this.props.navigation.navigate('Documents');
@@ -285,11 +294,11 @@ class SignUpDocumentsScreen extends React.Component {
                             showAlert(
                                 'Ошибка при отправке данных',
                                 'Попробуйте сделать это позже\n' + error.response.data.message,
-                                {okFn: undefined},
+                                { okFn: undefined },
                             );
                         }
                     } else {
-                        showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', {okFn: undefined});
+                        showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', { okFn: undefined });
                     }
                     return;
                 }
@@ -310,25 +319,25 @@ class SignUpDocumentsScreen extends React.Component {
                         showAlert(
                             'Ошибка при отправке данных',
                             'Попробуйте сделать это позже\n' + err.response.data.message,
-                            {okFn: undefined},
+                            { okFn: undefined },
                         );
                     } else {
-                        showAlert('Ошибка при авторизации', 'Попробуйте залогиниться заново', {okFn: undefined});
+                        showAlert('Ошибка при авторизации', 'Попробуйте залогиниться заново', { okFn: undefined });
                     }
                     this.props.navigation.navigate('SignIn');
                     return;
                 }
-                await this.uploadImages({passPic, passRegPic});
+                await this.uploadImages({ passPic, passRegPic });
                 this.props.navigation.navigate('AuthLoading');
             }
         }
     };
     openFirstCameraRoll = () => {
-        this.setState({choiceModalVisible: true, first: true});
+        this.setState({ choiceModalVisible: true, first: true });
     };
 
     openSecondCameraRoll = () => {
-        this.setState({choiceModalVisible: true, first: false});
+        this.setState({ choiceModalVisible: true, first: false });
     };
 
     closeModals = () => {
@@ -338,36 +347,36 @@ class SignUpDocumentsScreen extends React.Component {
     };
 
     pickFromCamera = async () => {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA);
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
         if (status === 'granted') {
-            this.setState({choiceModalVisible: false});
-            const {cancelled, uri} = await ImagePicker.launchCameraAsync({
+            this.setState({ choiceModalVisible: false });
+            const { cancelled, uri } = await ImagePicker.launchCameraAsync({
                 mediaTypes: 'Images',
                 quality: 0.3,
             });
             if (!cancelled) {
                 if (this.state.first) {
-                    this.setState({firstPageUri: uri});
+                    this.setState({ firstPageUri: uri });
                 } else if (!this.state.first) {
-                    this.setState({secondPageUri: uri});
+                    this.setState({ secondPageUri: uri });
                 }
             }
         }
     };
 
     selectPicture = async () => {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if (status === 'granted') {
-            this.setState({choiceModalVisible: false});
-            const {cancelled, uri} = await ImagePicker.launchImageLibraryAsync({
+            this.setState({ choiceModalVisible: false });
+            const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
                 quality: 0.3,
             });
             if (!cancelled) {
                 if (this.state.first) {
-                    this.setState({firstPageUri: uri});
+                    this.setState({ firstPageUri: uri });
                 } else if (!this.state.first) {
-                    this.setState({secondPageUri: uri});
+                    this.setState({ secondPageUri: uri });
                 }
                 console.log(TAG, typeof this.state.firstPageUri);
             }

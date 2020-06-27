@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+// import * as ImagePicker from 'expo-image-picker';
+// import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { CheckBox, Keyboard, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LoadingButton from '../components/LoadingButton';

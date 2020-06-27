@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+// import * as ImagePicker from 'expo-image-picker';
+// import * as Permissions from 'expo-permissions';
 import { Picker } from 'native-base';
 import React from 'react';
 import {Keyboard, ScrollView, Text, TextInput, View} from 'react-native';

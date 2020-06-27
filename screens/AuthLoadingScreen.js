@@ -9,7 +9,8 @@ import LoadingButton from '../components/LoadingButton';
 import { prepareNotificationListener, execPendingNotificationListener } from '../utils/NotificationListener';
 import styles from '../styles';
 import NetworkRequests from '../mobx/NetworkRequests';
-import { PERMISSIONS, checkMultiple, requestMultiple, RESULTS } from 'react-native-permissions';
+import Permissons from '../utils/Permissions';
+import { RESULTS } from 'react-native-permissions';
 
 const TAG = '~AuthLoadingScreen~';
 @inject('store')
@@ -28,47 +29,9 @@ class AuthLoadingScreen extends React.Component {
 
         this.setState({ error: '' });
 
-        let permissionsGranted = true;
+        const locationPermissionResult = await Permissons.askLocation();
 
-        switch (Platform.OS) {
-            case 'android':
-                const requiredPermissions = [
-                    PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-                    PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
-                    PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
-                ];
-
-                let statuses;
-                try {
-                    statuses = await checkMultiple(requiredPermissions);
-                } catch (error) {
-                    console.log(TAG, 'error while check permissions');
-                }
-
-                let permissionsForRequest = [];
-                requiredPermissions.forEach(permission => {
-                    if (statuses[permission] !== RESULTS.UNAVAILABLE && statuses[permission] !== RESULTS.GRANTED) {
-                        permissionsGranted = false;
-                        permissionsForRequest.push(permission);
-                    }
-                });
-
-                if (permissionsForRequest.length > 0) {
-                    try {
-                        statuses = await requestMultiple(permissionsForRequest);
-                    } catch (error) {
-                        console.log(TAG, 'error in request multiple permissions', error);
-                        this.setState({ error: 'Ошибка при запросе разрешений' });
-                        return;
-                    }
-                }
-                break;
-
-            case 'ios':
-                break;
-        }
-
-        if (!permissionsGranted) {
+        if (locationPermissionResult !== RESULTS.GRANTED) {
             Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');
             return;
         }

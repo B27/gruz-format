@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+// import * as ImagePicker from 'expo-image-picker';
+// import * as Permissions from 'expo-permissions';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { DatePickerAndroid, Keyboard, Picker, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
