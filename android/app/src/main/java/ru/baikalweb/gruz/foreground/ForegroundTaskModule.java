@@ -1,7 +1,6 @@
 package ru.baikalweb.gruz.foreground;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.util.Log;
 
 import com.facebook.react.bridge.Callback;
@@ -11,11 +10,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 import javax.annotation.Nonnull;
-
-import android.content.Intent;
-
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 public class ForegroundTaskModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "ReactNativeJS";
@@ -39,7 +33,7 @@ public class ForegroundTaskModule extends ReactContextBaseJavaModule {
         }
     }
 
-    @ReactMethod 
+    @ReactMethod
     public void startService(String token, String message, Promise promise) {
         Log.d(REACT_CLASS, "startService");
 

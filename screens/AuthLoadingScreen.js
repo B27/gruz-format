@@ -30,6 +30,7 @@ class AuthLoadingScreen extends React.Component {
         this.setState({ error: '' });
 
         const locationPermissionResult = await Permissons.askLocation();
+        console.log('locations permission result', locationPermissionResult);
 
         if (locationPermissionResult !== RESULTS.GRANTED) {
             Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');

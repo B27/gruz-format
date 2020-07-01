@@ -11,8 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -82,7 +83,8 @@ public class OneTimeSendLocation extends Service implements LocationListener {
         try {
             IO.Options opts = new IO.Options();
             opts.query = "token=" + sharedPref.getString("token", "");
-            mSocket = IO.socket("https://api.gruzformat.ru/socket", opts);
+            // mSocket = IO.socket("https://api.gruzformat.ru/socket", opts);
+            mSocket = IO.socket("http://10.0.2.2:3008/socket", opts);
             mSocket.connect();
 //            mSocket.emit("set work", true);
         } catch (URISyntaxException e) {
@@ -151,7 +153,7 @@ public class OneTimeSendLocation extends Service implements LocationListener {
 
     public void registerRequestUpdate(final LocationListener listener) {
         mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
         mLocationRequest.setInterval(10000); // every 1 min
         Log.d(TAG, "registerRequestUpdate");
         new Handler().postDelayed(new Runnable() {

@@ -9,6 +9,7 @@ async function checkOrRequestPermissions({ iosPermissions = undefined, androidPe
             let statuses;
             try {
                 statuses = await checkMultiple(androidPermissions);
+                console.log('permission statuses', statuses);
             } catch (error) {
                 console.error(TAG, 'error while check android permissions', error);
             }
@@ -20,6 +21,7 @@ async function checkOrRequestPermissions({ iosPermissions = undefined, androidPe
                 }
             });
 
+            console.log('permissions for request', permissionsForRequest);
             if (permissionsForRequest.length > 0) {
                 try {
                     statuses = await requestMultiple(permissionsForRequest);
@@ -27,13 +29,13 @@ async function checkOrRequestPermissions({ iosPermissions = undefined, androidPe
                     console.error(TAG, 'error in request multiple permissions', error);
                     return;
                 }
-            }
 
-            permissionsForRequest.forEach(permission => {
-                if (statuses[permission] !== RESULTS.UNAVAILABLE && statuses[permission] !== RESULTS.GRANTED) {
-                    return statuses[permission];
-                }
-            });
+                permissionsForRequest.forEach(permission => {
+                    if (statuses[permission] !== RESULTS.UNAVAILABLE && statuses[permission] !== RESULTS.GRANTED) {
+                        return statuses[permission];
+                    }
+                });
+            }
 
             return RESULTS.GRANTED;
 
@@ -43,7 +45,7 @@ async function checkOrRequestPermissions({ iosPermissions = undefined, androidPe
 }
 
 async function askLocation() {
-    await checkOrRequestPermissions({
+    return await checkOrRequestPermissions({
         androidPermissions: [
             PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
             PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
@@ -52,10 +54,4 @@ async function askLocation() {
     });
 }
 
-async function askCamera() {
-    await checkOrRequestPermissions({
-        androidPermissions: [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE],
-    });
-}
-
-export default { askLocation, askCamera };
+export default { askLocation };

@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">FormatGruz</string>
+    <string name="app_name">Gruz.Format</string>
+
+    <string name="default_ncid" translatable="false">gruz_notification_id</string>
+    <string name="new_order_ncid" translatable="false">new_order_ncid</string>
+    <string name="kick_from_order_ncid" translatable="false">kick_from_order_ncid</string>
+    <string name="reject_order_ncid" translatable="false">reject_order_ncid</string>
+    <string name="inactive_user_ncid" translatable="false">inactive_user_ncid</string>
+    <string name="new_message_ncid" translatable="false">new_message_ncid</string>
+
+    <string name="default_ncn">Order statuses</string>
+    <string name="default_ncd">Foreground service notifications for sending geolocation</string>
+    <string name="new_order_ncn">New order</string>
+    <string name="kick_from_order_ncn">Kick from order</string>
+    <string name="reject_order_ncn">Reject order</string>
+    <string name="inactive_user_ncn">You are inactive</string>
+    <string name="new_message_ncn">New message</string>
 </resources>
