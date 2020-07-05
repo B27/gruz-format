@@ -82,7 +82,7 @@ function PhotoChoicer({ store, onChoiceImage, onDeleteImage, index, storeView, s
             },
             _handleImagePickerResponse,
         );
-    }, [_handleImagePickerResponse, index, store, storeView]);
+    }, [_handleImagePickerResponse]);
 
     const _renderImage = useMemo(
         () => (
@@ -96,7 +96,7 @@ function PhotoChoicer({ store, onChoiceImage, onDeleteImage, index, storeView, s
                 resizeMode="cover"
             />
         ),
-        [index, photo, size, store, storeView],
+        [photo, size],
     );
 
     const _renderPlaceholder = useMemo(

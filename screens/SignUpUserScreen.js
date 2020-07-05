@@ -4,7 +4,6 @@ import axios from 'axios';
 import React from 'react';
 
 import {
-    CheckBox,
     DatePickerAndroid,
     Keyboard,
     KeyboardAvoidingView, Linking,
@@ -15,6 +14,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import LoadingButton from '../components/LoadingButton';
 import LocalImage from '../components/LocalImage';
 import NumericInput from '../components/NumericInput';
