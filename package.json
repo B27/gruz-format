@@ -19,8 +19,8 @@
     "mobx-react": "^5.4.3",
     "moment": "^2.27.0",
     "native-base": "^2.12.1",
-    "react": "16.11.0",
-    "react-native": "0.62.2",
+    "react": "16.13.1",
+    "react-native": "0.63.0",
     "react-native-default-preference": "^1.4.3",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-gifted-chat": "^0.16.3",
@@ -36,15 +36,18 @@
     "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.2",
+    "@babel/core": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
+    "@react-native-community/eslint-config": "^1.1.0",
+    "babel-jest": "^25.1.0",
     "@babel/plugin-proposal-decorators": "^7.6.2",
-    "@babel/runtime": "^7.6.2",
-    "@react-native-community/eslint-config": "^0.0.5",
-    "babel-jest": "^24.9.0",
     "eslint": "^6.5.1",
-    "jest": "^24.9.0",
-    "metro-react-native-babel-preset": "^0.58.0",
-    "react-test-renderer": "16.11.0"
+    "jest": "^25.1.0",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "react-test-renderer": "16.13.1"
+  },
+  "resolutions": {
+    "native-base/react-native-vector-icons": "6.6.0"
   },
   "jest": {
     "preset": "react-native"
