@@ -1,84 +1,47 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Modal, Image } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import styles from '../../styles';
+const placeholder = require('../../images/unknown.png');
 
-class ChoiceCameraRoll extends React.Component {
-    render() {
-        return (
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={this.props.visible}
-                onRequestClose={() => {
-                    this.props.closeModal();
-                }}
-            >
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'rgba(52, 52, 52, 0.8)',
-                    }}
-                >
-                    <View style={styles.choiceCameraRoll}>
-                        <TouchableOpacity style={styles.choiceCameraRollItem} onPress={this.props.pickFromCamera}>
-                            <Text style={styles.blackText}>Сделать фото...</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.choiceCameraRollItem} onPress={this.props.selectPicture}>
-                            <Text style={styles.blackText}>Выбрать из галереи...</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.choiceCameraRollCancel}
-                            onPress={() => {
-                                this.props.closeModal();
-                            }}
-                        >
-                            <Text style={styles.text}>Отменить</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-        );
-    }
-}
+function PhotoChoicer({ size, state, field }) {
+    const [photo, setPhoto] = useState(null);
 
-function PhotoChoicer({ store, onChoiceImage, onDeleteImage, index, storeView, size }) {
-    const [photo, setPhoto] = useState();
+    const _handleImagePickerResponse = useCallback(
+        async response => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.error('error in select image');
+            } else {
+                console.log(response, 'imagepicker');
+                state[field] = response.uri; //.replace('///', '/');
+                setPhoto(response.uri);
 
-    const _handleImagePickerResponse = useCallback(async response => {
-        if (response.didCancel) {
-            console.log('User cancelled image picker');
-        } else if (response.error) {
-            console.log('error in select image');
-        } else {
-            console.log(response, 'imagepicker');
-
-            setPhoto(response.uri);
-            // await _cropImage(response.uri);
-        }
-    }, []);
+                // await _cropImage(response.uri);
+            }
+        },
+        [field, state],
+    );
 
     const _onPressSelectImage = useCallback(async () => {
         ImagePicker.showImagePicker(
             {
                 title: null,
-                // customButtons: store[storeView](index) ? [{ name: 'delete', title: $T.delete }] : undefined,
-                // cancelButtonTitle: $T.cancel,
-                // takePhotoButtonTitle: $T.take_photo,
-                // chooseFromLibraryButtonTitle: $T.choose_from_gallery,
-                // permissionDenied: {
-                //     title: $T.permission_denied,
-                //     text: $T.need_permissions,
-                //     reTryTitle: $T.allow,
-                //     okTitle: $T.understandably,
-                // },
+                cancelButtonTitle: 'Отмена',
+                takePhotoButtonTitle: 'Сделать фото',
+                chooseFromLibraryButtonTitle: 'Выбрать из галереи',
+                permissionDenied: {
+                    title: 'Разрешения не предоставлены',
+                    text: 'Для загрузки фотографии необходимо предоставить разрешения',
+                    reTryTitle: 'Разрешить',
+                    okTitle: 'Понятно',
+                },
                 noData: true,
                 storageOptions: {
                     skipBackup: true,
-                    path: 'images',
+                    privateDirectory: true,
                 },
+                quality: 0.5,
             },
             _handleImagePickerResponse,
         );
@@ -87,40 +50,60 @@ function PhotoChoicer({ store, onChoiceImage, onDeleteImage, index, storeView, s
     const _renderImage = useMemo(
         () => (
             <Image
-                style={[styles.image, { width: size, height: size }]}
-                source={
-                    photo && {
-                        uri: photo, //`data:${store[storeView](index).mime};base64,${store[storeView](index).base64}`,
-                    }
-                }
+                style={localStyles.image}
+                // style={[styles.image, { flex: 1,  width: size, height: size, borderWidth: 2, borderColor: 'black' }]}
+                source={{
+                    uri: photo, //`data:${store[storeView](index).mime};base64,${store[storeView](index).base64}`,
+                }}
                 resizeMode="cover"
             />
         ),
-        [photo, size],
+        [photo],
     );
 
     const _renderPlaceholder = useMemo(
         () => (
-            <View style={styles.placeholder}>
-                <IconFontello style={styles.icon} name="add-photo" size={36} />
-            </View>
+            <Image
+                style={{
+                    width: size,
+                    height: size,
+                }}
+                source={placeholder}
+                resizeMode="cover"
+            />
         ),
-        [],
+        [size],
     );
 
     return (
         <>
-            <View style={[styles.container, { width: size, height: size }]}>
-                {photo ? _renderImage : _renderPlaceholder}
-                {/* <RectButton
-                    onPress={_onPressSelectImage}
-                    rippleColor={colors.modalButtons}
-                    underlayColor={colors.modalButtons}
-                    style={StyleSheet.absoluteFill}
-                /> */}
+            <View style={[localStyles.container, { height: size }]}>
+                <TouchableOpacity onPress={_onPressSelectImage} style={localStyles.touchableOpacity}>
+                    {photo ? _renderImage : _renderPlaceholder}
+                </TouchableOpacity>
             </View>
         </>
     );
 }
 
-export default ChoiceCameraRoll;
+const localStyles = StyleSheet.create({
+    container: {
+        alignSelf: 'stretch',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginHorizontal: 8,
+    },
+    image: {
+        flex: 1,
+        alignSelf: 'stretch',
+    },
+    touchableOpacity: {
+        flex: 1,
+        flexDirection: 'row',
+
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+
+export default PhotoChoicer;
