@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>ru</string>
 	<key>CFBundleDisplayName</key>
 	<string>FormatGruz</string>
 	<key>CFBundleExecutable</key>
@@ -53,5 +53,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Информация о местоположении используется при выполнении и при подборе заказа</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Информация о местоположении используется при выполнении и при подборе заказа</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Чтобы сделать фото предоставьте доступ к камере</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Чтобы выбрать фото предоставьте доступ к галерее</string>
 </dict>
 </plist>
