@@ -5,12 +5,12 @@ import axios from 'axios';
 import { inject, observer } from 'mobx-react/native';
 import { Picker } from 'native-base';
 import React from 'react';
-import {Keyboard, ScrollView, Text, TextInput, View} from 'react-native';
+import { Keyboard, ScrollView, Text, TextInput, View } from 'react-native';
 import ImageChooser from '../components/ImageChooser';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
-import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
+import PhotoChoicer from './modals/ChoiceCameraRoll';
 
 //import { ImageCacheManager } from 'react-native-cached-image';
 @inject('store')
@@ -18,9 +18,6 @@ import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 class MyAutoScreen extends React.Component {
     state = {
         imageNum: null,
-        choiceModalVisible: false,
-        pictureUri: require('../images/camera.png'),
-        placeholderVisible: true,
         isOpen: null,
         types: [
             { name: 'Тип кузова', isOpen: null },
@@ -28,15 +25,18 @@ class MyAutoScreen extends React.Component {
             { name: 'Термобудка (крытый)', isOpen: false },
             { name: 'Кран. борт', isOpen: true },
             { name: 'Тент (крытый)', isOpen: false },
-            { name: 'Открытый борт', isOpen: true }
+            { name: 'Открытый борт', isOpen: true },
         ],
         veh_stateCarNumber: '',
-        colorMessage: 'red'
+        colorMessage: 'red',
+        vehicle0: null,
+        vehicle1: null,
+        vehicle2: null,
     };
 
     static navigationOptions = {
         title: 'Мое авто',
-        headerLeft: null
+        headerLeft: null,
     };
 
     componentDidMount() {
@@ -52,8 +52,8 @@ class MyAutoScreen extends React.Component {
                     return;
                 }
 
-                await this.setState({ ...this.props.store, message: '' });
-                console.log('[MyAutoScreen].() this.props.store', this.state)
+                this.setState({ ...this.props.store, message: '' });
+                console.log('[MyAutoScreen].() this.props.store', this.state);
             })();
         });
 
@@ -71,16 +71,10 @@ class MyAutoScreen extends React.Component {
         }
     }
 
-    _closeModals = () => {
-        this.setState({
-            choiceModalVisible: false
-        });
-    };
-
-    _openModalImage = num => () => {
+    _openModalImage = (num) => () => {
         this.setState({
             choiceModalVisible: true,
-            imageNum: num
+            imageNum: num,
         });
     };
 
@@ -90,7 +84,7 @@ class MyAutoScreen extends React.Component {
             this.setState({ choiceModalVisible: false });
             const { cancelled, uri } = await ImagePicker.launchCameraAsync({
                 mediaTypes: 'Images',
-                quality: 0.3
+                quality: 0.3,
             });
             if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
         }
@@ -102,7 +96,7 @@ class MyAutoScreen extends React.Component {
             this.setState({ choiceModalVisible: false });
             const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'Images',
-                quality: 0.3
+                quality: 0.3,
             });
             if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
         }
@@ -135,27 +129,26 @@ class MyAutoScreen extends React.Component {
                 veh_length: this.state.veh_length,
                 veh_loadingCap: this.state.veh_loadingCap,
                 veh_frameType: this.state.veh_frameType,
-                veh_stateCarNumber: this.state.veh_stateCarNumber
+                veh_stateCarNumber: this.state.veh_stateCarNumber,
             });
 
             console.log(res.data);
             const data = new FormData();
-            console.log('PHOTOOOOOOOS: ', this.state.vehicle0, this.state.vehicle1, this.state.vehicle2);
 
             data.append('vehicle0', {
                 uri: this.state.vehicle0,
                 type: 'image/jpeg',
-                name: 'image.jpg'
+                name: 'image.jpg',
             });
             data.append('vehicle1', {
                 uri: this.state.vehicle1,
                 type: 'image/jpeg',
-                name: 'image.jpg'
+                name: 'image.jpg',
             });
             data.append('vehicle2', {
                 uri: this.state.vehicle2,
                 type: 'image/jpeg',
-                name: 'image.jpg'
+                name: 'image.jpg',
             });
             //ImageCacheManager.clearCache();
 
@@ -181,7 +174,7 @@ class MyAutoScreen extends React.Component {
                             height: '100%',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            alignSelf: 'center'
+                            alignSelf: 'center',
                         }}
                     >
                         <Text style={{ textAlign: 'center', fontSize: 16 }}>
@@ -191,12 +184,6 @@ class MyAutoScreen extends React.Component {
                     </View>
                 ) : (
                     <ScrollView contentContainerStyle={styles.registrationScreen}>
-                        <ChoiceCameraRoll
-                            pickFromCamera={this._pickFromCamera}
-                            selectPicture={this._selectPicture}
-                            visible={this.state.choiceModalVisible}
-                            closeModal={this._closeModals}
-                        />
                         <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
                         <View style={styles.inputContainer}>
                             <View
@@ -206,7 +193,7 @@ class MyAutoScreen extends React.Component {
                                     borderRadius: 15,
                                     paddingLeft: 5,
                                     marginBottom: 15,
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
                                 }}
                             >
                                 <Picker
@@ -214,11 +201,11 @@ class MyAutoScreen extends React.Component {
                                     onValueChange={(itemValue, itemIndex) => {
                                         this.setState({
                                             veh_frameType: itemValue,
-                                            veh_is_open: this.state.types[itemIndex].isOpen
+                                            veh_is_open: this.state.types[itemIndex].isOpen,
                                         });
                                         console.log(itemValue, this.state.types[itemIndex].isOpen);
                                     }}
-                                    placeholder='Тип кузова'
+                                    placeholder="Тип кузова"
                                 >
                                     {this.state.types.map(({ name }, index) => {
                                         return (
@@ -234,43 +221,50 @@ class MyAutoScreen extends React.Component {
                             </View>
                             <TextInput
                                 style={styles.input}
-                                placeholder='Гос. номер'
-                                placeholderTextColor='grey'
+                                placeholder="Гос. номер"
+                                placeholderTextColor="grey"
                                 value={this.state.veh_stateCarNumber}
-                                onChangeText={veh_stateCarNumber => this.setState({ veh_stateCarNumber })}
+                                onChangeText={(veh_stateCarNumber) => this.setState({ veh_stateCarNumber })}
                             />
                             <NumericInput
                                 style={styles.input}
-                                placeholder='Грузоподъёмность (т)'
-                                onChangeText={veh_loadingCap => this.setState({ veh_loadingCap })}
+                                placeholder="Грузоподъёмность (т)"
+                                onChangeText={(veh_loadingCap) => this.setState({ veh_loadingCap })}
                                 value={this.state.veh_loadingCap ? this.state.veh_loadingCap.toString() : ''}
                             />
                             <Text style={styles.descriptionTwo}>Кузов:</Text>
                             <NumericInput
                                 style={styles.input}
-                                placeholder='Длина (м)'
-                                onChangeText={veh_length => this.setState({ veh_length })}
+                                placeholder="Длина (м)"
+                                onChangeText={(veh_length) => this.setState({ veh_length })}
                                 value={this.state.veh_length ? this.state.veh_length.toString() : ''}
                             />
                             <NumericInput
                                 style={styles.input}
-                                placeholder='Ширина (м)'
-                                onChangeText={veh_width => this.setState({ veh_width })}
+                                placeholder="Ширина (м)"
+                                onChangeText={(veh_width) => this.setState({ veh_width })}
                                 value={this.state.veh_width ? this.state.veh_width.toString() : ''}
                             />
                             {!this.state.veh_is_open && (
                                 <NumericInput
                                     style={styles.input}
-                                    placeholder='Высота (м)'
-                                    onChangeText={veh_height => this.setState({ veh_height })}
+                                    placeholder="Высота (м)"
+                                    onChangeText={(veh_height) => this.setState({ veh_height })}
                                     value={this.state.veh_height ? this.state.veh_height.toString() : ''}
                                 />
                             )}
                             <Text style={styles.descriptionTwo}>Фотографии:</Text>
                             <View style={styles.photoButtonContainer}>
-                                <ImageChooser openModal={this._openModalImage(0)} img={this.state.vehicle0} />
-                                <ImageChooser openModal={this._openModalImage(1)} img={this.state.vehicle1} />
-                                <ImageChooser openModal={this._openModalImage(2)} img={this.state.vehicle2} />
+                                {[0, 1, 2].map((num) => (
+                                    <PhotoChoicer
+                                        key={`choicer${num}`}
+                                        size={100}
+                                        imageStyle={{ width: 100, height: 100 }}
+                                        uri={this.state[`vehicle${num}`] || this.props.store[`vehicle${num}`]}
+                                        refreshImage={this.props.store.refreshImage}
+                                        onChange={(uri) => this.setState({ [`vehicle${num}`]: uri })}
+                                    />
+                                ))}
                             </View>
                         </View>
 

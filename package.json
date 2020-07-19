@@ -12,8 +12,10 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/checkbox": "^0.4.2",
+    "@react-native-community/datetimepicker": "^2.6.0",
     "@react-native-community/netinfo": "^5.9.4",
     "axios": "^0.19.2",
+    "date-fns": "^2.14.0",
     "md5": "^2.2.1",
     "mobx": "^5.9.4",
     "mobx-react": "^5.4.3",
@@ -37,10 +39,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-decorators": "^7.6.2",
     "@babel/runtime": "^7.8.4",
     "@react-native-community/eslint-config": "^1.1.0",
     "babel-jest": "^25.1.0",
-    "@babel/plugin-proposal-decorators": "^7.6.2",
     "eslint": "^6.5.1",
     "jest": "^25.1.0",
     "metro-react-native-babel-preset": "^0.59.0",

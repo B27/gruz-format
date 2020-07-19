@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     logoText: {
         color: 'white',
         fontSize: 32,
-        fontWeight: '500'
+        fontWeight: 'bold'
     },
 
     logoIcon: {
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
     datePickerText: {
         fontSize: 16,
-        color: 'grey'
+        color: 'black'
     },
 
     inputHalf: {

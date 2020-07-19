@@ -3,24 +3,19 @@ import { StyleSheet, View, Text, TouchableOpacity, Modal, Image } from 'react-na
 import ImagePicker from 'react-native-image-picker';
 const placeholder = require('../../images/unknown.png');
 
-function PhotoChoicer({ size, state, field }) {
-    const [photo, setPhoto] = useState(null);
-
+function PhotoChoicer({ onChange, size, uri, refreshImage, containerStyle, imageStyle }) {
     const _handleImagePickerResponse = useCallback(
-        async response => {
+        async (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
                 console.error('error in select image');
             } else {
-                console.log(response, 'imagepicker');
-                state[field] = response.uri; //.replace('///', '/');
-                setPhoto(response.uri);
-
+                onChange(response.uri);
                 // await _cropImage(response.uri);
             }
         },
-        [field, state],
+        [onChange],
     );
 
     const _onPressSelectImage = useCallback(async () => {
@@ -50,15 +45,14 @@ function PhotoChoicer({ size, state, field }) {
     const _renderImage = useMemo(
         () => (
             <Image
-                style={localStyles.image}
-                // style={[styles.image, { flex: 1,  width: size, height: size, borderWidth: 2, borderColor: 'black' }]}
+                style={imageStyle || localStyles.image}
                 source={{
-                    uri: photo, //`data:${store[storeView](index).mime};base64,${store[storeView](index).base64}`,
+                    uri: `${uri}?${refreshImage}`,
                 }}
                 resizeMode="cover"
             />
         ),
-        [photo],
+        [imageStyle, uri, refreshImage],
     );
 
     const _renderPlaceholder = useMemo(
@@ -77,9 +71,9 @@ function PhotoChoicer({ size, state, field }) {
 
     return (
         <>
-            <View style={[localStyles.container, { height: size }]}>
+            <View style={[localStyles.container, { height: size }, containerStyle]}>
                 <TouchableOpacity onPress={_onPressSelectImage} style={localStyles.touchableOpacity}>
-                    {photo ? _renderImage : _renderPlaceholder}
+                    {uri ? _renderImage : _renderPlaceholder}
                 </TouchableOpacity>
             </View>
         </>
@@ -91,7 +85,7 @@ const localStyles = StyleSheet.create({
         alignSelf: 'stretch',
         flexDirection: 'column',
         justifyContent: 'center',
-        marginHorizontal: 8,
+        marginHorizontal: 24,
     },
     image: {
         flex: 1,

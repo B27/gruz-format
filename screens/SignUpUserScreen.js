@@ -1,12 +1,12 @@
+import AsyncStorage from '@react-native-community/async-storage';
+import CheckBox from '@react-native-community/checkbox';
 import axios from 'axios';
 // import * as Permissions from 'expo-permissions';
 // import * as ImagePicker from 'expo-image-picker';
 import React from 'react';
-
 import {
     DatePickerAndroid,
     Keyboard,
-    KeyboardAvoidingView,
     Linking,
     Picker,
     ScrollView,
@@ -15,17 +15,12 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
 import LoadingButton from '../components/LoadingButton';
-import LocalImage from '../components/LocalImage';
 import NumericInput from '../components/NumericInput';
+import { privacyPolicyURL } from '../constants';
 import styles from '../styles';
-import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 import showAlert from '../utils/showAlert';
-import ImageChooser from '../components/ImageChooser';
-
-import { URL, privacyPolicyURL } from '../constants';
-import AsyncStorage from '@react-native-community/async-storage';
+import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
 
 class SignUpUserScreen extends React.Component {
     state = {
@@ -69,6 +64,8 @@ class SignUpUserScreen extends React.Component {
 
         policy: false,
         policyURL: privacyPolicyURL,
+        userImgUri: null,
+        vehicleImgUri: null,
     };
     static navigationOptions = {
         title: 'Регистрация',
@@ -78,11 +75,6 @@ class SignUpUserScreen extends React.Component {
             flexGrow: 1,
             alignSelf: 'center',
         },
-    };
-
-    imagesState = {
-        userImgUri: null,
-        vehicleImgUri: null,
     };
 
     // choiceModalVisible: false,
@@ -147,7 +139,11 @@ class SignUpUserScreen extends React.Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.registrationScreen}>
-                <ChoiceCameraRoll state={this.imagesState} field="userImgUri" size={200} />
+                <ChoiceCameraRoll
+                    onChange={(uri) => this.setState({ userImgUri: uri })}
+                    uri={this.state.userImgUri}
+                    size={200}
+                />
                 {/* <TouchableOpacity onPress={() => this.openCameraRoll()}>
                         <LocalImage source={this.state.pictureUri} originalWidth={909} originalHeight={465} />
                     </TouchableOpacity> */}
@@ -231,7 +227,7 @@ class SignUpUserScreen extends React.Component {
                         style={styles.input}
                         placeholder="Номер телефона"
                         placeholderTextColor="grey"
-                        onChangeText={phone => this.setState({ phone: phone.replace(/[ \(\)]/g, '') })}
+                        onChangeText={(phone) => this.setState({ phone: phone.replace(/[ \(\)]/g, '') })}
                     />
 
                     {/* [var_name]: "phone" */}
@@ -241,21 +237,21 @@ class SignUpUserScreen extends React.Component {
                         placeholder="Пароль"
                         secureTextEntry={true}
                         placeholderTextColor="grey"
-                        onChangeText={password => this.setState({ password })}
+                        onChangeText={(password) => this.setState({ password })}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder="Повторите пароль"
                         secureTextEntry={true}
                         placeholderTextColor="grey"
-                        onChangeText={repeatPassword => this.setState({ repeatPassword })}
+                        onChangeText={(repeatPassword) => this.setState({ repeatPassword })}
                     />
                     {this.checkPasswordAndRepeatPassword()}
                     <TextInput
                         style={styles.input}
                         placeholder="Имя"
                         placeholderTextColor="grey"
-                        onChangeText={firstname => this.setState({ firstname })}
+                        onChangeText={(firstname) => this.setState({ firstname })}
                     />
                     <View
                         style={{
@@ -295,7 +291,7 @@ class SignUpUserScreen extends React.Component {
                         style={styles.input}
                         placeholder="Год рождения"
                         placeholderTextColor="grey"
-                        onChangeText={birthDate => this.setState({ birthDate })}
+                        onChangeText={(birthDate) => this.setState({ birthDate })}
                     />
 
                     {!this.state.isDriver && (
@@ -304,7 +300,7 @@ class SignUpUserScreen extends React.Component {
                                 onlyNum
                                 style={styles.inputHalf}
                                 placeholder="Рост (cм)"
-                                onChangeText={height => this.setState({ height })}
+                                onChangeText={(height) => this.setState({ height })}
                                 value={this.state.height}
                             />
                             <View style={{ width: 15 }} />
@@ -312,7 +308,7 @@ class SignUpUserScreen extends React.Component {
                                 onlyNum
                                 style={styles.inputHalf}
                                 placeholder="Вес (кг)"
-                                onChangeText={weight => this.setState({ weight })}
+                                onChangeText={(weight) => this.setState({ weight })}
                                 value={this.state.weight}
                             />
                         </View>
@@ -358,37 +354,41 @@ class SignUpUserScreen extends React.Component {
                                 style={styles.input}
                                 placeholder="Гос. номер"
                                 placeholderTextColor="grey"
-                                onChangeText={veh_stateCarNumber => this.setState({ veh_stateCarNumber })}
+                                onChangeText={(veh_stateCarNumber) => this.setState({ veh_stateCarNumber })}
                             />
                             <NumericInput
                                 style={styles.input}
                                 placeholder="Грузоподъёмность (т)"
-                                onChangeText={loadCapacity => this.setState({ loadCapacity })}
+                                onChangeText={(loadCapacity) => this.setState({ loadCapacity })}
                                 value={this.state.loadCapacity}
                             />
                             <Text style={styles.descriptionTwo}>Кузов:</Text>
                             <NumericInput
                                 style={styles.input}
                                 placeholder="Длина (м)"
-                                onChangeText={length => this.setState({ length })}
+                                onChangeText={(length) => this.setState({ length })}
                                 value={this.state.length}
                             />
                             <NumericInput
                                 style={styles.input}
                                 placeholder="Ширина (м)"
-                                onChangeText={width => this.setState({ width })}
+                                onChangeText={(width) => this.setState({ width })}
                                 value={this.state.width}
                             />
                             {!this.state.isOpen && (
                                 <NumericInput
                                     style={styles.input}
                                     placeholder="Высота (м)"
-                                    onChangeText={veh_height => this.setState({ veh_height })}
+                                    onChangeText={(veh_height) => this.setState({ veh_height })}
                                     value={this.state.veh_height}
                                 />
                             )}
                             <Text style={styles.descriptionTwo}>Фото авто:</Text>
-                            <ChoiceCameraRoll state={this.imagesState} field="vehicleImgUri" size={140} />
+                            <ChoiceCameraRoll
+                                onChange={(uri) => this.setState({ vehicleImgUri: uri })}
+                                uri={this.state.vehicleImgUri}
+                                size={140}
+                            />
                         </View>
                     )}
                 </View>
@@ -419,9 +419,9 @@ class SignUpUserScreen extends React.Component {
         );
     }
 
-    isValidFields = async city => {
+    isValidFields = async (city) => {
         console.log('[SignUpUserScreen].isValidFields() this.state.bodyType', this.state.bodyType);
-        if (!this.imagesState.userImgUri)
+        if (!this.state.userImgUri)
             return 'Загрузите свое фото! (Нажмите на картинку с фотоаппаратом в самом начале окна регистрации )';
         if (this.state.phone === '') return 'Заполните номер';
         if (this.state.phone.length !== 11) return 'Ваш номер должен содержать ровно 11 символов';
@@ -441,7 +441,7 @@ class SignUpUserScreen extends React.Component {
             if (this.state.width === null || this.state.width === '') return 'Заполните ширину авто';
             if (!this.state.isOpen && (this.state.veh_height === null || this.state.veh_height === ''))
                 return 'Заполните высоту авто';
-            if (!this.imagesState.vehicleImgUri) return 'Загрузите 1 фото авто';
+            if (!this.state.vehicleImgUri) return 'Загрузите 1 фото авто';
         } else {
             if (this.state.height === '') return 'Укажите свой рост';
             if (this.state.weight === '') return 'Укажите свой вес';
@@ -454,9 +454,9 @@ class SignUpUserScreen extends React.Component {
 
     _nextScreen = async () => {
         const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
-        const error = await this.isValidFields(city);
-        if (error !== null) {
-            this.setState({ message: error });
+        const errorMessage = await this.isValidFields(city);
+        if (errorMessage !== null) {
+            this.setState({ message: errorMessage });
         } else {
             let userData = {
                 name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
@@ -548,13 +548,13 @@ class SignUpUserScreen extends React.Component {
                 //console.log(this.state.pictureUri);
 
                 data.append('user', {
-                    uri: this.imagesState.userImgUri,
+                    uri: this.state.userImgUri,
                     type: 'image/jpeg',
                     name: 'image.jpg',
                 });
-                if (this.imagesState.vehicleImgUri) {
+                if (this.state.vehicleImgUri) {
                     data.append('vehicle0', {
-                        uri: this.imagesState.vehicleImgUri,
+                        uri: this.state.vehicleImgUri,
                         type: 'image/jpeg',
                         name: 'image.jpg',
                     });
@@ -564,7 +564,6 @@ class SignUpUserScreen extends React.Component {
                 await axios.patch('/worker/upload/' + this.state.userId, data);
                 this.props.navigation.navigate('AuthLoading');
             } catch (error) {
-                debugger;
                 console.log('Download photos error: ', error);
                 console.dir(error, { depth: null });
                 if (error.response) {
@@ -583,21 +582,21 @@ class SignUpUserScreen extends React.Component {
         }
     };
 
-    openDatePicker = async () => {
-        try {
-            const { action, year, month, day } = await DatePickerAndroid.open({
-                date: new Date(),
-            });
-            if (action !== DatePickerAndroid.dismissedAction) {
-                console.log(year, month, day);
+    // openDatePicker = async () => {
+    //     try {
+    //         const { action, year, month, day } = await DatePickerAndroid.open({
+    //             date: new Date(),
+    //         });
+    //         if (action !== DatePickerAndroid.dismissedAction) {
+    //             console.log(year, month, day);
 
-                let date = new Date(year, month, day);
-                this.setState({ birthDate: date });
-            }
-        } catch ({ code, message }) {
-            console.warn('Cannot open date picker', message);
-        }
-    };
+    //             let date = new Date(year, month, day);
+    //             this.setState({ birthDate: date });
+    //         }
+    //     } catch ({ code, message }) {
+    //         console.warn('Cannot open date picker', message);
+    //     }
+    // };
 }
 
 export default SignUpUserScreen;

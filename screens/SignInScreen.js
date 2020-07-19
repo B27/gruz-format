@@ -58,7 +58,7 @@ class SignInScreen extends React.Component {
                             placeholder='Номер телефона'
                             placeholderTextColor='grey'
                             onChangeText={async phone => {
-                                await this.setState({ phone: phone.replace(/[ \(\)]/g, '') });
+                                this.setState({ phone: phone.replace(/[ \(\)]/g, '') });
                             }}
                         />
                     </View>

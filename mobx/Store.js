@@ -103,9 +103,13 @@ class ObservableStore {
             [this.city, this.street, this.house, this.flat] = response.data.address.split(' ');
             this.cityId = response.data.city;
             this.birthDate = date;
-            response.data.photos  && (this.vehicle0 = URL + response.data.photos.vehicle0);
-            response.data.photos  && (this.vehicle1 = URL + response.data.photos.vehicle1);
-            response.data.photos  && (this.vehicle2 = URL + response.data.photos.vehicle2);
+
+            if (response.data.photos) {
+                const { vehicle0, vehicle1, vehicle2 } = response.data.photos;
+                vehicle0 && (this.vehicle0 = URL + response.data.photos.vehicle0);
+                vehicle1 && (this.vehicle1 = URL + response.data.photos.vehicle1);
+                vehicle2 && (this.vehicle2 = URL + response.data.photos.vehicle2);
+            }
 
 
             this.veh_stateCarNumber = response.data.veh_stateCarNumber;
