@@ -45,7 +45,7 @@ function PhotoChoicer({ onChange, size, uri, refreshImage, containerStyle, image
     const _renderImage = useMemo(
         () => (
             <Image
-                style={imageStyle || localStyles.image}
+                style={[localStyles.image, imageStyle]}
                 source={{
                     uri: `${uri}?${refreshImage}`,
                 }}
@@ -90,6 +90,7 @@ const localStyles = StyleSheet.create({
     image: {
         flex: 1,
         alignSelf: 'stretch',
+        borderRadius: 15,
     },
     touchableOpacity: {
         flex: 1,

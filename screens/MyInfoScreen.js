@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
+import mime from 'mime/lite';
 // import * as ImagePicker from 'expo-image-picker';
 // import * as Permissions from 'expo-permissions';
 import { format } from 'date-fns';
@@ -11,7 +12,7 @@ import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
-import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
+import PhotoChoicer from './modals/ChoiceCameraRoll';
 
 @inject('store')
 @observer
@@ -101,7 +102,7 @@ class MyInfoScreen extends React.Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.registrationScreen}>
-                <ChoiceCameraRoll
+                <PhotoChoicer
                     refreshImage={this.props.store.refreshImage}
                     onChange={(uri) => this.setState({ avatar: uri })}
                     uri={this.state.avatar || this.props.store.avatar}
@@ -287,12 +288,11 @@ class MyInfoScreen extends React.Component {
 
                 if (this.state.avatar) {
                     const data = new FormData();
-                    //console.log(this.state.pictureUri);
 
                     data.append('user', {
                         uri: this.state.avatar,
-                        type: 'image/jpeg',
-                        name: 'image.jpg',
+                        type: mime.getType(this.state.avatar),
+                        name: 'imageFile',
                     });
 
                     // console.log(data);

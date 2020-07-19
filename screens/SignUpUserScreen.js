@@ -1,26 +1,15 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import axios from 'axios';
-// import * as Permissions from 'expo-permissions';
-// import * as ImagePicker from 'expo-image-picker';
+import mime from 'mime/lite';
 import React from 'react';
-import {
-    DatePickerAndroid,
-    Keyboard,
-    Linking,
-    Picker,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Keyboard, Linking, Picker, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import { privacyPolicyURL } from '../constants';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
-import ChoiceCameraRoll from './modals/ChoiceCameraRoll';
+import PhotoChoicer from './modals/ChoiceCameraRoll';
 
 class SignUpUserScreen extends React.Component {
     state = {
@@ -139,7 +128,7 @@ class SignUpUserScreen extends React.Component {
     render() {
         return (
             <ScrollView contentContainerStyle={styles.registrationScreen}>
-                <ChoiceCameraRoll
+                <PhotoChoicer
                     onChange={(uri) => this.setState({ userImgUri: uri })}
                     uri={this.state.userImgUri}
                     size={200}
@@ -384,7 +373,7 @@ class SignUpUserScreen extends React.Component {
                                 />
                             )}
                             <Text style={styles.descriptionTwo}>Фото авто:</Text>
-                            <ChoiceCameraRoll
+                            <PhotoChoicer
                                 onChange={(uri) => this.setState({ vehicleImgUri: uri })}
                                 uri={this.state.vehicleImgUri}
                                 size={140}
@@ -549,13 +538,13 @@ class SignUpUserScreen extends React.Component {
 
                 data.append('user', {
                     uri: this.state.userImgUri,
-                    type: 'image/jpeg',
+                    type: mime.getType(this.state.userImgUri),
                     name: 'image.jpg',
                 });
                 if (this.state.vehicleImgUri) {
                     data.append('vehicle0', {
                         uri: this.state.vehicleImgUri,
-                        type: 'image/jpeg',
+                        type: mime.getType(this.state.vehicleImgUri),
                         name: 'image.jpg',
                     });
                 }

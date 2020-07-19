@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import mime from 'mime/lite';
 // import * as ImagePicker from 'expo-image-picker';
 // import * as Permissions from 'expo-permissions';
 import { inject, observer } from 'mobx-react/native';
 import { Picker } from 'native-base';
 import React from 'react';
-import { Keyboard, ScrollView, Text, TextInput, View } from 'react-native';
-import ImageChooser from '../components/ImageChooser';
+import { Keyboard, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
@@ -135,21 +135,26 @@ class MyAutoScreen extends React.Component {
             console.log(res.data);
             const data = new FormData();
 
-            data.append('vehicle0', {
-                uri: this.state.vehicle0,
-                type: 'image/jpeg',
-                name: 'image.jpg',
-            });
-            data.append('vehicle1', {
-                uri: this.state.vehicle1,
-                type: 'image/jpeg',
-                name: 'image.jpg',
-            });
-            data.append('vehicle2', {
-                uri: this.state.vehicle2,
-                type: 'image/jpeg',
-                name: 'image.jpg',
-            });
+            this.state.vehicle0 &&
+                data.append('vehicle0', {
+                    uri: this.state.vehicle0,
+                    type: mime.getType(this.state.vehicle0),
+                    name: 'image.jpg',
+                });
+
+            this.state.vehicle1 &&
+                data.append('vehicle1', {
+                    uri: this.state.vehicle1,
+                    type: mime.getType(this.state.vehicle1),
+                    name: 'image.jpg',
+                });
+
+            this.state.vehicle2 &&
+                data.append('vehicle2', {
+                    uri: this.state.vehicle2,
+                    type: mime.getType(this.state.vehicle2),
+                    name: 'image.jpg',
+                });
             //ImageCacheManager.clearCache();
 
             console.log(data);
@@ -168,16 +173,8 @@ class MyAutoScreen extends React.Component {
         return (
             <View>
                 {!this.state.isDriver ? (
-                    <View
-                        style={{
-                            width: '90%',
-                            height: '100%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            alignSelf: 'center',
-                        }}
-                    >
-                        <Text style={{ textAlign: 'center', fontSize: 16 }}>
+                    <View style={localStyles.notDriverContainer}>
+                        <Text style={localStyles.notDriverText}>
                             Вы не являетесь водителем. Для того, чтобы изменять данные об автомобиле, измените
                             специальность на экране "Моя информация" с "Грузчика" на "Водителя"
                         </Text>
@@ -186,16 +183,7 @@ class MyAutoScreen extends React.Component {
                     <ScrollView contentContainerStyle={styles.registrationScreen}>
                         <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
                         <View style={styles.inputContainer}>
-                            <View
-                                style={{
-                                    height: 45,
-                                    borderWidth: 1,
-                                    borderRadius: 15,
-                                    paddingLeft: 5,
-                                    marginBottom: 15,
-                                    justifyContent: 'center',
-                                }}
-                            >
+                            <View style={localStyles.dropdown}>
                                 <Picker
                                     selectedValue={this.state.veh_frameType}
                                     onValueChange={(itemValue, itemIndex) => {
@@ -259,7 +247,7 @@ class MyAutoScreen extends React.Component {
                                     <PhotoChoicer
                                         key={`choicer${num}`}
                                         size={100}
-                                        imageStyle={{ width: 100, height: 100 }}
+                                        imageStyle={localStyles.photoChoicer}
                                         uri={this.state[`vehicle${num}`] || this.props.store[`vehicle${num}`]}
                                         refreshImage={this.props.store.refreshImage}
                                         onChange={(uri) => this.setState({ [`vehicle${num}`]: uri })}
@@ -277,5 +265,25 @@ class MyAutoScreen extends React.Component {
         );
     }
 }
+
+const localStyles = StyleSheet.create({
+    photoChoicer: { flex: 0, width: 100, height: 100 },
+    dropdown: {
+        height: 45,
+        borderWidth: 1,
+        borderRadius: 15,
+        paddingLeft: 5,
+        marginBottom: 15,
+        justifyContent: 'center',
+    },
+    notDriverContainer: {
+        width: '90%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+    },
+    notDriverText: { textAlign: 'center', fontSize: 16 },
+});
 
 export default MyAutoScreen;
