@@ -15,7 +15,8 @@ class BalanceScreen extends React.Component {
     };
 
     static navigationOptions = {
-        title: 'Пополнить баланс'
+        title: 'Пополнить баланс',
+        headerTintColor: 'black',
     };
 
     componentDidMount() {

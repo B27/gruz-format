@@ -1,15 +1,16 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import mime from 'mime/lite';
 // import * as ImagePicker from 'expo-image-picker';
 // import * as Permissions from 'expo-permissions';
 import { format } from 'date-fns';
+import mime from 'mime/lite';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { Keyboard, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
+import PickerSelect from '../components/PickerSelect';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
@@ -72,9 +73,7 @@ class MyInfoScreen extends React.Component {
                 // TODO добавить вывод ошибки пользователю
                 console.log('Ошибка при получении новых данных, проверьте подключение к сети');
                 if (error.response) {
-                    showAlert('Ошибка', 'Ошибка при обновлении данных\n' + error.response.data.message, {
-                        okFn: undefined,
-                    });
+                    showAlert('Ошибка', 'Ошибка при обновлении данных\n' + error.response.data.message);
                 } else {
                     showAlert('Ошибка', 'Ошибка при обновлении данных', error.toString(), { okFn: undefined });
                 }
@@ -156,25 +155,36 @@ class MyInfoScreen extends React.Component {
                         value={this.state.firstName}
                     />
 
-                    <View style={localStyles.cityPicker}>
-                        <Picker
-                            selectedValue={this.state.cityId}
-                            onValueChange={async (itemValue, itemIndex) =>
-                                this.setState({
-                                    cityId: itemValue,
-                                })
-                            }
-                            placeholder="Город"
-                        >
-                            {this.state.cities.map(({ name: city, id: id }, index) => {
-                                //console.log(city, id);
-
-                                return (
-                                    <Picker.Item color={!index ? 'grey' : 'black'} key={city} label={city} value={id} />
-                                );
-                            })}
-                        </Picker>
-                    </View>
+                    <PickerSelect
+                        style={{
+                            inputIOS: {
+                                height: 45,
+                                borderWidth: 1,
+                                borderRadius: 15,
+                                paddingLeft: 16,
+                                marginBottom: 15,
+                                fontSize: 16,
+                                justifyContent: 'center',
+                            },
+                            placeholder: {
+                                color: 'grey',
+                            },
+                        }}
+                        value={this.state.cityId}
+                        onValueChange={(itemValue, itemIndex) =>
+                            this.setState({
+                                cityId: itemValue,
+                            })
+                        }
+                        doneText="Готово"
+                        placeholder={{ label: 'Город', value: null }}
+                        useNativeAndroidPickerStyle={false}
+                        items={this.state.cities.map(({ name: city, id: id }) => ({
+                            label: city,
+                            value: id,
+                            key: id,
+                        }))}
+                    />
                     <TextInput
                         style={styles.input}
                         placeholder="Улица"
@@ -297,7 +307,7 @@ class MyInfoScreen extends React.Component {
 
                     // console.log(data);
 
-                    await axios.patch('/worker/upload/' + id, data);
+                    await axios.patch('/worker/upload/' + id, data, { timeout: 10000 });
 
                     await this.props.store.refreshImages();
                 }

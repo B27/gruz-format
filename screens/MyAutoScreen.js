@@ -4,11 +4,12 @@ import mime from 'mime/lite';
 // import * as ImagePicker from 'expo-image-picker';
 // import * as Permissions from 'expo-permissions';
 import { inject, observer } from 'mobx-react/native';
-import { Picker } from 'native-base';
 import React from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
+import PickerSelect from '../components/PickerSelect';
+import showAlert from '../utils/showAlert';
 import styles from '../styles';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
 
@@ -20,11 +21,11 @@ class MyAutoScreen extends React.Component {
         imageNum: null,
         isOpen: null,
         types: [
-            { name: 'Тип кузова', isOpen: null },
             { name: 'Рефрижератор (крытый)', isOpen: false },
             { name: 'Термобудка (крытый)', isOpen: false },
             { name: 'Кран. борт', isOpen: true },
             { name: 'Тент (крытый)', isOpen: false },
+            { name: 'Будка (крытый)', isOpen: false },
             { name: 'Открытый борт', isOpen: true },
         ],
         veh_stateCarNumber: '',
@@ -32,6 +33,8 @@ class MyAutoScreen extends React.Component {
         vehicle0: null,
         vehicle1: null,
         vehicle2: null,
+        veh_frameType: null,
+        veh_is_open: null,
     };
 
     static navigationOptions = {
@@ -71,37 +74,6 @@ class MyAutoScreen extends React.Component {
         }
     }
 
-    _openModalImage = (num) => () => {
-        this.setState({
-            choiceModalVisible: true,
-            imageNum: num,
-        });
-    };
-
-    _pickFromCamera = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        if (status === 'granted') {
-            this.setState({ choiceModalVisible: false });
-            const { cancelled, uri } = await ImagePicker.launchCameraAsync({
-                mediaTypes: 'Images',
-                quality: 0.3,
-            });
-            if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
-        }
-    };
-
-    _selectPicture = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (status === 'granted') {
-            this.setState({ choiceModalVisible: false });
-            const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: 'Images',
-                quality: 0.3,
-            });
-            if (!cancelled) this.setState({ [`vehicle${this.state.imageNum}`]: uri });
-        }
-    };
-
     _nextScreen = async () => {
         if (
             !this.state.vehicle0 ||
@@ -115,7 +87,7 @@ class MyAutoScreen extends React.Component {
             this.state.veh_height === null ||
             !this.state.veh_stateCarNumber
         ) {
-            this.setState({ message: 'Все поля должны быть заполнены', colorMessage: 'red' });
+            showAlert('Ошибка', 'Все поля должны быть заполнены');
             return;
         }
 
@@ -183,30 +155,37 @@ class MyAutoScreen extends React.Component {
                     <ScrollView contentContainerStyle={styles.registrationScreen}>
                         <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
                         <View style={styles.inputContainer}>
-                            <View style={localStyles.dropdown}>
-                                <Picker
-                                    selectedValue={this.state.veh_frameType}
-                                    onValueChange={(itemValue, itemIndex) => {
-                                        this.setState({
-                                            veh_frameType: itemValue,
-                                            veh_is_open: this.state.types[itemIndex].isOpen,
-                                        });
-                                        console.log(itemValue, this.state.types[itemIndex].isOpen);
-                                    }}
-                                    placeholder="Тип кузова"
-                                >
-                                    {this.state.types.map(({ name }, index) => {
-                                        return (
-                                            <Picker.Item
-                                                color={!index ? 'grey' : 'black'}
-                                                key={name}
-                                                label={name}
-                                                value={name}
-                                            />
-                                        );
-                                    })}
-                                </Picker>
-                            </View>
+                            <PickerSelect
+                                style={{
+                                    inputIOS: {
+                                        height: 45,
+                                        borderWidth: 1,
+                                        borderRadius: 15,
+                                        paddingLeft: 16,
+                                        marginBottom: 15,
+                                        fontSize: 16,
+                                        justifyContent: 'center',
+                                    },
+                                    placeholder: {
+                                        color: 'grey',
+                                    },
+                                }}
+                                value={this.state.veh_frameType}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    this.setState({
+                                        veh_frameType: itemValue,
+                                        veh_is_open: this.state.types[itemIndex - 1].isOpen,
+                                    });
+                                }}
+                                doneText="Готово"
+                                placeholder={{ label: 'Тип кузова', value: null }}
+                                useNativeAndroidPickerStyle={false}
+                                items={this.state.types.map(({ name }) => ({
+                                    label: name,
+                                    value: name,
+                                    key: name,
+                                }))}
+                            />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Гос. номер"
@@ -268,14 +247,6 @@ class MyAutoScreen extends React.Component {
 
 const localStyles = StyleSheet.create({
     photoChoicer: { flex: 0, width: 100, height: 100 },
-    dropdown: {
-        height: 45,
-        borderWidth: 1,
-        borderRadius: 15,
-        paddingLeft: 5,
-        marginBottom: 15,
-        justifyContent: 'center',
-    },
     notDriverContainer: {
         width: '90%',
         height: '100%',

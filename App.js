@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {Provider} from 'mobx-react/native';
+import { Provider } from 'mobx-react/native';
 import React from 'react';
-import {View, NativeModules} from 'react-native';
+import { View, NativeModules, Platform } from 'react-native';
 import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
-import NotificationListener, {setPendingNotificationParams} from './utils/NotificationListener';
+import NotificationListener, { setPendingNotificationParams } from './utils/NotificationListener';
 import UniversalEventEmitter from './utils/UniversalEventEmitter';
-import {URL} from './constants';
+import { URL } from './constants';
 
 axios.defaults.baseURL = URL; /* 'http://192.168.1.4:3008'; */
 const TAG = '~App.js~';
@@ -15,10 +15,15 @@ export default class App extends React.Component {
     componentDidMount() {
         if (!this.onMessageReceivedListener) {
             console.log(TAG, 'add new NotificationListener');
-            this.onMessageReceivedListener = UniversalEventEmitter.addListener(
-                'onMessageReceived',
-                NotificationListener,
-            );
+            Platform.select({
+                android: () => {
+                    this.onMessageReceivedListener = UniversalEventEmitter.addListener(
+                        'onMessageReceived',
+                        NotificationListener,
+                    );
+                },
+                ios: () => {},
+            })();
         }
 
         const initType = this.props.type;
@@ -47,7 +52,7 @@ export default class App extends React.Component {
     render() {
         return (
             <Provider store={Store}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                     <AppContainer />
                 </View>
             </Provider>

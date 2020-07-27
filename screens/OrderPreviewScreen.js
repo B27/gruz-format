@@ -1,6 +1,6 @@
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { ScrollView, Text, View, Alert, NativeModules } from 'react-native';
+import { ScrollView, SafeAreaView, Text, View, Alert, NativeModules, Platform } from 'react-native';
 import ExpandCardBase from '../components/ExpandCardBase';
 import LoadingButton from '../components/LoadingButton';
 import OrderCard from '../components/OrderCard';
@@ -12,7 +12,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 @inject('store')
 class OrderPreview extends React.Component {
     static navigationOptions = {
-        title: 'Заказ'
+        title: 'Заказ',
+        headerTintColor: 'black',
     };
 
     _acceptOrder = async () => {
@@ -30,7 +31,12 @@ class OrderPreview extends React.Component {
 
         try {
             await store.startFulfillingOrder(order._id);
-            await NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'), "В работе")
+            await Platform.select({
+                android: async () => {
+                    await NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'), "В работе")
+                },
+                ios: async () => {},
+            })();
             navigation.navigate('OrderDetail');
             console.log('Accept order successful');
         } catch (error) {
@@ -101,13 +107,13 @@ class OrderPreview extends React.Component {
                         cardStyle={styles.cardMargins}
                     />
                 </ScrollView>
-                <View style={styles.absoluteButtonContainer}>
+                <SafeAreaView style={styles.absoluteButtonContainer}>
                     <View style={styles.buttonContainerAlone}>
                         <LoadingButton blackText style={styles.buttonConfirmAlone} onPress={this._acceptOrder}>
                             ПРИНЯТЬ
                         </LoadingButton>
                     </View>
-                </View>
+                </SafeAreaView>
             </Fragment>
         );
     }

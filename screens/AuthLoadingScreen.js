@@ -29,13 +29,18 @@ class AuthLoadingScreen extends React.Component {
 
         this.setState({ error: '' });
 
-        const locationPermissionResult = await Permissons.askLocation();
-        console.log('locations permission result', locationPermissionResult);
+        await Platform.select({
+            android: async () => {
+                const locationPermissionResult = await Permissons.askLocation();
+                console.log('locations permission result', locationPermissionResult);
 
-        if (locationPermissionResult !== RESULTS.GRANTED) {
-            Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');
-            return;
-        }
+                if (locationPermissionResult !== RESULTS.GRANTED) {
+                    Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');
+                    return;
+                }
+            },
+            ios: async () => {},
+        })();
         prepareNotificationListener(navigation);
 
         const userToken = await AsyncStorage.getItem('token');
@@ -50,8 +55,13 @@ class AuthLoadingScreen extends React.Component {
             axios.defaults.headers = {
                 Authorization: 'Bearer ' + userToken,
             };
-            NativeModules.WorkManager.stopWorkManager();
-            NativeModules.WorkManager.startWorkManager(userToken);
+            Platform.select({
+                android: () => {
+                    NativeModules.WorkManager.stopWorkManager();
+                    NativeModules.WorkManager.startWorkManager(userToken);
+                },
+                ios: () => {},
+            })();
             try {
                 await store.getUserInfo();
                 registerForPushNotificationsAsync(store.hasPushToken);
@@ -65,11 +75,16 @@ class AuthLoadingScreen extends React.Component {
 
                     let sumEntered = true;
                     // проверка на то, указал ли пользователь полученную сумму
-                    if (!workersData.find(wrkr => wrkr.id._id == userId).sum) {
+                    if (!workersData.find((wrkr) => wrkr.id._id == userId).sum) {
                         sumEntered = false;
                     }
-                    NativeModules.ForegroundTaskModule.stopService();
-                    NativeModules.ForegroundTaskModule.startService(userToken, 'В работе');
+                    Platform.select({
+                        android: () => {
+                            NativeModules.ForegroundTaskModule.stopService();
+                            NativeModules.ForegroundTaskModule.startService(userToken, 'В работе');
+                        },
+                        ios: () => {},
+                    })();
                     if (store.order.status === 'ended' && sumEntered) {
                         screenNeedToGo = 'WaitCompleteOrder';
                     } else {
@@ -101,7 +116,12 @@ class AuthLoadingScreen extends React.Component {
         try {
             await NativeModules.RNFirebasePushToken.deleteInstanceId();
             await AsyncStorage.clear();
-            await NativeModules.ForegroundTaskModule.stopService();
+            await Platform.select({
+                android: async () => {
+                    await NativeModules.ForegroundTaskModule.stopService();
+                },
+                ios: async () => {},
+            })();
             this.props.navigation.navigate('SignIn');
         } catch (error) {
             this.setState({ error: error.toString() });
@@ -128,7 +148,7 @@ class AuthLoadingScreen extends React.Component {
                         </LoadingButton>
                     </Fragment>
                 ) : (
-                    <ActivityIndicator size={60} color="#FFC234" />
+                    <ActivityIndicator size={Platform.OS === 'android' ? 60 : 'large'} color="#FFC234" />
                 )}
             </View>
         );

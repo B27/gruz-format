@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Linking, Image } from 'react-native';
-import { DrawerItems, SafeAreaView } from 'react-navigation';
+import { View, Text, TouchableOpacity, Linking, Image, SafeAreaView } from 'react-native';
+import { DrawerItems } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../styles';
 import { privacyPolicyURL } from '../constants';
@@ -12,94 +12,99 @@ import { inject, observer } from 'mobx-react/native';
 @inject('store')
 @observer
 class CustomDrawerContentComponent extends React.Component {
-	constructor(props) {
-		super(props);
-	}
+    constructor(props) {
+        super(props);
+    }
 
-	state = {
-		workingStatus: false,
-		userName: 'Иванов И.И.'
-	};
+    state = {
+        workingStatus: false,
+        userName: 'Иванов И.И.',
+    };
 
-	// _onChangeSwitchValue = () => {
-	// 	this.props.store.setOnWork(!this.props.store.onWork);
-	// };
+    // _onChangeSwitchValue = () => {
+    // 	this.props.store.setOnWork(!this.props.store.onWork);
+    // };
 
-	_licenseAgreementPress = () => {
-		Linking.openURL(privacyPolicyURL);
-	};
+    _licenseAgreementPress = () => {
+        Linking.openURL(privacyPolicyURL);
+    };
 
-	_userContainerPress = () => {
-		this.props.navigation.navigate('Main');
-		this.props.navigation.closeDrawer();
-	};
+    _userContainerPress = () => {
+        this.props.navigation.navigate('Main');
+        this.props.navigation.closeDrawer();
+    };
 
-	_balancePress = () => {
-		this.props.navigation.navigate('Balance');
-		this.props.navigation.closeDrawer();
-	};
-	showName = () => {
-	//	console.log('avatar' + this.props.store.avatar);
-		let str = ''
-		if(this.props.store.lastName.length >= 1 &&
-			this.props.store.firstName.length >= 1 &&
-			this.props.store.patronymic.length >= 1){
-			str = `${this.props.store.firstName[0]}. ${this.props.store.patronymic[0]}. ${this.props.store.lastName}`
-		} else if(this.props.store.firstName.length >= 1){
-			str = this.props.store.firstName
-		} else {
-			str = 'Неизвестный'
-		}
+    _balancePress = () => {
+        this.props.navigation.navigate('Balance');
+        this.props.navigation.closeDrawer();
+    };
+    showName = () => {
+        //	console.log('avatar' + this.props.store.avatar);
+        let str = '';
+        if (
+            this.props.store.lastName.length >= 1 &&
+            this.props.store.firstName.length >= 1 &&
+            this.props.store.patronymic.length >= 1
+        ) {
+            str = `${this.props.store.firstName[0]}. ${this.props.store.patronymic[0]}. ${this.props.store.lastName}`;
+        } else if (this.props.store.firstName.length >= 1) {
+            str = this.props.store.firstName;
+        } else {
+            str = 'Неизвестный';
+        }
 
-
-		/*const arr = this.props.store.name.split(' ');
+        /*const arr = this.props.store.name.split(' ');
 		let str = '';
 		str += arr[0];
 		for (let i = 1; i < arr.length; i++) {
-			str += ` ${arr[i][0]}.`;
-		}*/
-		return str;
-	};
+            str += ` ${arr[i][0]}.`;
+            
+        }*/
+        return str;
+    };
 
-	render() {
-		return (
-			<View style={{ flex: 1 }}>
-				<SafeAreaView
-					style={{ flex: 1, justifyContent: 'space-between' }}
-					forceInset={{ top: 'never', horizontal: 'never' }}
-				>
-					<View>
-						<TouchableOpacity style={styles.drawerUserContainer} onPress={this._userContainerPress}>
-							{this.props.store.avatar === '' ? (
-								<Icon name='user-circle-o' size={64} />
-							) : (
-								<View>
-									<Image style={{ width: 64, height: 64, borderRadius: 45 }} source={{ uri: this.props.store.avatar + '?' + this.props.store.refreshImage }} />
-								</View>
-							)}
+    render() {
+        return (
+            <View style={{ flex: 1 }}>
+                <SafeAreaView
+                    style={{ backgroundColor: '#FFC234' }}
+                    // forceInset={{ top: 'always', horizontal: 'never' }}
+                >
+                    <TouchableOpacity style={styles.drawerUserContainer} onPress={this._userContainerPress}>
+                        {this.props.store.avatar === '' ? (
+                            <Icon name="user-circle-o" size={64} />
+                        ) : (
+                            <View>
+                                <Image
+                                    style={{ width: 64, height: 64, borderRadius: 45 }}
+                                    source={{ uri: this.props.store.avatar + '?' + this.props.store.refreshImage }}
+                                />
+                            </View>
+                        )}
 
-							<Text style={styles.drawerUserName}>{this.showName()}</Text>
-						</TouchableOpacity>
-						{/* <View style={styles.drawerTopItem}>
+                        <Text style={styles.drawerUserName}>{this.showName()}</Text>
+                    </TouchableOpacity>
+                </SafeAreaView>
+                <View>
+                    {/* <View style={styles.drawerTopItem}>
 							<Text style={styles.drawerFontTopItem}>Работаю</Text>
 							<View>
 								<SwitchToggle switchOn={this.props.store.onWork} onPress={this._onChangeSwitchValue} />
 							</View>
 						</View> */}
-						<TouchableOpacity style={styles.drawerTopItem} onPress={this._balancePress}>
-							<Text style={styles.drawerFontTopItem}>Баланс</Text>
+                    <TouchableOpacity style={styles.drawerTopItem} onPress={this._balancePress}>
+                        <Text style={styles.drawerFontTopItem}>Баланс</Text>
 
-							<Text style={styles.drawerFontTopItem}>{`${this.props.store.balance} руб.`}</Text>
-						</TouchableOpacity>
-						<DrawerItems {...this.props} />
-					</View>
-					<Text style={styles.drawerLicenseAgreement} onPress={this._licenseAgreementPress}>
-						Сублицензионное соглашение
-					</Text>
-				</SafeAreaView>
-			</View>
-		);
-	}
+                        <Text style={styles.drawerFontTopItem}>{`${this.props.store.balance} руб.`}</Text>
+                    </TouchableOpacity>
+                    <DrawerItems {...this.props} />
+                </View>
+                <Text style={styles.drawerLicenseAgreement} onPress={this._licenseAgreementPress}>
+                    Сублицензионное соглашение
+                </Text>
+            </View>
+        );
+    }
 }
 
 export default CustomDrawerContentComponent;

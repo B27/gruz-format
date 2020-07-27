@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View, NativeModules } from 'react-native';
+import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View, NativeModules, Platform } from 'react-native';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
 import LoadingButton from '../components/LoadingButton';
@@ -8,8 +8,9 @@ import NumericInput from '../components/NumericInput';
 import StarRating from '../components/StarRating';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
-import {values} from "mobx";
-import AsyncStorage from "@react-native-community/async-storage";
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { values } from 'mobx';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const TAG = '~OrderCompleteScreen.js~';
 @inject('store')
@@ -19,41 +20,43 @@ class OrderCompleteScreen extends React.Component {
         sumText: '',
         sumTextForThirdPartyWorkers: [],
         buttonDisabled: false,
-        message: false
+        message: false,
     };
 
     static navigationOptions = {
-        title: 'Завершение заказа'
+        title: 'Завершение заказа',
+        headerTintColor: 'black',
     };
 
     starsSet = new Set(); // id пользователей для которых не стоит оценка
-    requestData = { sum: null, data: [], thirdPartyWorkers:[] }; // данные для отправки на сервер
+    requestData = { sum: null, data: [], thirdPartyWorkers: [] }; // данные для отправки на сервер
     timeoutsSet = new Set();
 
     componentDidMount() {
         const { workers: workersObservable, dispatcher, userId, myThirdPartyWorkers } = this.props.store;
-        const sumTextForThirdPartyWorkers = []
-        myThirdPartyWorkers.forEach(values => {
-            sumTextForThirdPartyWorkers.push('')
-        })
-        this.setState({sumTextForThirdPartyWorkers})
+        const sumTextForThirdPartyWorkers = [];
+        myThirdPartyWorkers.forEach((values) => {
+            sumTextForThirdPartyWorkers.push('');
+        });
+        this.setState({ sumTextForThirdPartyWorkers });
 
-
-        const workers = workersObservable.slice().filter(worker => (worker.id != userId))
-        console.log('[OrderCompleteScreen].componentDidMount() workers', workers)
+        const workers = workersObservable.slice().filter((worker) => worker.id != userId);
+        console.log('[OrderCompleteScreen].componentDidMount() workers', workers);
 
         this.starsSet.add(dispatcher._id);
 
-        workers.forEach(worker => {
-
-
-
-            console.log('[OrderCompleteScreen].() worker', worker.invitedByWorker, 'userId', userId, worker.invitedByWorker == userId)
-            if(worker.invitedByWorker != userId) this.starsSet.add(worker.id);
-
+        workers.forEach((worker) => {
+            console.log(
+                '[OrderCompleteScreen].() worker',
+                worker.invitedByWorker,
+                'userId',
+                userId,
+                worker.invitedByWorker == userId,
+            );
+            if (worker.invitedByWorker != userId) this.starsSet.add(worker.id);
         });
 
-        console.log('[OrderCompleteScreen].componentDidMount() this.starsSet', this.starsSet)
+        console.log('[OrderCompleteScreen].componentDidMount() this.starsSet', this.starsSet);
     }
 
     componentWillUnmount() {
@@ -70,7 +73,7 @@ class OrderCompleteScreen extends React.Component {
         if (this.starsSet.delete(workerId)) {
             this.requestData.data = [...data, workerRating];
         } else {
-            this.requestData.data = data.map(wrkRtng => {
+            this.requestData.data = data.map((wrkRtng) => {
                 console.log(wrkRtng.worker_id == workerId);
                 return wrkRtng.worker_id == workerId ? workerRating : wrkRtng;
             });
@@ -81,99 +84,107 @@ class OrderCompleteScreen extends React.Component {
         console.log('request data _onChangeStarRating:', this.requestData);
     };
 
-    _onChangeSum = text => {
+    _onChangeSum = (text) => {
         this.setState({ sumText: text });
     };
 
-    _onChangeThirdPartySum = (index) => text => {
-        this.setState(prevState => {
-                const updatableState = {
-                    ...prevState
-                }
-                updatableState.sumTextForThirdPartyWorkers[index] = text
-                return {
-                    ...updatableState
-                }
-            }
-        )
+    _onChangeThirdPartySum = (index) => (text) => {
+        this.setState((prevState) => {
+            const updatableState = {
+                ...prevState,
+            };
+            updatableState.sumTextForThirdPartyWorkers[index] = text;
+            return {
+                ...updatableState,
+            };
+        });
     };
 
     _cancelPress = () => {
         this.props.navigation.goBack();
     };
 
-    checkFields(){
-
-        if (this.starsSet.size) {return 'Оцените всех участников заказа'; }
-        if (!this.state.sumText) {return 'Укажите полученную вами сумму'; }
-        if (this.state.sumText === '') {return 'Укажите полученную вами сумму'; }
-
-        for (let i = 0 ; i < this.state.sumTextForThirdPartyWorkers.length ; i++){
-            if (!this.state.sumTextForThirdPartyWorkers[i]) {return 'Укажите полученную вашим '+(i+1)+' грузчиком сумму в рублях'; }
-            if (this.state.sumTextForThirdPartyWorkers[i] === '') {return 'Укажите полученную вашим '+(i+1)+' грузчиком сумму в рублях'; }
+    checkFields() {
+        if (this.starsSet.size) {
+            return 'Оцените всех участников заказа';
+        }
+        if (!this.state.sumText) {
+            return 'Укажите полученную вами сумму';
+        }
+        if (this.state.sumText === '') {
+            return 'Укажите полученную вами сумму';
         }
 
-        return null
+        for (let i = 0; i < this.state.sumTextForThirdPartyWorkers.length; i++) {
+            if (!this.state.sumTextForThirdPartyWorkers[i]) {
+                return 'Укажите полученную вашим ' + (i + 1) + ' грузчиком сумму в рублях';
+            }
+            if (this.state.sumTextForThirdPartyWorkers[i] === '') {
+                return 'Укажите полученную вашим ' + (i + 1) + ' грузчиком сумму в рублях';
+            }
+        }
+
+        return null;
     }
 
-
-
-
     _confirmPress = async () => {
-
-
-
-        const error = this.checkFields()
-        if(error) {
+        const error = this.checkFields();
+        if (error) {
             this._showErrorMessage(error);
             console.log(error);
-            return
+            return;
         }
 
-        const requestData = { ...this.requestData, sum: +this.state.sumText, thirdPartyWorkers: this.state.sumTextForThirdPartyWorkers };
+        const requestData = {
+            ...this.requestData,
+            sum: +this.state.sumText,
+            thirdPartyWorkers: this.state.sumTextForThirdPartyWorkers,
+        };
 
         this.setState({
-            buttonDisabled: true
+            buttonDisabled: true,
         });
 
         try {
             await NetworkRequests.completeOrder(requestData);
-            //await NativeModules.ForegroundTaskModule.stopService();
             const userToken = await AsyncStorage.getItem('token');
-            NativeModules.WorkManager.startWorkManager(userToken);
+            Platform.select({
+                android: () => {
+                    NativeModules.WorkManager.startWorkManager(userToken);
+                },
+                ios: () => {},
+            })();
             this.props.navigation.navigate('AuthLoading');
         } catch (error) {
             this.setState({
-                buttonDisabled: false
+                buttonDisabled: false,
             });
             this._showErrorMessage(error);
             console.log(TAG, error);
         }
     };
 
-    _showErrorMessage = message => {
+    _showErrorMessage = (message) => {
         this.setState({ message: message });
         this.timeoutsSet.add(
             setTimeout(() => {
                 this.setState({ message: false });
-            }, 3000)
+            }, 3000),
         );
     };
 
-
-    renderThirdPartyTextFields(){
-
+    renderThirdPartyTextFields() {
         return this.state.sumTextForThirdPartyWorkers.map((value, index) => {
-            return <NumericInput
-                style={styles.inputSumComplete}
-                key={index}
-                placeholder={'Полученная вашим '+(index+1)+' грузчиком сумма в рублях'}
-                onChangeText={this._onChangeThirdPartySum(index)}
-                value={this.state.sumTextForThirdPartyWorkers[index]}
-            />
-        })
-
-
+            return (
+                <NumericInput
+                    style={styles.inputSumComplete}
+                    key={index}
+                    placeholder={'Полученная вашим ' + (index + 1) + ' грузчиком сумма в рублях'}
+                    onChangeText={this._onChangeThirdPartySum(index)}
+                    value={this.state.sumTextForThirdPartyWorkers[index]}
+                />
+            );
+        });
     }
 
     render() {
@@ -181,15 +192,17 @@ class OrderCompleteScreen extends React.Component {
 
         const workers = workersObservable.slice();
 
-        const driver = workers.find(worker => worker.isDriver && worker.id != userId);
-        const movers = workers.filter(worker => !worker.isDriver && worker.id != userId && worker.invitedByWorker != userId);
+        const driver = workers.find((worker) => worker.isDriver && worker.id != userId);
+        const movers = workers.filter(
+            (worker) => !worker.isDriver && worker.id != userId && worker.invitedByWorker != userId,
+        );
         return (
-            <Fragment>
+            <>
                 <ScrollView>
                     {this.state.message && <Text style={styles.errorMessage}>{this.state.message}</Text>}
                     <NumericInput
                         style={styles.inputSumComplete}
-                        placeholder='Полученная вами сумма в рублях'
+                        placeholder="Полученная вами сумма в рублях"
                         onChangeText={this._onChangeSum}
                         value={this.state.sumText}
                     />
@@ -198,7 +211,7 @@ class OrderCompleteScreen extends React.Component {
                         expandAlways
                         OpenComponent={<Text style={styles.cardExecutorH2}>Исполнители</Text>}
                         HiddenComponent={
-                            <Fragment>
+                            <>
                                 <View style={styles.cardDescription}>
                                     {dispatcher && (
                                         <View>
@@ -253,7 +266,7 @@ class OrderCompleteScreen extends React.Component {
                                             <Text style={styles.executorText}>
                                                 {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
                                             </Text>
-                                            {movers.map(mover => (
+                                            {movers.map((mover) => (
                                                 <View key={mover.id} style={styles.executorsRow}>
                                                     <View>
                                                         {mover.avatar ? (
@@ -279,13 +292,13 @@ class OrderCompleteScreen extends React.Component {
                                         </View>
                                     )}
                                 </View>
-                            </Fragment>
+                            </>
                         }
                         cardStyle={[styles.cardMargins, styles.spaceBottom]}
                     />
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
-                    <View style={styles.buttonContainer}>
+                    <SafeAreaView style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelPress}>
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
@@ -297,9 +310,10 @@ class OrderCompleteScreen extends React.Component {
                         >
                             ГОТОВО
                         </LoadingButton>
-                    </View>
+                    </SafeAreaView>
+                    <KeyboardSpacer />
                 </View>
-            </Fragment>
+            </>
         );
     }
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
         //   alignContent: "center",
         alignItems: 'center',
         padding: 18,
-        paddingTop: 40
+        // paddingTop: 40
     },
 
     plusSevenText: {
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingTop: 24,
         color: '#4D443F',
-        fontWeight: '100',
+        fontWeight: Platform.OS === "android" ? '100' : '300',
         paddingBottom: 42
         //     padding: 12
     },

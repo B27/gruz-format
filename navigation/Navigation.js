@@ -53,6 +53,14 @@ const yellowHeaderWithHamburger = ({ navigation }) => {
     });
 };
 
+const yellowHeaderWithHamburgerAndBack = ({ navigation }) => {
+    return Object.assign({}, yellowHeader, {
+        headerLeft: <MenuIcon navigationProps={navigation} />,
+        headerBackTitle: 'Назад',
+        headerLeftContainerStyle: { paddingLeft: 8 }
+    });
+}
+
 const FulfillingOrderStack = createStackNavigator(
     {
         OrderDetail: OrderDetailScreen,
@@ -72,7 +80,7 @@ const FulfillingOrderSwitch = createSwitchNavigator(
 
 const MainStack = createStackNavigator(
     {
-        Main: { screen: MainScreen, navigationOptions: yellowHeaderWithHamburger },
+        Main: { screen: MainScreen, navigationOptions: yellowHeaderWithHamburgerAndBack },
         Balance: BalanceScreen,
         Robokassa: RobokassaScreen,
         OrderPreview: OrderPreviewScreen

@@ -60,14 +60,14 @@ class SignUpDocumentsScreen extends React.Component {
                         onlyNum
                         style={styles.input}
                         placeholder="Номер паспорта"
-                        onChangeText={passportNumber => this.setState({ passportNumber })}
+                        onChangeText={(passportNumber) => this.setState({ passportNumber })}
                         value={this.state.passportNumber}
                     />
                     <NumericInput
                         onlyNum
                         style={styles.input}
                         placeholder="Серия паспорта"
-                        onChangeText={passportSeries => this.setState({ passportSeries })}
+                        onChangeText={(passportSeries) => this.setState({ passportSeries })}
                         value={this.state.passportSeries}
                     />
                     <Text>Фотография первой страницы паспорта:</Text>
@@ -139,14 +139,11 @@ class SignUpDocumentsScreen extends React.Component {
                 console.log('ERROR_LOGIN:', error);
                 if (error.response) {
                     if (error.response.data.message.indexOf('duplicate key error') !== -1) {
-                        showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован', {
-                            okFn: undefined,
-                        });
+                        showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован');
                     } else {
                         showAlert(
                             'Ошибка при отправке данных',
                             'Попробуйте сделать это позже\n' + error.response.data.message,
-                            { okFn: undefined },
                         );
                     }
                 } else {
@@ -222,11 +219,9 @@ class SignUpDocumentsScreen extends React.Component {
         } catch (err) {
             console.log('Download photos error: ', err);
             if (err.response) {
-                showAlert('Ошибка при загрузке фото', 'Попробуйте сделать это позже\n' + err.response.data.message, {
-                    okFn: undefined,
-                });
+                showAlert('Ошибка при загрузке фото', 'Попробуйте сделать это позже\n' + err.response.data.message);
             } else {
-                showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже', { okFn: undefined });
+                showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже');
             }
         }
     }
@@ -287,14 +282,11 @@ class SignUpDocumentsScreen extends React.Component {
                     console.log('ERROR_LOGIN:', error);
                     if (error.response) {
                         if (error.response.data.message.indexOf('duplicate key error') !== -1) {
-                            showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован', {
-                                okFn: undefined,
-                            });
+                            showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован');
                         } else {
                             showAlert(
                                 'Ошибка при отправке данных',
                                 'Попробуйте сделать это позже\n' + error.response.data.message,
-                                { okFn: undefined },
                             );
                         }
                     } else {

@@ -1,7 +1,7 @@
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Alert, AppState, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View, NativeModules } from 'react-native';
+import { Alert, AppState, Image, RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, View, NativeModules, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -22,7 +22,8 @@ class OrderDetailScreen extends React.Component {
     };
 
     static navigationOptions = {
-        title: 'Выполнение заказа'
+        title: 'Выполнение заказа',
+        headerBackTitle: 'Назад',
     };
 
     timeoutsSet = new Set();
@@ -105,10 +106,18 @@ class OrderDetailScreen extends React.Component {
     _cancelOrder = async () => {
         try {
             await this.props.store.cancelFulfillingOrder();
-            await NativeModules.ForegroundTaskModule.stopService();
+            await Platform.select({
+                android: async () => {
+                    await NativeModules.ForegroundTaskModule.stopService();
+                },
+                ios: async () => {},
+            })();
             this.props.navigation.navigate('Main');
         } catch (error) {
             console.log(TAG, error);
+            if (error.response) {
+                console.log('error.response', error.response);
+            }
             this._showErrorMessage(error.toString());
         }
     };
@@ -425,14 +434,14 @@ class OrderDetailScreen extends React.Component {
                     </TouchableOpacity>
                 </ScrollView>
                 <View style={styles.absoluteButtonContainer}>
-                    <View style={styles.buttonContainer}>
+                    <SafeAreaView style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelOrderPress}>
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonConfirm} onPress={this._completeOrderPress}>
                             <Text style={styles.buttonText}>ЗАВЕРШИТЬ</Text>
                         </TouchableOpacity>
-                    </View>
+                    </SafeAreaView>
                 </View>
             </Fragment>
         );
