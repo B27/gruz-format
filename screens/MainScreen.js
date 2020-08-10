@@ -26,6 +26,10 @@ class MainScreen extends React.Component {
         message: '',
     };
 
+    static navigationOptions = {
+        headerTintColor: 'black',
+    };
+
     showMessageAboutActivation = true;
 
     timeoutsSet = new Set();

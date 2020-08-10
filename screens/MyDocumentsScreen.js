@@ -4,7 +4,7 @@ import axios from 'axios';
 import mime from 'mime/lite';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { Keyboard, Linking, ScrollView, Text, View } from 'react-native';
+import { Keyboard, Linking, ScrollView, Text, View, Platform } from 'react-native';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import { privacyPolicyURL } from '../constants';
@@ -105,7 +105,7 @@ class MyDocumentsScreen extends React.Component {
                         value={this.state.policy}
                         onValueChange={() => this.setState({ policy: !this.state.policy })}
                     />
-                    <View style={{ flexDirection: 'column' }}>
+                    <View style={[{ flexDirection: 'column' }, Platform.OS === 'ios' && { marginLeft: 8 }]}>
                         <Text>Я согласен на обработку моих персональных данных</Text>
                         <Text
                             style={{ color: '#c69523' }}

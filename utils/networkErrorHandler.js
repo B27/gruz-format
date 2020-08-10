@@ -1,17 +1,19 @@
 import netInfo from '@react-native-community/netinfo';
 
-
-export default async function networkErrorHandler(TAG, error, route) {
+export default async function networkErrorHandler(TAG, error, route, keepOriginalError) {
     console.log('~networkErrorHandler~', TAG, route, error);
 
     if (error.isAxiosError) {
         if (error.response) {
+            if (keepOriginalError) {
+                throw error;
+            }
             throw `Ошибка ${error.response.status},  ${error.response.data.message}`;
         }
         if (error.message.includes('Network Error')) {
             const state = await netInfo.fetch();
             if (state.isInternetReachable) {
-                throw 'Ошибка, сервер недоступен'; 
+                throw 'Ошибка, сервер недоступен';
             } else {
                 throw 'Ошибка, проверьте подключение к сети';
             }
@@ -19,5 +21,4 @@ export default async function networkErrorHandler(TAG, error, route) {
     } else {
         throw `Внутренняя ошибка, ${error}`;
     }
-
 }

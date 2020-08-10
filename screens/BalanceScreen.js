@@ -4,6 +4,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
+import showAlert from '../utils/showAlert';
 
 @inject('store')
 @observer
@@ -11,7 +12,7 @@ class BalanceScreen extends React.Component {
     state = {
         sum: null,
         message: '',
-        sum: ''
+        sum: '',
     };
 
     static navigationOptions = {
@@ -28,7 +29,7 @@ class BalanceScreen extends React.Component {
                 } catch (error) {
                     // TODO добавить вывод ошибки пользователю
                     console.log(error);
-                    console.log('awdwadawdОшибка при получении новых данных, проверьте подключение к сети');
+                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');
                     return;
                 }
 
@@ -56,8 +57,8 @@ class BalanceScreen extends React.Component {
                     </Text>
                     <NumericInput
                         style={styles.input}
-                        placeholder='Сумма'
-                        onChangeText={sum => this.setState({ sum })}
+                        placeholder="Сумма"
+                        onChangeText={(sum) => this.setState({ sum })}
                         value={this.state.sum}
                     />
                 </View>
@@ -73,11 +74,14 @@ class BalanceScreen extends React.Component {
     }
 
     _goToRobokassa = async () => {
-        if (!this.state.sum) return this.setState({ message: "Необходимо заполнить поле 'Сумма'" });
+        if (!this.state.sum) {
+            showAlert("Необходимо заполнить поле 'Сумма'");
+            return;
+        }
 
         this.props.navigation.navigate('Robokassa', {
             sum: this.state.sum,
-            userId: await AsyncStorage.getItem('userId')
+            userId: await AsyncStorage.getItem('userId'),
         });
     };
 }

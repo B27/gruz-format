@@ -1,7 +1,19 @@
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { Alert, AppState, Image, RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, View, NativeModules, Platform } from 'react-native';
+import {
+    Alert,
+    AppState,
+    Image,
+    RefreshControl,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+    NativeModules,
+    Platform,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -10,7 +22,6 @@ import styles from '../styles';
 import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
 
-
 const TAG = '~OrderDetailScreen.js~';
 
 @inject('store')
@@ -18,7 +29,7 @@ const TAG = '~OrderDetailScreen.js~';
 class OrderDetailScreen extends React.Component {
     state = {
         message: false,
-        refreshing: false
+        refreshing: false,
     };
 
     static navigationOptions = {
@@ -77,7 +88,7 @@ class OrderDetailScreen extends React.Component {
         }
     };
 
-    _handleAppStateChange = nextAppState => {
+    _handleAppStateChange = (nextAppState) => {
         console.log(TAG, 'state changed', nextAppState);
         if (nextAppState === 'active') {
             console.log(TAG, 'App has come to the foreground!');
@@ -92,14 +103,14 @@ class OrderDetailScreen extends React.Component {
             [
                 {
                     text: 'ОТМЕНА',
-                    style: 'cancel'
+                    style: 'cancel',
                 },
                 {
                     text: 'ОК',
-                    onPress: this._cancelOrder
-                }
+                    onPress: this._cancelOrder,
+                },
             ],
-            { cancelable: true }
+            { cancelable: true },
         );
     };
 
@@ -115,10 +126,10 @@ class OrderDetailScreen extends React.Component {
             this.props.navigation.navigate('Main');
         } catch (error) {
             console.log(TAG, error);
-            if (error.response) {
-                console.log('error.response', error.response);
+            if (error.response.status === 400) {
+                showAlert(error.response.data.message);
             }
-            this._showErrorMessage(error.toString());
+            showAlert(error.message.toString());
         }
     };
 
@@ -130,38 +141,36 @@ class OrderDetailScreen extends React.Component {
         this.props.navigation.navigate('OrderChat');
     };
 
-    _AddThirdPartyWorker = async () => {
+    _addThirdPartyWorker = async () => {
         try {
             await this.props.store.addThirdPartyWorkerToOrder();
-            await this._onRefresh()
+            await this._onRefresh();
         } catch (e) {
-            console.log('[OrderDetailScreen]._AddThirdPartyWorker() e', e)
-            if(e.toString().indexOf('allowed') !== -1) {
-                showAlert('Ошибка', 'Вы не можете добавлять больше рабочих', {okFn: undefined});
-            } else if(e.toString().indexOf('anymore') !== -1) {
-                showAlert('Ошибка', 'Набрано максимум рабочих на заказе', {okFn: undefined});
-            } else if(e.toString().indexOf('need loaders') !== -1) {
-                showAlert('Ошибка', 'В заказе рабочие не нужны', {okFn: undefined});
+            console.log('[OrderDetailScreen]._AddThirdPartyWorker() e', e);
+            if (e.toString().indexOf('allowed') !== -1) {
+                showAlert('Ошибка', 'Вы не можете добавлять больше рабочих', { okFn: undefined });
+            } else if (e.toString().indexOf('anymore') !== -1) {
+                showAlert('Ошибка', 'Набрано максимум рабочих на заказе', { okFn: undefined });
+            } else if (e.toString().indexOf('need loaders') !== -1) {
+                showAlert('Ошибка', 'В заказе рабочие не нужны', { okFn: undefined });
             } else {
                 showAlert('Ошибка при добавлении', e, { okFn: undefined });
             }
-
         }
-    }
+    };
 
     _DeleteThirdPartyWorker = async () => {
         try {
-           await this.props.store.deleteThirdPartyWorkerToOrder();
-           this._onRefresh()
+            await this.props.store.deleteThirdPartyWorkerToOrder();
+            this._onRefresh();
         } catch (e) {
-            
-            if(e.response){
+            if (e.response) {
                 showAlert('Ошибка при удалении', e.response.data.message, { okFn: undefined });
             } else {
                 showAlert('Ошибка при удалении', e, { okFn: undefined });
             }
         }
-    }
+    };
 
     _checkOrderChanges = () => {
         console.log(TAG, 'check order changes');
@@ -181,7 +190,7 @@ class OrderDetailScreen extends React.Component {
             return;
         }
 
-        if (!workers.filter(worker => worker.id == userId).length) {
+        if (!workers.filter((worker) => worker.id == userId).length) {
             console.log(TAG, 'user not in order');
             showAlert('Исключение из заказа', 'Вы были исключены из заказа', { okFn: undefined });
             this.props.navigation.navigate('AuthLoading');
@@ -189,54 +198,49 @@ class OrderDetailScreen extends React.Component {
         }
     };
 
-    _showErrorMessage = message => {
+    _showErrorMessage = (message) => {
         this.setState({ message: message });
         this.timeoutsSet.add(
             setTimeout(() => {
                 this.setState({ message: false });
-            }, 3000)
+            }, 3000),
         );
     };
 
-    renderWorkerInfo(workers, name, canDelete){
-        
-        if(!workers) return null
-        if(workers.length == 0) return null
+    renderWorkerInfo(workers, name, canDelete) {
+        if (!workers) return null;
+        if (workers.length == 0) return null;
 
-        return <View>
-            <Text style={styles.executorText}>
-                {name}
-            </Text>
-            {workers.map(worker => (
-                <View key={worker.id} style={styles.executorsRow}>
-                    <View>
-                        {worker.avatar ? (
-                            <Image
-                                style={styles.executorImage}
-                                source={{ uri: worker.avatar }}
-                            />
-                        ) : (
-                            <IconCam
-                                name={'camera'}
-                                color={'#FFC234'}
-                                size={50}
-                                style={styles.orderIcon}
-                            />
+        return (
+            <View>
+                <Text style={styles.executorText}>{name}</Text>
+                {workers.map((worker) => (
+                    <View key={worker.id} style={styles.executorsRow}>
+                        <View>
+                            {worker.avatar ? (
+                                <Image style={styles.executorImage} source={{ uri: worker.avatar }} />
+                            ) : (
+                                <IconCam name={'camera'} color={'#FFC234'} size={50} style={styles.orderIcon} />
+                            )}
+                        </View>
+                        <View>
+                            <Text>{worker.name}</Text>
+                            <Text>{worker.phoneNum}</Text>
+                        </View>
+                        {canDelete && (
+                            <View>
+                                <TouchableOpacity
+                                    style={styles.buttonDeleteWorker}
+                                    onPress={this._DeleteThirdPartyWorker}
+                                >
+                                    <Text style={styles.buttonText}>X</Text>
+                                </TouchableOpacity>
+                            </View>
                         )}
                     </View>
-                    <View>
-                        <Text>{worker.name}</Text>
-                        <Text>{worker.phoneNum}</Text>
-                    </View>
-                    {canDelete && <View>
-                        <TouchableOpacity style={styles.buttonDeleteWorker} onPress={this._DeleteThirdPartyWorker}>
-                            <Text style={styles.buttonText}>X</Text>
-                        </TouchableOpacity>
-                    </View>}
-                </View>
-            ))}
-        </View>
-
+                ))}
+            </View>
+        );
 
         /*return workers.map((worker, index) => {
             return <View key={name+index}>
@@ -264,25 +268,32 @@ class OrderDetailScreen extends React.Component {
                 </View>
             </View>
         })*/
-
-
     }
 
     render() {
-        const { workers: workersObservable, order, dispatcher, isDriver, thirdPartyWorkers, myThirdPartyWorkers } = this.props.store;
+        const {
+            workers: workersObservable,
+            order,
+            dispatcher,
+            isDriver,
+            thirdPartyWorkers,
+            myThirdPartyWorkers,
+        } = this.props.store;
 
         const workers = toJS(workersObservable);
-        
-        const driver = workers.find(worker => worker.isDriver);
-        const movers = workers.filter(worker => !worker.isDriver);
-        
-        
-        
-        let orderType = ''
-        if(order){
-            if(order.need_loaders && order.need_driver) {orderType = `Водитель и ${order.loaders_count} грузчика`}
-            else if(order.need_loaders) { orderType = `Только ${order.loaders_count} ГРУЗЧИКА` }
-            else if(order.need_driver) { orderType = `Только ВОДИТЕЛЬ` }
+
+        const driver = workers.find((worker) => worker.isDriver);
+        const movers = workers.filter((worker) => !worker.isDriver);
+
+        let orderType = '';
+        if (order) {
+            if (order.need_loaders && order.need_driver) {
+                orderType = `Водитель и ${order.loaders_count} грузчика`;
+            } else if (order.need_loaders) {
+                orderType = `Только ${order.loaders_count} ГРУЗЧИКА`;
+            } else if (order.need_driver) {
+                orderType = `Только ВОДИТЕЛЬ`;
+            }
         }
 
         return (
@@ -302,7 +313,12 @@ class OrderDetailScreen extends React.Component {
                         cardStyle={styles.cardMargins}
                     />
                     <ExpandCardBase
-                        OpenComponent={<Text style={styles.cardH2}>Исполнители ({order.workers.has_driver + order.workers.loaders_count} / {order.need_driver+order.loaders_count})</Text>}
+                        OpenComponent={
+                            <Text style={styles.cardH2}>
+                                Исполнители ({order.workers.has_driver + order.workers.loaders_count} /{' '}
+                                {order.need_driver + order.loaders_count})
+                            </Text>
+                        }
                         HiddenComponent={
                             <Fragment>
                                 <View style={styles.cardDescription}>
@@ -399,8 +415,15 @@ class OrderDetailScreen extends React.Component {
                                 <View style={styles.cardDescription}>
                                     {/*{this.renderWorkerInfo([driver], 'Водитель')}
                                     {this.renderWorkerInfo(movers, movers.length > 1 ? 'Грузчики:' : 'Грузчик')}*/}
-                                    {this.renderWorkerInfo(this.props.store.myThirdPartyWorkers, movers.length > 1 ? 'Грузчики:' : 'Грузчик', true)}
-                                    <TouchableOpacity style={styles.buttonAddWorker} onPress={this._AddThirdPartyWorker}>
+                                    {this.renderWorkerInfo(
+                                        this.props.store.myThirdPartyWorkers,
+                                        movers.length > 1 ? 'Грузчики:' : 'Грузчик',
+                                        true,
+                                    )}
+                                    <TouchableOpacity
+                                        style={styles.buttonAddWorker}
+                                        onPress={this._addThirdPartyWorker}
+                                    >
                                         <Text style={styles.buttonText}>Добавить</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -409,13 +432,12 @@ class OrderDetailScreen extends React.Component {
                         cardStyle={styles.cardMargins}
                     />
 
-
-
                     <ExpandCardBase
                         OpenComponent={<Text style={styles.cardH2}>Комментарий к заказу</Text>}
                         HiddenComponent={
                             <Fragment>
                                 <View style={styles.cardDescription}>
+                                    <Text style={styles.instructionText}>{order.comment}</Text>
                                     {isDriver ? (
                                         <Text style={styles.instructionText}>{order.driver_comment}</Text>
                                     ) : (
@@ -429,7 +451,7 @@ class OrderDetailScreen extends React.Component {
                     <TouchableOpacity style={[styles.cardChat, styles.spaceBottom]} onPress={this._chatPress}>
                         <View style={styles.cardRowTopContainer}>
                             <Text style={styles.cardH2}>Чат</Text>
-                            <Icon name='chevron-right' size={42} color='#c4c4c4' />
+                            <Icon name="chevron-right" size={42} color="#c4c4c4" />
                         </View>
                     </TouchableOpacity>
                 </ScrollView>

@@ -6,7 +6,7 @@ import {
     createDrawerNavigator,
     createStackNavigator,
     createSwitchNavigator,
-    SafeAreaView
+    SafeAreaView,
 } from 'react-navigation';
 import { MenuIcon } from '../components/MenuIcon';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
@@ -42,14 +42,14 @@ SafeAreaView.setStatusBarHeight(StatusBar.currentHeight);
 
 const yellowHeader = {
     headerStyle: {
-        backgroundColor: '#FFC234'
-    }
+        backgroundColor: '#FFC234',
+    },
 };
 
 const yellowHeaderWithHamburger = ({ navigation }) => {
     return Object.assign({}, yellowHeader, {
         headerLeft: <MenuIcon navigationProps={navigation} />,
-        headerLeftContainerStyle: { paddingLeft: 8 }
+        headerLeftContainerStyle: { paddingLeft: 8 },
     });
 };
 
@@ -57,84 +57,84 @@ const yellowHeaderWithHamburgerAndBack = ({ navigation }) => {
     return Object.assign({}, yellowHeader, {
         headerLeft: <MenuIcon navigationProps={navigation} />,
         headerBackTitle: 'Назад',
-        headerLeftContainerStyle: { paddingLeft: 8 }
+        headerLeftContainerStyle: { paddingLeft: 8 },
     });
-}
+};
 
 const FulfillingOrderStack = createStackNavigator(
     {
         OrderDetail: OrderDetailScreen,
         OrderChat: ChatScreen,
-        OrderComplete: OrderCompleteScreen
+        OrderComplete: OrderCompleteScreen,
     },
-    { defaultNavigationOptions: yellowHeader }
+    { defaultNavigationOptions: yellowHeader },
 );
 
 const FulfillingOrderSwitch = createSwitchNavigator(
     {
         FulfillingOrder: FulfillingOrderStack,
-        WaitCompleteOrder: WaitCompleteOrderScreen
+        WaitCompleteOrder: WaitCompleteOrderScreen,
     },
-    { defaultNavigationOptions: yellowHeader }
+    { defaultNavigationOptions: yellowHeader },
 );
 
 const MainStack = createStackNavigator(
     {
         Main: { screen: MainScreen, navigationOptions: yellowHeaderWithHamburgerAndBack },
-        Balance: BalanceScreen,
+        Balance: { screen: BalanceScreen, navigationOptions: { headerBackTitle: 'Назад' } },
         Robokassa: RobokassaScreen,
-        OrderPreview: OrderPreviewScreen
+        OrderPreview: OrderPreviewScreen,
     },
-    { defaultNavigationOptions: yellowHeader }
+    { defaultNavigationOptions: yellowHeader },
 );
 
 const MyInfoStack = createStackNavigator({
     MyInfo: {
         screen: MyInfoScreen,
-        navigationOptions: yellowHeaderWithHamburger
-    }
+        navigationOptions: yellowHeaderWithHamburger,
+    },
 });
 
 const MyCarStack = createStackNavigator(
     {
         MyCar: {
             screen: MyAutoScreen,
-            navigationOptions: yellowHeaderWithHamburger
-        }
+            navigationOptions: yellowHeaderWithHamburger,
+        },
     },
     {
         defaultNavigationOptions: {
-            headerTitle: 'Мое авто'
-        }
-    }
+            headerTitle: 'Мое авто',
+        },
+    },
 );
 
 const MyDocsStack = createStackNavigator(
     {
         MyDoc: {
             screen: MyDocsScreen,
-            navigationOptions: yellowHeaderWithHamburger
-        }
+            navigationOptions: yellowHeaderWithHamburger,
+        },
     },
     {
         defaultNavigationOptions: {
-            headerTitle: 'Мои документы'
-        }
-    }
+            headerTitle: 'Мои документы',
+        },
+    },
 );
 
 const SettingsStack = createStackNavigator({
     Settings: {
         screen: SettingsScreen,
-        navigationOptions: yellowHeaderWithHamburger
-    }
+        navigationOptions: yellowHeaderWithHamburger,
+    },
 });
 
 const InstructionsStack = createStackNavigator({
     Instructions: {
         screen: InstructionScreen,
-        navigationOptions: yellowHeaderWithHamburger
-    }
+        navigationOptions: yellowHeaderWithHamburger,
+    },
 });
 
 const AppStack = createDrawerNavigator(
@@ -145,17 +145,17 @@ const AppStack = createDrawerNavigator(
         Page1: {
             screen: MainStack,
             navigationOptions: {
-                drawerLabel: () => null //'Заявки',
+                drawerLabel: () => null, //'Заявки',
                 //    drawerIcon: <IconMenuItem name='inbox' />
-            }
+            },
         },
 
         Page5: {
             screen: MyInfoStack,
             navigationOptions: {
                 drawerLabel: 'Моя информация',
-                drawerIcon: <IconMenuItem name='user-circle-o' />
-            }
+                drawerIcon: <IconMenuItem name="user-circle-o" />,
+            },
         },
         // Page2: {
         //     screen: OrderListScreen,
@@ -169,48 +169,46 @@ const AppStack = createDrawerNavigator(
             screen: MyCarStack,
             navigationOptions: {
                 drawerLabel: 'Моё авто',
-                drawerIcon: <IconMenuItem name='truck' />
-            }
+                drawerIcon: <IconMenuItem name="truck" />,
+            },
         },
 
-        Page6:{
+        Page6: {
             screen: MyDocsStack,
             navigationOptions: {
                 drawerLabel: 'Мои документы',
-                drawerIcon: <IconMenuItem name='briefcase' />
-            }
+                drawerIcon: <IconMenuItem name="briefcase" />,
+            },
         },
 
         Page3: {
             screen: SettingsStack,
             navigationOptions: {
                 drawerLabel: 'Настройки',
-                drawerIcon: <IconMenuItem name='gear' />
-            }
+                drawerIcon: <IconMenuItem name="gear" />,
+            },
         },
-
-
 
         Page4: {
             screen: InstructionsStack,
             navigationOptions: {
                 drawerLabel: 'Инструкции',
-                drawerIcon: <IconMenuItem name='info-circle' />
-            }
-        }
+                drawerIcon: <IconMenuItem name="info-circle" />,
+            },
+        },
     },
     {
         drawerWidth: width * 0.8,
         contentComponent: AppDrawer,
         contentOptions: {
             activeBackgroundColor: 'transparent',
-            activeTintColor: 'black'
+            activeTintColor: 'black',
             /*       iconContainerStyle: {
         width: 45,
         border: 2
       } */
-        }
-    }
+        },
+    },
 );
 
 const AuthStack = createStackNavigator(
@@ -219,16 +217,16 @@ const AuthStack = createStackNavigator(
         SignIn: SignInScreen,
         RegisterPerson: SignUpUserScreen,
         Documents: SignUpDocumentsScreen,
-        EditCar: SignUpCarScreen
+        EditCar: SignUpCarScreen,
     },
     {
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: '#FFC234',
                 textAlign: 'center',
-            }
-        }
-    }
+            },
+        },
+    },
 );
 
 export default createAppContainer(
@@ -238,11 +236,11 @@ export default createAppContainer(
             AuthLoading: AuthLoadingScreen,
             App: AppStack,
             Auth: AuthStack,
-            FulfillingOrder: FulfillingOrderSwitch
+            FulfillingOrder: FulfillingOrderSwitch,
         },
         {
             initialRouteName: 'AuthLoading',
-            resetOnBlur: false
-        }
-    )
+            resetOnBlur: false,
+        },
+    ),
 );
