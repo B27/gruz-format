@@ -153,12 +153,12 @@ class SignUpCarScreen extends React.Component {
             console.log('ERROR_LOGIN:', error);
             if(error.response){
                 if(error.response.data.message.indexOf('duplicate key error') !== -1) {
-                    showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован', {okFn: undefined});
+                    showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован',);
                 } else {
-                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже\n' + error.response.data.message, {okFn: undefined});
+                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже\n' + error.response.data.message,);
                 }
             } else {
-                showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', { okFn: undefined });
+                showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже');
             }
             return;
         }
@@ -177,9 +177,9 @@ class SignUpCarScreen extends React.Component {
         } catch (err) {
             console.log('ОШИБКА', err);
             if(error.response){
-                showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже\n'+error.response.data.message, { okFn: undefined });
+                showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже\n'+error.response.data.message);
             } else {
-                showAlert('Ошибка при авторизации', 'Попробуйте залогиниться заново', {okFn: undefined});
+                showAlert('Ошибка при авторизации', 'Попробуйте залогиниться заново',);
             }
             this.props.navigation.navigate('SignIn');
             return;
@@ -233,9 +233,9 @@ class SignUpCarScreen extends React.Component {
         } catch (err) {
             console.log('Download photos error: ', err);
             if(error.response){
-                showAlert('Ошибка при загрузке фото', 'Попробуйте сделать это позже\n'+error.response.data.message, { okFn: undefined });
+                showAlert('Ошибка при загрузке фото', 'Попробуйте сделать это позже\n'+error.response.data.message);
             } else {
-                showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже', {okFn: undefined});
+                showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже',);
             }
         }
     };

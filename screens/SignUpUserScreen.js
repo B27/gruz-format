@@ -542,7 +542,7 @@ class SignUpUserScreen extends React.Component {
                         );
                     }
                 } else {
-                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', { okFn: undefined });
+                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже');
                 }
                 return;
             }
@@ -564,7 +564,6 @@ class SignUpUserScreen extends React.Component {
                     showAlert(
                         'Регистрация успешна, но произошла ошибка ',
                         'Попробуйте сделать это позже\n' + error.response.data.message,
-                        { okFn: undefined },
                     );
                 } else {
                     showAlert('Регистрация успешна, но произошла ошибка ', 'Попробуйте залогиниться заново');
@@ -600,7 +599,6 @@ class SignUpUserScreen extends React.Component {
                     showAlert(
                         'Ошибка при загрузке фото',
                         'Попробуйте сделать это позже\n' + error.response.data.message,
-                        { okFn: undefined },
                     );
                 } else {
                     showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже');

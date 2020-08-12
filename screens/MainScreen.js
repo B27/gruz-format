@@ -118,7 +118,6 @@ class MainScreen extends React.Component {
                     'Учетная запись неактивна',
                     'Дождитесь когда диспетчер подтвердит ваши данные.\n' +
                         'Если вы не получаете ответ слишком долго - свяжитесь с дипетчером',
-                    { okFn: undefined },
                 );
                 this.showMessageAboutActivation = false;
             }

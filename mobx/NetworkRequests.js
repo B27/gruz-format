@@ -17,13 +17,14 @@ async function getDispatcher(id) {
 }
 
 async function startOrder(id) {
+    let userId;
     try {
-        const userId = await AsyncStorage.getItem('userId');
+        userId = await AsyncStorage.getItem('userId');
         console.log('[NetworkRequests].startOrder() userId', userId)
         let response = await axios.patch(`/order/workers/${id}/${userId}`);
         console.log(TAG, 'startOrder response.status:', response.status, response.data.msg);
     } catch (error) {
-        await networkErrorHandler(TAG, error, `patch /order/workers/${id}/${userId}`);
+        await networkErrorHandler(TAG, error, `patch /order/workers/${id}/${userId}`, true);
     }
 }
 

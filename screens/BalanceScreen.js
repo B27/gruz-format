@@ -5,6 +5,13 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
+import axios from 'axios';
+import qs from 'qs';
+
+const axios2 = axios.create({
+    baseURL: 'https://3dsec.sberbank.ru',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+});
 
 @inject('store')
 @observer
@@ -75,11 +82,31 @@ class BalanceScreen extends React.Component {
 
     _goToRobokassa = async () => {
         if (!this.state.sum) {
-            showAlert("Необходимо заполнить поле 'Сумма'");
+            showAlert('Ошибка', "Необходимо заполнить поле 'Сумма'");
+            return;
+        }
+
+        let url;
+
+        try {
+            const data = qs.stringify({
+                userName: 'gruzformat-api',
+                password: 'gruzformat',
+                amount: `${this.state.sum}00`,
+                orderNumber: `11`,
+                returnUrl: '0',
+                pageView: 'MOBILE',
+            });
+            const response = await axios2.post('/payment/rest/register.do', data);
+            console.log(response.data);
+            url = response.data.formUrl;
+        } catch (error) {
+            showAlert('Ошибка', error.toString());
             return;
         }
 
         this.props.navigation.navigate('Robokassa', {
+            url,
             sum: this.state.sum,
             userId: await AsyncStorage.getItem('userId'),
         });

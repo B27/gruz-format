@@ -127,9 +127,9 @@ class OrderDetailScreen extends React.Component {
         } catch (error) {
             console.log(TAG, error);
             if (error.response.status === 400) {
-                showAlert(error.response.data.message);
+                showAlert('Ошибка', error.response.data.message);
             }
-            showAlert(error.message.toString());
+            showAlert('Ошибка', error.message.toString());
         }
     };
 
@@ -148,13 +148,13 @@ class OrderDetailScreen extends React.Component {
         } catch (e) {
             console.log('[OrderDetailScreen]._AddThirdPartyWorker() e', e);
             if (e.toString().indexOf('allowed') !== -1) {
-                showAlert('Ошибка', 'Вы не можете добавлять больше рабочих', { okFn: undefined });
+                showAlert('Ошибка', 'Вы не можете добавлять больше рабочих');
             } else if (e.toString().indexOf('anymore') !== -1) {
-                showAlert('Ошибка', 'Набрано максимум рабочих на заказе', { okFn: undefined });
+                showAlert('Ошибка', 'Набрано максимум рабочих на заказе');
             } else if (e.toString().indexOf('need loaders') !== -1) {
-                showAlert('Ошибка', 'В заказе рабочие не нужны', { okFn: undefined });
+                showAlert('Ошибка', 'В заказе рабочие не нужны');
             } else {
-                showAlert('Ошибка при добавлении', e, { okFn: undefined });
+                showAlert('Ошибка при добавлении', e);
             }
         }
     };
@@ -165,9 +165,9 @@ class OrderDetailScreen extends React.Component {
             this._onRefresh();
         } catch (e) {
             if (e.response) {
-                showAlert('Ошибка при удалении', e.response.data.message, { okFn: undefined });
+                showAlert('Ошибка при удалении', e.response.data.message);
             } else {
-                showAlert('Ошибка при удалении', e, { okFn: undefined });
+                showAlert('Ошибка при удалении', e);
             }
         }
     };
@@ -185,14 +185,14 @@ class OrderDetailScreen extends React.Component {
 
         if (order.status === 'rejected') {
             console.log(TAG, 'order rejected');
-            showAlert('Отмена заказа', 'Заказ над которым вы работаете был отменён', { okFn: undefined });
+            showAlert('Отмена заказа', 'Заказ над которым вы работаете был отменён');
             this.props.navigation.navigate('AuthLoading');
             return;
         }
 
         if (!workers.filter((worker) => worker.id == userId).length) {
             console.log(TAG, 'user not in order');
-            showAlert('Исключение из заказа', 'Вы были исключены из заказа', { okFn: undefined });
+            showAlert('Исключение из заказа', 'Вы были исключены из заказа');
             this.props.navigation.navigate('AuthLoading');
             return;
         }

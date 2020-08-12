@@ -49,7 +49,7 @@ export default async function NotificationListener(params) {
     }
 }
 
-gotoOrderPreview = order_id => async () => {
+const gotoOrderPreview = order_id => async () => {
     try {
         const { data } = await NetworkRequests.getOrder(order_id);
         _navigation.navigate('OrderPreview', { order: data });

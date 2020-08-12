@@ -75,7 +75,7 @@ class MyInfoScreen extends React.Component {
                 if (error.response) {
                     showAlert('Ошибка', 'Ошибка при обновлении данных\n' + error.response.data.message);
                 } else {
-                    showAlert('Ошибка', 'Ошибка при обновлении данных', error.toString(), { okFn: undefined });
+                    showAlert('Ошибка', 'Ошибка при обновлении данных', error.toString());
                 }
                 return;
             }
@@ -314,7 +314,7 @@ class MyInfoScreen extends React.Component {
 
                 this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
 
-                showAlert('Успешно!', 'Ваши данные сохраненны!', { okFn: undefined });
+                showAlert('Успешно!', 'Ваши данные сохраненны!');
             } catch (error) {
                 console.log(error);
                 Object.keys(error).forEach((value) => {
@@ -325,17 +325,15 @@ class MyInfoScreen extends React.Component {
                         showAlert(
                             'Ошибка при изменении данных',
                             'Пользователь с таким номером телефона уже зарегистрирован',
-                            { okFn: undefined },
                         );
                     } else {
                         showAlert(
                             'Ошибка при изменении данных',
                             'Ошибка при обновлении данных\n' + error.response.data.message,
-                            { okFn: undefined },
                         );
                     }
                 } else {
-                    showAlert('Ошибка', 'Ошибка при обновлении данных', { okFn: undefined });
+                    showAlert('Ошибка', 'Ошибка при обновлении данных');
                 }
             }
         }

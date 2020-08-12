@@ -157,10 +157,9 @@ class MyDocumentsScreen extends React.Component {
                 showAlert(
                     'Ошибка при отправке данных',
                     'Попробуйте сделать это позже\n' + error.response.data.message,
-                    { okFn: undefined },
                 );
             } else {
-                showAlert('Ошибка при отправке данных', 'Попробуйте попозже', { okFn: undefined });
+                showAlert('Ошибка при отправке данных', 'Попробуйте попозже');
             }
         }
     }
@@ -209,17 +208,16 @@ class MyDocumentsScreen extends React.Component {
                 const res = await axios.patch('/worker/' + id, dataToSend);
                 console.log('[MyDocumentsScreen]._nextScreen() res from server', res);
                 await this.uploadImages({ passPic, passRegPic });
-                showAlert('Успешно', 'Данные обновлены!', { okFn: undefined });
+                showAlert('Успешно', 'Данные обновлены!');
             } catch (error) {
                 console.log('[MyDocumentsScreen]._nextScreen() err', error);
                 if (error.response) {
                     showAlert(
                         'Ошибка при отправке данных',
                         'Попробуйте сделать это позже\n' + error.response.data.message,
-                        { okFn: undefined },
                     );
                 } else {
-                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', { okFn: undefined });
+                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже');
                 }
                 return;
             }

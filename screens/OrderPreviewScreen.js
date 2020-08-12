@@ -6,8 +6,8 @@ import LoadingButton from '../components/LoadingButton';
 import OrderCard from '../components/OrderCard';
 import styles from '../styles';
 import AsyncStorage from '@react-native-community/async-storage';
-import showAlert from "../utils/showAlert";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import showAlert from '../utils/showAlert';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 @inject('store')
 class OrderPreview extends React.Component {
@@ -33,7 +33,10 @@ class OrderPreview extends React.Component {
             await store.startFulfillingOrder(order._id);
             await Platform.select({
                 android: async () => {
-                    await NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'), "В работе")
+                    await NativeModules.ForegroundTaskModule.startService(
+                        await AsyncStorage.getItem('token'),
+                        'В работе',
+                    );
                 },
                 ios: async () => {},
             })();
@@ -41,10 +44,10 @@ class OrderPreview extends React.Component {
             console.log('Accept order successful');
         } catch (error) {
             console.log('error in OrderPreviewScreen acceptOrder:', error);
-            if(error.response){
-                showAlert('Ошибка при принятии заказа', error.response.data.message, { okFn: undefined });
+            if (error.response.status === 400) {
+                showAlert('Ошибка принятия заказа', 'В заказе набрано необходимое количество исполнителей');
             } else {
-                showAlert('Ошибка при принятии заказа', 'Возникла ошибка в приложении при принятии заказа\n' + error.toString(), {okFn: undefined});
+                showAlert('Ошибка', error.toString());
             }
         }
     };
@@ -53,11 +56,15 @@ class OrderPreview extends React.Component {
         const { isDriver } = this.props.store;
 
         const order = this.props.navigation.getParam('order');
-        let orderType = ''
-        if(order){
-            if(order.need_loaders && order.need_driver) {orderType = `Водитель и ${order.loaders_count} грузчика`}
-            else if(order.need_loaders) { orderType = `Только ${order.loaders_count} ГРУЗЧИКА` }
-            else if(order.need_driver) { orderType = `Только ВОДИТЕЛЬ` }
+        let orderType = '';
+        if (order) {
+            if (order.need_loaders && order.need_driver) {
+                orderType = `Водитель и ${order.loaders_count} грузчика`;
+            } else if (order.need_loaders) {
+                orderType = `Только ${order.loaders_count} ГРУЗЧИКА`;
+            } else if (order.need_driver) {
+                orderType = `Только ВОДИТЕЛЬ`;
+            }
         }
         return (
             <Fragment>
@@ -73,19 +80,35 @@ class OrderPreview extends React.Component {
                     />
                     <ExpandCardBase
                         expanded
-                        OpenComponent={<Text style={styles.cardH2}>Набранные исполнители ({order.workers.has_driver + order.workers.loaders_count} / {order.need_driver+order.loaders_count})</Text>}
+                        OpenComponent={
+                            <Text style={styles.cardH2}>
+                                Набранные исполнители ({order.workers.has_driver + order.workers.loaders_count} /{' '}
+                                {order.need_driver + order.loaders_count})
+                            </Text>
+                        }
                         HiddenComponent={
                             <Fragment>
-                                {order.need_driver ? <View style={styles.orderRow}>
-                                    <Icon name='car-pickup' color='#FFC234' size={20} style={styles.orderIcon} />
-                                    <Text style={styles.textInput}>Водитель:</Text>
-                                    <Icon name={order.workers.hasDriver ? 'check' : 'window-close'} color='#FFC234' size={20} style={styles.orderIcon} />
-                                </View> : null }
-                                {order.need_loaders ? <View style={styles.orderRow}>
-                                    <Icon name='human-handsup' color='#FFC234' size={20} style={styles.orderIcon} />
-                                    <Text style={styles.textInput}>Грузчики:</Text>
-                                    <Text style={styles.textInput}>{order.workers.loaders_count} из {order.loaders_count}</Text>
-                                </View> : null }
+                                {order.need_driver ? (
+                                    <View style={styles.orderRow}>
+                                        <Icon name="car-pickup" color="#FFC234" size={20} style={styles.orderIcon} />
+                                        <Text style={styles.textInput}>Водитель:</Text>
+                                        <Icon
+                                            name={order.workers.hasDriver ? 'check' : 'window-close'}
+                                            color="#FFC234"
+                                            size={20}
+                                            style={styles.orderIcon}
+                                        />
+                                    </View>
+                                ) : null}
+                                {order.need_loaders ? (
+                                    <View style={styles.orderRow}>
+                                        <Icon name="human-handsup" color="#FFC234" size={20} style={styles.orderIcon} />
+                                        <Text style={styles.textInput}>Грузчики:</Text>
+                                        <Text style={styles.textInput}>
+                                            {order.workers.loaders_count} из {order.loaders_count}
+                                        </Text>
+                                    </View>
+                                ) : null}
                             </Fragment>
                         }
                         cardStyle={styles.cardMargins}
@@ -99,8 +122,8 @@ class OrderPreview extends React.Component {
                                     {isDriver ? (
                                         <Text style={styles.instructionText}>{order.driver_comment}</Text>
                                     ) : (
-                                            <Text style={styles.instructionText}>{order.loader_comment}</Text>
-                                        )}
+                                        <Text style={styles.instructionText}>{order.loader_comment}</Text>
+                                    )}
                                 </View>
                             </Fragment>
                         }

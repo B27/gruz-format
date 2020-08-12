@@ -147,7 +147,7 @@ class SignUpDocumentsScreen extends React.Component {
                         );
                     }
                 } else {
-                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', { okFn: undefined });
+                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже');
                 }
                 return;
             }
@@ -177,10 +177,9 @@ class SignUpDocumentsScreen extends React.Component {
                     showAlert(
                         'Ошибка при попытке авторизации',
                         'Попробуйте сделать это позже\n' + err.response.data.message,
-                        { okFn: undefined },
                     );
                 } else {
-                    showAlert('Ошибка при попытке авторизации', 'Попробуйте залогиниться заново', { okFn: undefined });
+                    showAlert('Ошибка при попытке авторизации', 'Попробуйте залогиниться заново');
                 }
                 this.props.navigation.navigate('SignIn');
             }
@@ -290,7 +289,7 @@ class SignUpDocumentsScreen extends React.Component {
                             );
                         }
                     } else {
-                        showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже', { okFn: undefined });
+                        showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже');
                     }
                     return;
                 }
@@ -310,11 +309,10 @@ class SignUpDocumentsScreen extends React.Component {
                     if (err.response) {
                         showAlert(
                             'Ошибка при отправке данных',
-                            'Попробуйте сделать это позже\n' + err.response.data.message,
-                            { okFn: undefined },
+                            'Попробуйте сделать это позже\n' + err.response.data.message
                         );
                     } else {
-                        showAlert('Ошибка при авторизации', 'Попробуйте залогиниться заново', { okFn: undefined });
+                        showAlert('Ошибка при авторизации', 'Попробуйте залогиниться заново');
                     }
                     this.props.navigation.navigate('SignIn');
                     return;
