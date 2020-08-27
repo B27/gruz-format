@@ -1,17 +1,19 @@
 import AsyncStorage from '@react-native-community/async-storage';
-
+import NetworkRequests from '../mobx/NetworkRequests';
+import axios from 'axios';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { Alert, FlatList, NativeModules, Platform, Text, View, YellowBox, SafeAreaView } from 'react-native';
+import { FlatList, NativeModules, Platform, SafeAreaView, Text, View, YellowBox } from 'react-native';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import OrderCard from '../components/OrderCard';
-import SwitchToggle from '../components/SwitchToggle';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
 
 // const LOCATION_TASK_NAME = 'background-location-task';
 
 const TAG = '~MainScreen~';
+const pauseBetweenSendGeo = 1000 * 60 * 30;
 
 YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?',
@@ -79,15 +81,10 @@ class MainScreen extends React.Component {
         //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
         const { store } = this.props;
         try {
-            if (store.onWork) {
-                //  this.fetchData();
-                this.setState({ refreshing: true });
+            console.log('store onWork ==', store.onWork);
+            this.setState({ refreshing: true });
 
-                await Promise.all([store.updateUserInfo(), store.getOrders()]);
-            } else {
-                await store.updateUserInfo();
-                store.clearOrders();
-            }
+            await Promise.all([store.updateUserInfo(), store.getOrders()]);
         } catch (error) {
             console.log(TAG, error);
             if (error.response) {
@@ -96,12 +93,14 @@ class MainScreen extends React.Component {
                 this._showErrorMessage(error.toString());
             }
 
-            this.props.store.setOnWork(!this.props.store.onWork);
             await Platform.select({
                 android: async () => {
                     await NativeModules.ForegroundTaskModule.stopService();
                 },
-                ios: async () => {},
+                ios: async () => {
+                    await BackgroundGeolocation.stop();
+                    await BackgroundGeolocation.destroyLocations();
+                },
             })();
         }
 
@@ -129,9 +128,79 @@ class MainScreen extends React.Component {
             android: () => {
                 NativeModules.ForegroundTaskModule.stopService();
             },
-            ios: () => {},
+            ios: async () => {
+                const needSendGeo = await this._checkNeedSendGeolocation();
+                if (needSendGeo) {
+                    await this._sendGeolocation(store.userId);
+                }
+                // try {
+                //     BackgroundGeolocation.onHttp((httpEvent) => {
+                //         console.log('http event ', httpEvent);
+                //     });
+                //     const state = await BackgroundGeolocation.ready({
+                //         elasticityMultiplier: 1,
+                //         stopTimeout: 1,
+                //         url: `http://localhost:3008/worker/location/${store.userId}`,
+                //         logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                //         autoSync: true,
+                //         autoSyncThreshold: 0,
+                //         maxRecordsToPersist: 1,
+                //         headers: axios.defaults.headers,
+                //     });
+                //     console.log('BacGeo state', state, state.enabled);
+                //     BackgroundGeolocation.stop();
+                //     if (state.enabled) {
+                //         ////
+                //         // 3. Start tracking!
+                //         //
+                //         // BackgroundGeolocation.start(function () {
+                //         //     console.log('- Start success');
+                //         // });
+                //         await BackgroundGeolocation.stop();
+                //         BackgroundGeolocation.destroyLocations();
+                //     }
+                //     if (!state.enabled) {
+                //         ////
+                //         // 3. Start tracking!
+                //         //
+                //         BackgroundGeolocation.start(function () {
+                //             console.log('- Start success');
+                //         });
+                //     }
+
+                //     const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
+                //     await NetworkRequests.sendLocation({ location }, this.props.store.userId);
+                //     console.log('location recieved', location);
+                // } catch (error) {
+                //     console.error('error in location', error);
+                // } finally {
+                // }
+            },
         })();
         //console.log('[MainScreen]._onRefresh() store', this.props.store)
+    };
+
+    _checkNeedSendGeolocation = async () => {
+        const lastSendGeo = await AsyncStorage.getItem('lastSendGeo');
+        if (+lastSendGeo + pauseBetweenSendGeo < Date.now()) {
+            return true;
+        }
+        return false;
+    };
+
+    _sendGeolocation = async (userId) => {
+        try {
+            await BackgroundGeolocation.ready();
+
+            const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
+            console.log('location recieved', location);
+
+            await NetworkRequests.sendLocation({ location }, userId);
+            await AsyncStorage.setItem('lastSendGeo', Date.now().toString());
+            await BackgroundGeolocation.stop();
+        } catch (error) {
+            console.error('error in location', error);
+        }
     };
 
     _showErrorMessage = (message) => {

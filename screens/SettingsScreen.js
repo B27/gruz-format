@@ -8,6 +8,7 @@ import { NativeModules, Text, TextInput, View, Platform } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 const TAG = '~SettingsScreen~';
 @inject('store')
@@ -87,7 +88,10 @@ class SettingsScreen extends React.Component {
                 android: async () => {
                     await NativeModules.ForegroundTaskModule.stopService();
                 },
-                ios: async () => {},
+                ios: async () => {
+                    await BackgroundGeolocation.stop();
+                    await BackgroundGeolocation.destroyLocations();
+                },
             })();
             this.props.navigation.navigate('SignIn');
         } catch (error) {

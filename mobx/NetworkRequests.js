@@ -61,6 +61,14 @@ async function getOpenOrders() {
     return response;
 }
 
+async function sendLocation(location, workerId) {
+    try {
+        await axios.post(`/worker/location/${workerId}`, location);
+    } catch (error) {
+        await networkErrorHandler(TAG, error, `post /worker/location/${workerId}`);
+    }
+}
+
 async function getWorker(id) {
     let response;
     try {
@@ -119,4 +127,5 @@ export default {
     clearPushToken,
     addThirdPartyWorker,
     deleteThirdPartyWorker,
+    sendLocation,
 };

@@ -1,5 +1,7 @@
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
+import axios from 'axios';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import { ScrollView, SafeAreaView, Text, View, Alert, NativeModules, Platform } from 'react-native';
 import ExpandCardBase from '../components/ExpandCardBase';
 import LoadingButton from '../components/LoadingButton';
@@ -18,7 +20,7 @@ class OrderPreview extends React.Component {
 
     _acceptOrder = async () => {
         const { store, navigation } = this.props;
-        if (this.props.store.isDriver && this.props.store.veh_width === '' && !this.props.store.onWork) {
+        if (this.props.store.isDriver && this.props.store.veh_width === '') {
             Alert.alert('Ошибка', 'Заполните данные об автомобиле');
             return;
         }
@@ -38,7 +40,9 @@ class OrderPreview extends React.Component {
                         'В работе',
                     );
                 },
-                ios: async () => {},
+                ios: async () => {
+                    await this._startBackgroundGelocation(store.userId);
+                },
             })();
             navigation.navigate('OrderDetail');
             console.log('Accept order successful');
@@ -49,6 +53,26 @@ class OrderPreview extends React.Component {
             } else {
                 showAlert('Ошибка', error.toString());
             }
+        }
+    };
+
+    _startBackgroundGelocation = async (userId) => {
+        try {
+            const state = await BackgroundGeolocation.ready({
+                elasticityMultiplier: 2,
+                url: `${axios.defaults.baseURL}/worker/location/${userId}`,
+                logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                distanceFilter: 250,
+                autoSync: true,
+                autoSyncThreshold: 0,
+                maxRecordsToPersist: 1,
+                headers: axios.defaults.headers,
+            });
+            if (!state.enabled) {
+                BackgroundGeolocation.start();
+            }
+        } catch (error) {
+            console.error('error in location', error);
         }
     };
 

@@ -10,6 +10,7 @@ import { prepareNotificationListener, execPendingNotificationListener } from '..
 import styles from '../styles';
 import NetworkRequests from '../mobx/NetworkRequests';
 import Permissons from '../utils/Permissions';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import { RESULTS } from 'react-native-permissions';
 
 const TAG = '~AuthLoadingScreen~';
@@ -78,12 +79,14 @@ class AuthLoadingScreen extends React.Component {
                     if (!workersData.find((wrkr) => wrkr.id._id == userId).sum) {
                         sumEntered = false;
                     }
-                    Platform.select({
-                        android: () => {
+                    await Platform.select({
+                        android: async () => {
                             NativeModules.ForegroundTaskModule.stopService();
                             NativeModules.ForegroundTaskModule.startService(userToken, 'В работе');
                         },
-                        ios: () => {},
+                        ios: async () => {
+                            await this._startBackgroundGelocation(userId);
+                        },
                     })();
                     if (store.order.status === 'ended' && sumEntered) {
                         screenNeedToGo = 'WaitCompleteOrder';
@@ -120,11 +123,34 @@ class AuthLoadingScreen extends React.Component {
                 android: async () => {
                     await NativeModules.ForegroundTaskModule.stopService();
                 },
-                ios: async () => {},
+                ios: async () => {
+                    await BackgroundGeolocation.stop();
+                    await BackgroundGeolocation.destroyLocations();
+                },
             })();
             this.props.navigation.navigate('SignIn');
         } catch (error) {
             this.setState({ error: error.toString() });
+        }
+    };
+
+    _startBackgroundGelocation = async (userId) => {
+        try {
+            const state = await BackgroundGeolocation.ready({
+                elasticityMultiplier: 2,
+                url: `${axios.defaults.baseURL}/worker/location/${userId}`,
+                logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                distanceFilter: 250,
+                autoSync: true,
+                autoSyncThreshold: 0,
+                maxRecordsToPersist: 1,
+                headers: axios.defaults.headers,
+            });
+            if (!state.enabled) {
+                BackgroundGeolocation.start();
+            }
+        } catch (error) {
+            console.error('error in location', error);
         }
     };
 

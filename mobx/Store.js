@@ -18,7 +18,7 @@ class ObservableStore {
     @observable balance = '';
     @observable name = '';
     @observable isDriver = false;
-    @observable onWork = false;
+    @observable onWork = true; // на данный момент всегда true, необходимо смотреть response.data.order
     @observable orderIdOnWork = '';
     @observable userId = '';
     @observable hasPushToken = false;
@@ -94,7 +94,7 @@ class ObservableStore {
             // this.balance = response.data.balance;
             // this.name = response.data.name;
             // this.isDriver = response.data.isDriver;
-            // this.onWork = response.data.onWork; // на данный момент всегда false, необходимо смотреть response.data.order
+            // this.onWork = response.data.onWork; // на данный момент всегда true, необходимо смотреть response.data.order
             this.orderIdOnWork = response.data.order; // null когда грузчиком не выполняется заказ
             response.data.photos && (this.avatar = URL + response.data.photos.user);
 
@@ -131,9 +131,9 @@ class ObservableStore {
         });
     }
 
-    @action async setOnWork(value) {
-        this.onWork = value;
-    }
+    // @action async setOnWork(value) {
+    //     this.onWork = value;
+    // }
 
     @action async getOrders() {
         const response = await NetworkRequests.getOpenOrders();

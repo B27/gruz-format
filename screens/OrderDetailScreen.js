@@ -21,6 +21,7 @@ import OrderCard from '../components/OrderCard';
 import styles from '../styles';
 import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 const TAG = '~OrderDetailScreen.js~';
 
@@ -121,7 +122,10 @@ class OrderDetailScreen extends React.Component {
                 android: async () => {
                     await NativeModules.ForegroundTaskModule.stopService();
                 },
-                ios: async () => {},
+                ios: async () => {
+                    await BackgroundGeolocation.stop();
+                    await BackgroundGeolocation.destroyLocations();
+                },
             })();
             this.props.navigation.navigate('Main');
         } catch (error) {
