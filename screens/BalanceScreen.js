@@ -7,6 +7,10 @@ import styles from '../styles';
 import showAlert from '../utils/showAlert';
 import axios from 'axios';
 import qs from 'qs';
+import md5 from 'md5';
+import LoadingButton from '../components/LoadingButton';
+import { succesfulPayUrl, errorPayUrl } from '../constants';
+import RNSimpleCrypto from 'react-native-simple-crypto';
 
 const axios2 = axios.create({
     baseURL: 'https://3dsec.sberbank.ru',
@@ -70,17 +74,17 @@ class BalanceScreen extends React.Component {
                     />
                 </View>
                 <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                <TouchableOpacity
+                <LoadingButton
                     style={[styles.buttonBottom, { marginTop: 0, alignSelf: 'center' }]}
-                    onPress={this._goToRobokassa}
+                    onPress={this._goToPay}
                 >
                     <Text style={styles.text}>ПЕРЕЙТИ К ОПЛАТЕ</Text>
-                </TouchableOpacity>
+                </LoadingButton>
             </View>
         );
     }
 
-    _goToRobokassa = async () => {
+    _goToPay = async () => {
         if (!this.state.sum) {
             showAlert('Ошибка', "Необходимо заполнить поле 'Сумма'");
             return;
@@ -93,19 +97,21 @@ class BalanceScreen extends React.Component {
                 userName: 'gruzformat-api',
                 password: 'gruzformat',
                 amount: `${this.state.sum}00`,
-                orderNumber: `11`,
-                returnUrl: '0',
+                orderNumber: `${this.props.store.userId}_${md5(Date.now()).slice(21)}`,
+                returnUrl: succesfulPayUrl,
+                failUrl: errorPayUrl,
                 pageView: 'MOBILE',
             });
+            console.log('data', data);
             const response = await axios2.post('/payment/rest/register.do', data);
-            console.log(response.data);
+            console.log('response data', response.data);
             url = response.data.formUrl;
         } catch (error) {
             showAlert('Ошибка', error.toString());
             return;
         }
 
-        this.props.navigation.navigate('Robokassa', {
+        this.props.navigation.navigate('Pay', {
             url,
             sum: this.state.sum,
             userId: await AsyncStorage.getItem('userId'),

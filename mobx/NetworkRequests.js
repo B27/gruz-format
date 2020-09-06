@@ -116,6 +116,16 @@ async function deleteThirdPartyWorker(userId, orderIdOnWork){
     }
 }
 
+async function registerOrder(userId, amount, returnUrl, failUrl) {
+    let response;
+    try {
+        response = await axios.post('/sber/register_order', {userId, amount, returnUrl, failUrl})
+    } catch (error) {
+        await networkErrorHandler(TAG, error, `post /sber/register_order`);
+    }
+    return response;
+}
+
 export default {
     cancelOrder,
     getDispatcher,
@@ -128,4 +138,5 @@ export default {
     addThirdPartyWorker,
     deleteThirdPartyWorker,
     sendLocation,
+    registerOrder,
 };

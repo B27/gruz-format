@@ -6,4 +6,6 @@ export const URL = Platform.select({
     ios: () => 'http://localhost:3008',
 })();
 export const privacyPolicyURL = `${URL}/policy.pdf`;
+export const succesfulPayUrl = 'https://gruz.payment.was.succesful';
+export const errorPayUrl = 'https://gruz.payment.error';
 console.log('[Index].() URL', URL);

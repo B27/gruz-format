@@ -24,7 +24,7 @@ import MyDocsScreen from '../screens/MyDocumentsScreen';
 import OrderCompleteScreen from '../screens/OrderCompleteScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import OrderPreviewScreen from '../screens/OrderPreviewScreen';
-import RobokassaScreen from '../screens/RobokassaScreen';
+import PayScreen from '../screens/PayScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SignInScreen from '../screens/SignInScreen';
 import WaitCompleteOrderScreen from '../screens/WaitCompleteOrder';
@@ -82,7 +82,7 @@ const MainStack = createStackNavigator(
     {
         Main: { screen: MainScreen, navigationOptions: yellowHeaderWithHamburgerAndBack },
         Balance: { screen: BalanceScreen, navigationOptions: { headerBackTitle: 'Назад' } },
-        Robokassa: RobokassaScreen,
+        Pay: PayScreen,
         OrderPreview: OrderPreviewScreen,
     },
     { defaultNavigationOptions: yellowHeader },

@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.transistorsoft.fetch</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ru</string>
 	<key>CFBundleDisplayName</key>
@@ -41,18 +45,14 @@
 	<string>Чтобы сделать фото предоставьте доступ к камере</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Информация о местоположении используется при выполнении и при подборе заказа</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Акселерометр используется для уменьшения потребления энергии путём отключения отслеживания гелокоации когда телефон находится в состоянии покоя</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Информация о местоположении используется при выполнении и при подборе заказа</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Информация о местоположении используется при выполнении и при подборе заказа</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Акселерометр используется для уменьшения потребления энергии путём отключения отслеживания гелокоации когда телефон находится в состоянии покоя</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Чтобы выбрать фото предоставьте доступ к галерее</string>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>com.transistorsoft.fetch</string>
-	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>
@@ -65,6 +65,7 @@
 		<string>audio</string>
 		<string>fetch</string>
 		<string>location</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

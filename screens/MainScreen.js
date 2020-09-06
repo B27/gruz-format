@@ -3,6 +3,7 @@ import NetworkRequests from '../mobx/NetworkRequests';
 import axios from 'axios';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
+import { Observer } from 'mobx-react';
 import React from 'react';
 import { FlatList, NativeModules, Platform, SafeAreaView, Text, View, YellowBox } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
@@ -81,7 +82,6 @@ class MainScreen extends React.Component {
         //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
         const { store } = this.props;
         try {
-            console.log('store onWork ==', store.onWork);
             this.setState({ refreshing: true });
 
             await Promise.all([store.updateUserInfo(), store.getOrders()]);
@@ -193,7 +193,7 @@ class MainScreen extends React.Component {
             await BackgroundGeolocation.ready();
 
             const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
-            console.log('location recieved', location);
+            // console.log('location recieved', location);
 
             await NetworkRequests.sendLocation({ location }, userId);
             await AsyncStorage.setItem('lastSendGeo', Date.now().toString());
