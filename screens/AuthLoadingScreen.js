@@ -12,6 +12,7 @@ import NetworkRequests from '../mobx/NetworkRequests';
 import Permissons from '../utils/Permissions';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { RESULTS } from 'react-native-permissions';
+import messaging from '@react-native-firebase/messaging';
 
 const TAG = '~AuthLoadingScreen~';
 @inject('store')
@@ -56,12 +57,14 @@ class AuthLoadingScreen extends React.Component {
             axios.defaults.headers = {
                 Authorization: 'Bearer ' + userToken,
             };
-            Platform.select({
-                android: () => {
+            await Platform.select({
+                android: async () => {
                     NativeModules.WorkManager.stopWorkManager();
                     NativeModules.WorkManager.startWorkManager(userToken);
                 },
-                ios: () => {},
+                ios: async () => {
+                    await this._requestNotificationsPermission();
+                },
             })();
             try {
                 await store.getUserInfo();
@@ -131,6 +134,17 @@ class AuthLoadingScreen extends React.Component {
             this.props.navigation.navigate('SignIn');
         } catch (error) {
             this.setState({ error: error.toString() });
+        }
+    };
+
+    _requestNotificationsPermission = async () => {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+        if (enabled) {
+            console.log('Authorization status:', authStatus);
         }
     };
 

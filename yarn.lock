@@ -1190,10 +1190,15 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/messaging@^7.8.3":
-  version "7.8.3"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-7.8.3.tgz#c1326ebb5026e05264bd76a472063789902c6459"
-  integrity sha512-m2hoaCvmAHzPNiJ1tSaitoXAvkeVFTXoXuq2IO9HN6bqnQngErqY6iGor9i7uIR4du65jUhrlYv79beLRaMyPg==
+"@react-native-firebase/iid@^7.4.2":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/iid/-/iid-7.4.2.tgz#e5d646cc0ff65014906271a88b375de73869efa0"
+  integrity sha512-UXioh7F/b7/1jXR7AaKA8XdrGrRKndbm7gJumCkL/34HD6QaW7ujnGH1bD6AHNbnOVV9kSG3ybfYQGFhQ1sq7Q==
+
+"@react-native-firebase/messaging@^7.8.4":
+  version "7.8.4"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-7.8.4.tgz#2ad67556c889bea302c6306f0d3f5bcacd8295e0"
+  integrity sha512-sMgViSnQ6MM1MDgvOhxrTCIuJB8KNhqM+ZVpNI71RpQFynZMKFO1YfSaMMXZQT+Mg3tRQ0Y+wMusz7s1wvueAA==
 
 "@react-navigation/core@~3.5.1":
   version "3.5.2"

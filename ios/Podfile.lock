@@ -409,7 +409,12 @@ PODS:
   - RNFBApp (8.4.1):
     - Firebase/CoreOnly (~> 6.30.0)
     - React
-  - RNFBMessaging (7.8.3):
+  - RNFBIid (7.4.2):
+    - Firebase/CoreOnly (~> 6.30.0)
+    - FirebaseInstanceID
+    - React
+    - RNFBApp
+  - RNFBMessaging (7.8.4):
     - Firebase/Messaging (~> 6.30.0)
     - React
     - RNFBApp
@@ -487,6 +492,7 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDefaultPreference (from `../node_modules/react-native-default-preference`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - "RNFBIid (from `../node_modules/@react-native-firebase/iid`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -602,6 +608,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-default-preference"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
+  RNFBIid:
+    :path: "../node_modules/@react-native-firebase/iid"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
@@ -680,7 +688,8 @@ SPEC CHECKSUMS:
   RNDateTimePicker: e386ff4ef3300964ed0cad97ce6f206e0effbfdb
   RNDefaultPreference: 2f8d6d54230edbd78708ada8d63bb275e5a8415b
   RNFBApp: e4321cad5dd23b43b3b4f0ca060300b9f85cb7a4
-  RNFBMessaging: ca2afaa9449dde72fded30f93b9a4fd296d4dd60
+  RNFBIid: e680cefebe2bfdb978de307319e325f97d8836d6
+  RNFBMessaging: f28096dc79edf6b0a094e95c265c7224122d051d
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNPermissions: ad71dd4f767ec254f2cd57592fbee02afee75467
   RNScreens: f28b48b8345f2f5f39ed6195518291515032a788

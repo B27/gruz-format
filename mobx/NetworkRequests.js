@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import { errorPayUrl, succesfulPayUrl } from '../constants';
 import networkErrorHandler from '../utils/networkErrorHandler';
 
 const TAG = '~NetworkRequest.js~';
@@ -20,7 +21,7 @@ async function startOrder(id) {
     let userId;
     try {
         userId = await AsyncStorage.getItem('userId');
-        console.log('[NetworkRequests].startOrder() userId', userId)
+        console.log('[NetworkRequests].startOrder() userId', userId);
         let response = await axios.patch(`/order/workers/${id}/${userId}`);
         console.log(TAG, 'startOrder response.status:', response.status, response.data.msg);
     } catch (error) {
@@ -99,7 +100,7 @@ async function clearPushToken() {
     }
 }
 
-async function addThirdPartyWorker(userId, orderIdOnWork){
+async function addThirdPartyWorker(userId, orderIdOnWork) {
     try {
         await axios.post(`/order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
     } catch (error) {
@@ -107,22 +108,29 @@ async function addThirdPartyWorker(userId, orderIdOnWork){
     }
 }
 
-async function deleteThirdPartyWorker(userId, orderIdOnWork){
+async function deleteThirdPartyWorker(userId, orderIdOnWork) {
     try {
         const res = await axios.delete(`/order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
-        console.log('[NetworkRequests].deleteThirdPartyWorker() res', res)
+        console.log('[NetworkRequests].deleteThirdPartyWorker() res', res);
     } catch (error) {
         await networkErrorHandler(TAG, error, `patch /order/workers/${orderIdOnWork}/${userId}/third_party_worker`);
     }
 }
 
-async function registerOrder(userId, amount, returnUrl, failUrl) {
+async function registerOrder(userId, amount) {
     let response;
+
     try {
-        response = await axios.post('/sber/register_order', {userId, amount, returnUrl, failUrl})
+        response = await axios.post('/sber/register_order', {
+            userId,
+            amount,
+            returnUrl: succesfulPayUrl,
+            failUrl: errorPayUrl,
+        });
     } catch (error) {
-        await networkErrorHandler(TAG, error, `post /sber/register_order`);
+        await networkErrorHandler(TAG, error, 'post /sber/register_order');
     }
+
     return response;
 }
 

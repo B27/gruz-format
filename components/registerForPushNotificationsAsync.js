@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Platform, NativeModules } from 'react-native';
 import DefaultPreference from 'react-native-default-preference';
+import RNFirebase from '@react-native-firebase/app';
 
 const TAG = '~registerForPushNotificationsAsync~';
 
@@ -8,7 +9,14 @@ export default async function registerForPushNotificationsAsync(userHasPushToken
     let pushToken = await DefaultPreference.get('pushToken');
     if (!pushToken && !userHasPushToken) {
         try {
-            ({ pushToken } = await NativeModules.RNFirebasePushToken.getToken());
+            await Platform.select({
+                android: async () => {
+                    ({ pushToken } = await NativeModules.RNFirebasePushToken.getToken());
+                },
+                ios: async () => {
+                    pushToken = await RNFirebase.messaging().getToken();
+                },
+            })();
         } catch (error) {
             console.log(TAG, error);
         }

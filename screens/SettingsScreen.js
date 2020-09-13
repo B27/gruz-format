@@ -9,6 +9,9 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+import iid from '@react-native-firebase/iid';
+import firebase from '@react-native-firebase/app';
+import showAlert from '../utils/showAlert';
 
 const TAG = '~SettingsScreen~';
 @inject('store')
@@ -82,20 +85,21 @@ class SettingsScreen extends React.Component {
 
     _signOutAsync = async () => {
         try {
-            await NativeModules.RNFirebasePushToken.deleteInstanceId();
             await AsyncStorage.clear();
             await Platform.select({
                 android: async () => {
+                    await NativeModules.RNFirebasePushToken.deleteInstanceId();
                     await NativeModules.ForegroundTaskModule.stopService();
                 },
                 ios: async () => {
+                    await firebase.iid().delete();
                     await BackgroundGeolocation.stop();
                     await BackgroundGeolocation.destroyLocations();
                 },
             })();
             this.props.navigation.navigate('SignIn');
         } catch (error) {
-            this._showErrorMessage(error.toString(), 'red');
+            showAlert('Ошибка', error.toString());
         }
     };
 

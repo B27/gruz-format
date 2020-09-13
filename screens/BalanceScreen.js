@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { inject, observer } from 'mobx-react/native';
+import NetworkRequests from '../mobx/NetworkRequests';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import NumericInput from '../components/NumericInput';
@@ -9,7 +10,6 @@ import axios from 'axios';
 import qs from 'qs';
 import md5 from 'md5';
 import LoadingButton from '../components/LoadingButton';
-import { succesfulPayUrl, errorPayUrl } from '../constants';
 import RNSimpleCrypto from 'react-native-simple-crypto';
 
 const axios2 = axios.create({
@@ -93,18 +93,7 @@ class BalanceScreen extends React.Component {
         let url;
 
         try {
-            const data = qs.stringify({
-                userName: 'gruzformat-api',
-                password: 'gruzformat',
-                amount: `${this.state.sum}00`,
-                orderNumber: `${this.props.store.userId}_${md5(Date.now()).slice(21)}`,
-                returnUrl: succesfulPayUrl,
-                failUrl: errorPayUrl,
-                pageView: 'MOBILE',
-            });
-            console.log('data', data);
-            const response = await axios2.post('/payment/rest/register.do', data);
-            console.log('response data', response.data);
+            const response = await NetworkRequests.registerOrder(this.props.store.userId, `${this.state.sum}00`);
             url = response.data.formUrl;
         } catch (error) {
             showAlert('Ошибка', error.toString());

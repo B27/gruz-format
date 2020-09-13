@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>975746048600-b29t52had2gslvmlv3v79ctkv2s6370a.apps.googleusercontent.com</string>
+	<string>975746048600-fpufq75h0pieva8s58eckhc60o2akvri.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.975746048600-b29t52had2gslvmlv3v79ctkv2s6370a</string>
+	<string>com.googleusercontent.apps.975746048600-fpufq75h0pieva8s58eckhc60o2akvri</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBkmW1aSDa-ejPDfJKSuZm6Ll1cC1OaeqQ</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>ru.baikalweb.gruz</string>
+	<string>ru.format.gruz</string>
 	<key>PROJECT_ID</key>
 	<string>formatgruz-ed9fb</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:975746048600:ios:5a60f0636d92fe8313602d</string>
+	<string>1:975746048600:ios:d9e30460bff9a77213602d</string>
 	<key>DATABASE_URL</key>
 	<string>https://formatgruz-ed9fb.firebaseio.com</string>
 </dict>
