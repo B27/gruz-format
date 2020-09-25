@@ -133,48 +133,6 @@ class MainScreen extends React.Component {
                 if (needSendGeo) {
                     await this._sendGeolocation(store.userId);
                 }
-                // try {
-                //     BackgroundGeolocation.onHttp((httpEvent) => {
-                //         console.log('http event ', httpEvent);
-                //     });
-                //     const state = await BackgroundGeolocation.ready({
-                //         elasticityMultiplier: 1,
-                //         stopTimeout: 1,
-                //         url: `http://localhost:3008/worker/location/${store.userId}`,
-                //         logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-                //         autoSync: true,
-                //         autoSyncThreshold: 0,
-                //         maxRecordsToPersist: 1,
-                //         headers: axios.defaults.headers,
-                //     });
-                //     console.log('BacGeo state', state, state.enabled);
-                //     BackgroundGeolocation.stop();
-                //     if (state.enabled) {
-                //         ////
-                //         // 3. Start tracking!
-                //         //
-                //         // BackgroundGeolocation.start(function () {
-                //         //     console.log('- Start success');
-                //         // });
-                //         await BackgroundGeolocation.stop();
-                //         BackgroundGeolocation.destroyLocations();
-                //     }
-                //     if (!state.enabled) {
-                //         ////
-                //         // 3. Start tracking!
-                //         //
-                //         BackgroundGeolocation.start(function () {
-                //             console.log('- Start success');
-                //         });
-                //     }
-
-                //     const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
-                //     await NetworkRequests.sendLocation({ location }, this.props.store.userId);
-                //     console.log('location recieved', location);
-                // } catch (error) {
-                //     console.error('error in location', error);
-                // } finally {
-                // }
             },
         })();
         //console.log('[MainScreen]._onRefresh() store', this.props.store)
@@ -190,7 +148,7 @@ class MainScreen extends React.Component {
 
     _sendGeolocation = async (userId) => {
         try {
-            await BackgroundGeolocation.ready();
+            await BackgroundGeolocation.ready({ locationAuthorizationRequest: 'Always' });
 
             const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
             // console.log('location recieved', location);
@@ -281,7 +239,7 @@ class MainScreen extends React.Component {
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}
                     ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
-                    ListFooterComponent={<SafeAreaView />}
+                    contentInsetAdjustmentBehavior="automatic"
                 />
             </>
         );

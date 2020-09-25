@@ -14,6 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1D1ABE4F24FBB63600BD207E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D1ABE4E24FBB63600BD207E /* GoogleService-Info.plist */; };
 		1D1ABE5024FBB63600BD207E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D1ABE4E24FBB63600BD207E /* GoogleService-Info.plist */; };
+		1DE903A32519633200FEE47E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1DE903A22519633200FEE47E /* Launch Screen.storyboard */; };
 		1DEAA01C24E410E80094B74D /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DEAA01B24E410E80094B74D /* RNBackgroundFetch+AppDelegate.m */; };
 		5129260E1647D43D4E586EBC /* libPods-FormatGruz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C4399EDD42217933CB700E /* libPods-FormatGruz.a */; };
 		58C68DC451A25F5A874EFC95 /* libPods-FormatGruz-FormatGruzTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C46EFB1EFF42389D5200CC4 /* libPods-FormatGruz-FormatGruzTests.a */; };
@@ -35,7 +36,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* FormatGruzTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FormatGruzTests.m; sourceTree = "<group>"; };
 		02F38BC32AF1ABD5491CD1DE /* Pods-FormatGruz-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FormatGruz-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-FormatGruz-tvOSTests/Pods-FormatGruz-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* FormatGruz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FormatGruz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Формат.Груз - Исполнитель.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Формат.Груз - Исполнитель.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = FormatGruz/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = FormatGruz/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -44,6 +45,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FormatGruz/main.m; sourceTree = "<group>"; };
 		173E52D36646D798129449DC /* Pods-FormatGruz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FormatGruz.release.xcconfig"; path = "Target Support Files/Pods-FormatGruz/Pods-FormatGruz.release.xcconfig"; sourceTree = "<group>"; };
 		1D1ABE4E24FBB63600BD207E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1DE903A22519633200FEE47E /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		1DEAA01B24E410E80094B74D /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		1DFFD99124D6ECCD00A4D1D2 /* FormatGruz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FormatGruz.entitlements; path = FormatGruz/FormatGruz.entitlements; sourceTree = "<group>"; };
 		25036531B7080A2BEBEA7E47 /* Pods-FormatGruz-FormatGruzTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FormatGruz-FormatGruzTests.debug.xcconfig"; path = "Target Support Files/Pods-FormatGruz-FormatGruzTests/Pods-FormatGruz-FormatGruzTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				1DE903A22519633200FEE47E /* Launch Screen.storyboard */,
 			);
 			name = FormatGruz;
 			sourceTree = "<group>";
@@ -152,7 +155,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* FormatGruz.app */,
+				13B07F961A680F5B00A75B9A /* Формат.Груз - Исполнитель.app */,
 				00E356EE1AD99517003FC87E /* FormatGruzTests.xctest */,
 			);
 			name = Products;
@@ -215,7 +218,7 @@
 			);
 			name = FormatGruz;
 			productName = FormatGruz;
-			productReference = 13B07F961A680F5B00A75B9A /* FormatGruz.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Формат.Груз - Исполнитель.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -271,6 +274,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				1DE903A32519633200FEE47E /* Launch Screen.storyboard in Resources */,
 				1D1ABE4F24FBB63600BD207E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -561,7 +565,7 @@
 				CODE_SIGN_ENTITLEMENTS = FormatGruz/FormatGruz.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = F3MQA58UUP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -576,7 +580,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.format.gruz;
-				PRODUCT_NAME = FormatGruz;
+				PRODUCT_NAME = "Формат.Груз - Исполнитель";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -593,7 +597,7 @@
 				CODE_SIGN_ENTITLEMENTS = FormatGruz/FormatGruz.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = F3MQA58UUP;
 				INFOPLIST_FILE = FormatGruz/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -603,7 +607,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.format.gruz;
-				PRODUCT_NAME = FormatGruz;
+				PRODUCT_NAME = "Формат.Груз - Исполнитель";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

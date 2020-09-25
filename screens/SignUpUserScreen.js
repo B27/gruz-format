@@ -6,18 +6,18 @@ import React from 'react';
 import {
     Keyboard,
     Linking,
+    Platform,
+    SafeAreaView,
     ScrollView,
     Text,
     TextInput,
     TouchableOpacity,
     View,
-    Platform,
-    SafeAreaView,
 } from 'react-native';
-import { Picker } from '@react-native-community/picker';
-import PickerSelect from '../components/PickerSelect';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
+import PickerSelect from '../components/PickerSelect';
 import { privacyPolicyURL } from '../constants';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
@@ -69,7 +69,7 @@ class SignUpUserScreen extends React.Component {
     };
     static navigationOptions = {
         title: 'Регистрация',
-        headerLeft: null,
+        headerTintColor: 'black',
         headerTitleStyle: {
             textAlign: 'center',
             flexGrow: 1,
@@ -137,16 +137,16 @@ class SignUpUserScreen extends React.Component {
 
     render() {
         return (
-            <SafeAreaView>
-                <ScrollView contentContainerStyle={styles.registrationScreen}>
+            <>
+                <ScrollView
+                    contentContainerStyle={styles.registrationScreen}
+                    contentInsetAdjustmentBehavior="automatic"
+                >
                     <PhotoChoicer
                         onChange={(uri) => this.setState({ userImgUri: uri })}
                         uri={this.state.userImgUri}
                         size={200}
                     />
-                    {/* <TouchableOpacity onPress={() => this.openCameraRoll()}>
-                        <LocalImage source={this.state.pictureUri} originalWidth={909} originalHeight={465} />
-                    </TouchableOpacity> */}
 
                     <View style={[styles.inputContainer, { flexDirection: 'row', justifyContent: 'space-between' }]}>
                         <TouchableOpacity
@@ -213,23 +213,12 @@ class SignUpUserScreen extends React.Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.inputContainer} behavior="padding" enabled>
-                        {/*<View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Text style={styles.plusSevenText}>+7</Text>
-                            <TextInput
-                                style={[styles.input, {alignSelf: 'stretch', width: '70%'}]}
-                                placeholder='Номер телефона'
-                                placeholderTextColor='grey'
-                                onChangeText={phone => this.setState({ phone })}
-                            />
-                        </View>*/}
                         <TextInput
                             style={styles.input}
                             placeholder="Номер телефона"
                             placeholderTextColor="grey"
                             onChangeText={(phone) => this.setState({ phone: phone.replace(/[ \(\)]/g, '') })}
                         />
-
-                        {/* [var_name]: "phone" */}
 
                         <TextInput
                             style={styles.input}
@@ -254,32 +243,6 @@ class SignUpUserScreen extends React.Component {
                             placeholderTextColor="grey"
                             onChangeText={(firstname) => this.setState({ firstname })}
                         />
-                        {/* <View
-                        style={{
-                            height: 45,
-                            borderWidth: 1,
-                            borderRadius: 15,
-                            paddingLeft: 5,
-                            marginBottom: 15,
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Picker
-                            selectedValue={this.state.cityId}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({
-                                    cityId: itemValue,
-                                })
-                            }
-                            placeholder="Город"
-                        >
-                            {this.state.cities.map(({ name: city, id: id }, index) => {
-                                return (
-                                    <Picker.Item color={!index ? 'grey' : 'black'} key={city} label={city} value={id} />
-                                );
-                            })}
-                        </Picker>
-                    </View> */}
                         <PickerSelect
                             style={{
                                 inputIOS: {
@@ -310,13 +273,6 @@ class SignUpUserScreen extends React.Component {
                                 key: id,
                             }))}
                         />
-                        {/*<TouchableOpacity style={styles.input} onPress={() => this.openDatePicker()}>
-                            <Text style={styles.datePickerText}>
-                                {this.state.birthDate != 'Дата рождения'
-                                    ? `${this.state.birthDate.getDate()}.${this.state.birthDate.getMonth()+1}.${this.state.birthDate.getFullYear()}`
-                                    : this.state.birthDate}
-                            </Text>
-                        </TouchableOpacity>*/}
 
                         <TextInput
                             style={styles.input}
@@ -450,7 +406,8 @@ class SignUpUserScreen extends React.Component {
                         ПРОДОЛЖИТЬ
                     </LoadingButton>
                 </ScrollView>
-            </SafeAreaView>
+                <KeyboardSpacer />
+            </>
         );
     }
 
