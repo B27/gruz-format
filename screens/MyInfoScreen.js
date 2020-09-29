@@ -221,14 +221,14 @@ class MyInfoScreen extends React.Component {
                     </TouchableOpacity>
 
                     <View style={[localStyles.flexOne, localStyles.flexDirectionRow]}>
-                        <NumericInput
+                        {/* <NumericInput
                             onlyNum
                             style={styles.inputHalf}
                             placeholder="Рост (cм)"
                             onChangeText={(height) => this.setState({ height })}
                             value={this.state.height ? this.state.height.toString() : ''}
                         />
-                        <View style={localStyles.divider} />
+                        <View style={localStyles.divider} /> */}
                         <NumericInput
                             onlyNum
                             style={styles.inputHalf}
@@ -261,7 +261,7 @@ class MyInfoScreen extends React.Component {
         if (this.state.phone.length !== 11) return 'Ваш номер должен содержать ровно 11 символов';
         if (!/^8/g.test(this.state.phone)) return 'Ваш номер должен начинаться с 8';
         if (this.state.birthDate === 'Дата рождения') return 'Укажите дату рождения';
-        if (this.state.height === '') return 'Укажите свой вес';
+        // if (this.state.height === '') return 'Укажите свой вес';
         if (this.state.weight === '') return 'Укажите свой рост';
         if (city === '') return 'Укажите город';
         if (this.state.cityId === '') return 'Укажите город';
@@ -289,7 +289,7 @@ class MyInfoScreen extends React.Component {
                     birthDate: this.state.birthDate || this.props.store.birthDate,
                     address: `${city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
                     city: this.state.cityId,
-                    height: this.state.height,
+                    // height: this.state.height,
                     weight: this.state.weight,
                     isDriver: this.state.isDriver,
                 });

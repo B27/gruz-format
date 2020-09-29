@@ -13,6 +13,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Alert,
 } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
@@ -36,7 +37,7 @@ class SignUpUserScreen extends React.Component {
         birthDate: '',
         city: '',
         cityId: null,
-        height: '',
+        // height: '',
         weight: '',
         message: '',
         street: '',
@@ -283,14 +284,14 @@ class SignUpUserScreen extends React.Component {
 
                         {!this.state.isDriver && (
                             <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <NumericInput
+                                {/* <NumericInput
                                     onlyNum
                                     style={styles.inputHalf}
                                     placeholder="Рост (cм)"
                                     onChangeText={(height) => this.setState({ height })}
                                     value={this.state.height}
                                 />
-                                <View style={{ width: 15 }} />
+                                <View style={{ width: 15 }} /> */}
                                 <NumericInput
                                     onlyNum
                                     style={styles.inputHalf}
@@ -434,9 +435,6 @@ class SignUpUserScreen extends React.Component {
             if (!this.state.isOpen && (this.state.veh_height === null || this.state.veh_height === ''))
                 return 'Заполните высоту авто';
             if (!this.state.vehicleImgUri) return 'Загрузите 1 фото авто';
-        } else {
-            if (this.state.height === '') return 'Укажите свой рост';
-            if (this.state.weight === '') return 'Укажите свой вес';
         }
         if (this.state.policy === false)
             return 'Для продолжения регистрации необходимо принять условия сублицензионного соглашения';
@@ -444,124 +442,154 @@ class SignUpUserScreen extends React.Component {
         return null;
     };
 
+    isUserNeedsCorrectWeight = async () => {
+        if (!this.state.isDriver && this.state.weight === '') {
+            try {
+                await new Promise((resolve, reject) => {
+                    Alert.alert(
+                        'Предупреждение',
+                        'Вы не сможете получать новые заявки пока не укажете вес. После регистрации вес можно указать в боковом меню на вкладке "Моя информация"',
+                        [
+                            {
+                                text: 'Отмена',
+                                style: 'cancel',
+                                onPress: reject,
+                            },
+                            { text: 'Продолжить', onPress: resolve },
+                        ],
+                        { onDismiss: reject },
+                    );
+                });
+            } catch (error) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     _nextScreen = async () => {
         const errorMessage = await this.isValidFields();
+
         if (errorMessage !== null) {
             showAlert('Ошибка', errorMessage);
-        } else {
-            const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
-            let userData = {
-                name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
-                login: this.state.phone,
-                phoneNum: this.state.phone,
-                password: this.state.password,
-                birthDate: new Date(this.state.birthDate, 0, 1),
-                address: `${city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
-                city: this.state.cityId,
-                isDriver: this.state.isDriver,
+            return;
+        }
+
+        const needsCorrection = await this.isUserNeedsCorrectWeight();
+
+        if (needsCorrection) {
+            return;
+        }
+
+        const city = this.state.cities.filter(({ id }) => id === this.state.cityId)[0].name;
+
+        let userData = {
+            name: `${this.state.lastname} ${this.state.firstname} ${this.state.patronimyc}`,
+            login: this.state.phone,
+            phoneNum: this.state.phone,
+            password: this.state.password,
+            birthDate: new Date(this.state.birthDate, 0, 1),
+            address: `${city} ${this.state.street} ${this.state.house} ${this.state.flat}`,
+            city: this.state.cityId,
+            isDriver: this.state.isDriver,
+        };
+
+        if (this.state.isDriver) {
+            userData = {
+                ...userData,
+                veh_is_open: this.state.isOpen,
+                veh_height: this.state.isOpen ? '4' : this.state.veh_height,
+                veh_width: this.state.width,
+                veh_length: this.state.length,
+                veh_loadingCap: this.state.loadCapacity,
+                veh_frameType: this.state.bodyType,
+                veh_stateCarNumber: this.state.veh_stateCarNumber,
             };
+        } else {
+            userData = {
+                ...userData,
+                // height: this.state.height,
+                weight: this.state.weight,
+            };
+        }
 
-            if (this.state.isDriver) {
-                userData = {
-                    ...userData,
-                    veh_is_open: this.state.isOpen,
-                    veh_height: this.state.isOpen ? '4' : this.state.veh_height,
-                    veh_width: this.state.width,
-                    veh_length: this.state.length,
-                    veh_loadingCap: this.state.loadCapacity,
-                    veh_frameType: this.state.bodyType,
-                    veh_stateCarNumber: this.state.veh_stateCarNumber,
-                };
-            } else {
-                userData = {
-                    ...userData,
-                    height: this.state.height,
-                    weight: this.state.weight,
-                };
-            }
-
-            try {
-                console.log('Data to server: ', userData);
-                const res = await axios.post('/worker', userData);
-                //console.log('REGISTRATION: ', res);
-                this.setState({ userId: res.data._id });
-                await AsyncStorage.setItem('userId', this.state.userId);
-                //this.props.navigation.navigate('Documents');
-            } catch (error) {
-                console.log('ERROR_POST:', error);
-                if (error.response) {
-                    if (error.response.data.message.indexOf('duplicate key error') !== -1) {
-                        showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован');
-                    } else {
-                        showAlert(
-                            'Ошибка при отправке данных',
-                            'Попробуйте сделать это позже\n' + error.response.data.message,
-                        );
-                    }
+        try {
+            console.log('Data to server: ', userData);
+            const res = await axios.post('/worker', userData);
+            //console.log('REGISTRATION: ', res);
+            this.setState({ userId: res.data._id });
+            await AsyncStorage.setItem('userId', this.state.userId);
+        } catch (error) {
+            console.log('ERROR_POST:', error);
+            if (error.response) {
+                if (error.response.data.message.indexOf('duplicate key error') !== -1) {
+                    showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован');
                 } else {
-                    showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже');
-                }
-                return;
-            }
-
-            try {
-                const response = await axios.post('/login', {
-                    login: userData.login,
-                    password: userData.password,
-                });
-                //console.log('respLogin: ', response);
-                await AsyncStorage.setItem('token', response.data.token);
-
-                axios.defaults.headers = {
-                    Authorization: 'Bearer ' + response.data.token,
-                };
-            } catch (error) {
-                console.log('ОШИБКА', error);
-                if (error.response) {
                     showAlert(
-                        'Регистрация успешна, но произошла ошибка ',
+                        'Ошибка при отправке данных',
                         'Попробуйте сделать это позже\n' + error.response.data.message,
                     );
-                } else {
-                    showAlert('Регистрация успешна, но произошла ошибка ', 'Попробуйте залогиниться заново');
                 }
-                this.props.navigation.navigate('SignIn');
-                return;
+            } else {
+                showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже');
             }
+            return;
+        }
 
-            try {
-                const data = new FormData();
-                //console.log(this.state.pictureUri);
+        try {
+            const response = await axios.post('/login', {
+                login: userData.login,
+                password: userData.password,
+            });
+            //console.log('respLogin: ', response);
+            await AsyncStorage.setItem('token', response.data.token);
 
-                data.append('user', {
-                    uri: this.state.userImgUri,
-                    type: mime.getType(this.state.userImgUri),
+            axios.defaults.headers = {
+                Authorization: 'Bearer ' + response.data.token,
+            };
+        } catch (error) {
+            console.log('ОШИБКА', error);
+            if (error.response) {
+                showAlert(
+                    'Регистрация успешна, но произошла ошибка ',
+                    'Попробуйте сделать это позже\n' + error.response.data.message,
+                );
+            } else {
+                showAlert('Регистрация успешна, но произошла ошибка ', 'Попробуйте залогиниться заново');
+            }
+            this.props.navigation.navigate('SignIn');
+            return;
+        }
+
+        try {
+            const data = new FormData();
+            //console.log(this.state.pictureUri);
+
+            data.append('user', {
+                uri: this.state.userImgUri,
+                type: mime.getType(this.state.userImgUri),
+                name: 'image.jpg',
+            });
+            if (this.state.vehicleImgUri) {
+                data.append('vehicle0', {
+                    uri: this.state.vehicleImgUri,
+                    type: mime.getType(this.state.vehicleImgUri),
                     name: 'image.jpg',
                 });
-                if (this.state.vehicleImgUri) {
-                    data.append('vehicle0', {
-                        uri: this.state.vehicleImgUri,
-                        type: mime.getType(this.state.vehicleImgUri),
-                        name: 'image.jpg',
-                    });
-                }
-                //console.log(data);
-
-                await axios.patch('/worker/upload/' + this.state.userId, data);
-                this.props.navigation.navigate('AuthLoading');
-            } catch (error) {
-                console.log('Download photos error: ', error);
-                console.dir(error, { depth: null });
-                if (error.response) {
-                    showAlert(
-                        'Ошибка при загрузке фото',
-                        'Попробуйте сделать это позже\n' + error.response.data.message,
-                    );
-                } else {
-                    showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже');
-                }
-                this.props.navigation.navigate('AuthLoading');
             }
+            //console.log(data);
+
+            await axios.patch('/worker/upload/' + this.state.userId, data);
+            this.props.navigation.navigate('AuthLoading');
+        } catch (error) {
+            console.log('Download photos error: ', error);
+            console.dir(error, { depth: null });
+            if (error.response) {
+                showAlert('Ошибка при загрузке фото', 'Попробуйте сделать это позже\n' + error.response.data.message);
+            } else {
+                showAlert('Ошибка при загрузке фото', 'Попробуйте произвести загрузку фото позже');
+            }
+            this.props.navigation.navigate('AuthLoading');
         }
     };
 

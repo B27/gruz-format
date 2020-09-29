@@ -12,9 +12,7 @@ import { MenuIcon } from '../components/MenuIcon';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
 import BalanceScreen from '../screens/BalanceScreen';
 import ChatScreen from '../screens/Chat';
-import SignUpDocumentsScreen from '../screens/SignUpDocumentsScreen';
 
-import SignUpCarScreen from '../screens/SignUpCarScreen';
 import SignUpUserScreen from '../screens/SignUpUserScreen';
 import InstructionScreen from '../screens/InstructionScreen';
 import MainScreen from '../screens/MainScreen';
@@ -223,8 +221,6 @@ const AuthStack = createStackNavigator(
             navigationOptions: { headerBackTitle: 'Назад', headerTruncatedBackTitle: 'Назад' },
         },
         RegisterPerson: SignUpUserScreen,
-        Documents: SignUpDocumentsScreen,
-        EditCar: SignUpCarScreen,
     },
     {
         defaultNavigationOptions: {

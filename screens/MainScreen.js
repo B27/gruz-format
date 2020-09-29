@@ -207,9 +207,10 @@ class MainScreen extends React.Component {
                                 <Text style={styles.errorMessage}>{this.state.message}</Text>
                                 <Text style={styles.mainFontUserName}>{store.name}</Text>
                                 <Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
-                                {store.disabled ? (
-                                    <Text style={styles.errorMessage}>Учетная запись неактивна</Text>
-                                ) : null}
+                                {store.isDriver || store.weight || (
+                                    <Text style={styles.errorMessage}>Не указан вес</Text>
+                                )}
+                                {store.disabled && <Text style={styles.errorMessage}>Учетная запись неактивна</Text>}
                                 {store.docStatus === 'notUploaded' ? (
                                     <Text style={styles.errorMessage}>Загрузите документы!</Text>
                                 ) : store.docStatus === 'updated' ? (
