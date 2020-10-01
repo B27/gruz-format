@@ -1,34 +1,33 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { TextInput } from 'react-native';
-export default class NumericInput extends React.Component {
-    _onChangeText = text => {
-        if (this.props.onlyNum && (text.includes(',') || text.includes('.'))) {
-            return;
-        }
 
-        if (text.includes(',')) {
-            return;
-        }
+export default function DecimalInput({ onlyNum, onChangeText, style, placeholder, value }) {
+    const _onChangeText = useCallback(
+        (text) => {
+            if (onlyNum && (text.includes(',') || text.includes('.'))) {
+                return;
+            }
 
-        // отрезаю число до сотых и проверяю наличие двух точек
-        if (-1 < text.search(/\....|\..*\./)) {
-            return;
-        }
+            const inputStr = text.replace(',', '.');
 
-        this.props.onChangeText(text);
-    };
+            // отрезаю число до сотых и проверяю наличие двух точек
+            if (inputStr.search(/\....|\..*\./) > -1) {
+                return;
+            }
 
-    render() {
-        const { style, placeholder, value } = this.props;
-        return (
-            <TextInput
-                style={style}
-                placeholder={placeholder}
-                placeholderTextColor='grey'
-                keyboardType='numeric'
-                onChangeText={this._onChangeText}
-                value={value}
-            />
-        );
-    }
+            onChangeText(inputStr);
+        },
+        [onChangeText, onlyNum],
+    );
+
+    return (
+        <TextInput
+            style={style}
+            placeholder={placeholder}
+            placeholderTextColor="grey"
+            keyboardType="numeric"
+            onChangeText={_onChangeText}
+            value={value}
+        />
+    );
 }

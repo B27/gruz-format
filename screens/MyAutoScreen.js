@@ -152,7 +152,10 @@ class MyAutoScreen extends React.Component {
                         </Text>
                     </View>
                 ) : (
-                    <ScrollView contentContainerStyle={styles.registrationScreen}>
+                    <ScrollView
+                        contentInsetAdjustmentBehavior="automatic"
+                        contentContainerStyle={styles.registrationScreen}
+                    >
                         <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
                         <View style={styles.inputContainer}>
                             <PickerSelect

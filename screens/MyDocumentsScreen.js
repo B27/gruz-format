@@ -5,6 +5,7 @@ import mime from 'mime/lite';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { Keyboard, Linking, ScrollView, Text, View, Platform } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import { privacyPolicyURL } from '../constants';
@@ -67,66 +68,72 @@ class MyDocumentsScreen extends React.Component {
     }
     render() {
         return (
-            <ScrollView contentContainerStyle={styles.registrationScreen}>
-                <View style={styles.inputContainer}>
-                    <NumericInput
-                        onlyNum
-                        style={styles.input}
-                        placeholder="Номер паспорта"
-                        onChangeText={(passportNumber) => this.setState({ passportNumber })}
-                        value={this.state.passportNumber}
-                    />
-                    <NumericInput
-                        onlyNum
-                        style={styles.input}
-                        placeholder="Серия паспорта"
-                        onChangeText={(passportSeries) => this.setState({ passportSeries })}
-                        value={this.state.passportSeries}
-                    />
-                    <Text>Фотография первой страницы паспорта:</Text>
-                    <PhotoChoicer
-                        containerStyle={styles.fullScreenPicture}
-                        refreshImage={this.props.store.refreshImage}
-                        onChange={(uri) => this.setState({ firstPageUri: uri })}
-                        uri={this.state.firstPageUri || this.props.store.firstPageUri}
-                        size={200}
-                    />
-                    <Text>Фотография страницы паспорта c пропиской:</Text>
-                    <PhotoChoicer
-                        containerStyle={styles.fullScreenPicture}
-                        refreshImage={this.props.store.refreshImage}
-                        onChange={(uri) => this.setState({ secondPageUri: uri })}
-                        uri={this.state.secondPageUri || this.props.store.secondPageUri}
-                        size={200}
-                    />
-                </View>
-                <View style={styles.policy}>
-                    <CheckBox
-                        value={this.state.policy}
-                        onValueChange={() => this.setState({ policy: !this.state.policy })}
-                    />
-                    <View style={[{ flexDirection: 'column' }, Platform.OS === 'ios' && { marginLeft: 8 }]}>
-                        <Text>Я согласен на обработку моих персональных данных</Text>
-                        <Text
-                            style={{ color: '#c69523' }}
-                            onPress={() => {
-                                Linking.openURL(this.state.policyURL);
-                            }}
-                        >
-                            Сублицензионное соглашение
-                        </Text>
-                    </View>
-                </View>
-
-                <Text style={{ color: 'red' }}>{this.state.message}</Text>
-                <LoadingButton
-                    style={styles.buttonBottom}
-                    onPress={this._nextScreen}
-                    // eslint-disable-next-line react-native/no-raw-text
+            <>
+                <ScrollView
+                    contentInsetAdjustmentBehavior="automatic"
+                    contentContainerStyle={styles.registrationScreen}
                 >
-                    ПРОДОЛЖИТЬ
-                </LoadingButton>
-            </ScrollView>
+                    <View style={styles.inputContainer}>
+                        <NumericInput
+                            onlyNum
+                            style={styles.input}
+                            placeholder="Номер паспорта"
+                            onChangeText={(passportNumber) => this.setState({ passportNumber })}
+                            value={this.state.passportNumber}
+                        />
+                        <NumericInput
+                            onlyNum
+                            style={styles.input}
+                            placeholder="Серия паспорта"
+                            onChangeText={(passportSeries) => this.setState({ passportSeries })}
+                            value={this.state.passportSeries}
+                        />
+                        <Text>Фотография первой страницы паспорта:</Text>
+                        <PhotoChoicer
+                            containerStyle={styles.fullScreenPicture}
+                            refreshImage={this.props.store.refreshImage}
+                            onChange={(uri) => this.setState({ firstPageUri: uri })}
+                            uri={this.state.firstPageUri || this.props.store.firstPageUri}
+                            size={200}
+                        />
+                        <Text>Фотография страницы паспорта c пропиской:</Text>
+                        <PhotoChoicer
+                            containerStyle={styles.fullScreenPicture}
+                            refreshImage={this.props.store.refreshImage}
+                            onChange={(uri) => this.setState({ secondPageUri: uri })}
+                            uri={this.state.secondPageUri || this.props.store.secondPageUri}
+                            size={200}
+                        />
+                    </View>
+                    <View style={styles.policy}>
+                        <CheckBox
+                            value={this.state.policy}
+                            onValueChange={() => this.setState({ policy: !this.state.policy })}
+                        />
+                        <View style={[{ flexDirection: 'column' }, Platform.OS === 'ios' && { marginLeft: 8 }]}>
+                            <Text>Я согласен на обработку моих персональных данных</Text>
+                            <Text
+                                style={{ color: '#c69523' }}
+                                onPress={() => {
+                                    Linking.openURL(this.state.policyURL);
+                                }}
+                            >
+                                Сублицензионное соглашение
+                            </Text>
+                        </View>
+                    </View>
+
+                    <Text style={{ color: 'red' }}>{this.state.message}</Text>
+                    <LoadingButton
+                        style={styles.buttonBottom}
+                        onPress={this._nextScreen}
+                        // eslint-disable-next-line react-native/no-raw-text
+                    >
+                        ПРОДОЛЖИТЬ
+                    </LoadingButton>
+                </ScrollView>
+                <KeyboardSpacer />
+            </>
         );
     }
 
@@ -154,10 +161,7 @@ class MyDocumentsScreen extends React.Component {
         } catch (error) {
             console.log('Download photos error: ', error);
             if (error.response) {
-                showAlert(
-                    'Ошибка при отправке данных',
-                    'Попробуйте сделать это позже\n' + error.response.data.message,
-                );
+                showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже\n' + error.response.data.message);
             } else {
                 showAlert('Ошибка при отправке данных', 'Попробуйте попозже');
             }

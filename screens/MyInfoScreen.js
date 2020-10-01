@@ -7,7 +7,8 @@ import { format } from 'date-fns';
 import mime from 'mime/lite';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { Keyboard, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import PickerSelect from '../components/PickerSelect';
@@ -100,128 +101,132 @@ class MyInfoScreen extends React.Component {
 
     render() {
         return (
-            <ScrollView contentContainerStyle={styles.registrationScreen}>
-                <PhotoChoicer
-                    refreshImage={this.props.store.refreshImage}
-                    onChange={(uri) => this.setState({ avatar: uri })}
-                    uri={this.state.avatar || this.props.store.avatar}
-                    size={200}
-                />
-                <View
-                    style={[
-                        styles.inputContainer,
-                        localStyles.flexDirectionRow,
-                        localStyles.justifyContentSpaceBetween,
-                    ]}
+            <>
+                <ScrollView
+                    contentInsetAdjustmentBehavior="automatic"
+                    contentContainerStyle={styles.registrationScreen}
                 >
-                    <TouchableOpacity
-                        style={localStyles.driverButton}
-                        onPress={() => {
-                            this.setState({ isDriver: true });
-                        }}
+                    <PhotoChoicer
+                        refreshImage={this.props.store.refreshImage}
+                        onChange={(uri) => this.setState({ avatar: uri })}
+                        uri={this.state.avatar || this.props.store.avatar}
+                        size={200}
+                    />
+                    <View
+                        style={[
+                            styles.inputContainer,
+                            localStyles.flexDirectionRow,
+                            localStyles.justifyContentSpaceBetween,
+                        ]}
                     >
-                        <View style={localStyles.roundEdging}>
-                            {this.state.isDriver ? <View style={localStyles.roundDot} /> : null}
-                        </View>
-                        <Text>Водитель</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={localStyles.flexDirectionRow}
-                        onPress={() => {
-                            this.setState({ isDriver: false });
-                        }}
-                    >
-                        <View style={localStyles.roundEdging}>
-                            {!this.state.isDriver ? <View style={localStyles.roundDot} /> : null}
-                        </View>
-                        <Text>Грузчик</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.inputContainer}>
-                    {/* [var_name]: "phone" */}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Номер телефона"
-                        placeholderTextColor="grey"
-                        onChangeText={(phone) => this.setState({ phone: phone.replace(/[ \(\)]/g, '') })}
-                        value={this.state.phone}
-                        fullWidth
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Имя"
-                        placeholderTextColor="grey"
-                        onChangeText={(firstName) => this.setState({ firstName })}
-                        value={this.state.firstName}
-                    />
-
-                    <PickerSelect
-                        style={{
-                            inputIOS: {
-                                height: 45,
-                                borderWidth: 1,
-                                borderRadius: 15,
-                                paddingLeft: 16,
-                                marginBottom: 15,
-                                fontSize: 16,
-                                justifyContent: 'center',
-                            },
-                            placeholder: {
-                                color: 'grey',
-                            },
-                        }}
-                        value={this.state.cityId}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({
-                                cityId: itemValue,
-                            })
-                        }
-                        doneText="Готово"
-                        placeholder={{ label: 'Город', value: null }}
-                        useNativeAndroidPickerStyle={false}
-                        items={this.state.cities.map(({ name: city, id: id }) => ({
-                            label: city,
-                            value: id,
-                            key: id,
-                        }))}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Улица"
-                        placeholderTextColor="grey"
-                        onChangeText={(street) => this.setState({ street })}
-                        value={this.state.street}
-                    />
-                    <View style={[localStyles.flexOne, localStyles.flexDirectionRow]}>
-                        <NumericInput
-                            onlyNum
-                            style={styles.inputHalf}
-                            placeholder="Дом"
-                            onChangeText={(house) => this.setState({ house })}
-                            value={this.state.house}
-                        />
-                        <View style={localStyles.divider} />
-                        <NumericInput
-                            onlyNum
-                            style={styles.inputHalf}
-                            placeholder="Квартира"
-                            onChangeText={(flat) => this.setState({ flat })}
-                            value={this.state.flat}
-                        />
+                        <TouchableOpacity
+                            style={localStyles.driverButton}
+                            onPress={() => {
+                                this.setState({ isDriver: true });
+                            }}
+                        >
+                            <View style={localStyles.roundEdging}>
+                                {this.state.isDriver ? <View style={localStyles.roundDot} /> : null}
+                            </View>
+                            <Text>Водитель</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={localStyles.flexDirectionRow}
+                            onPress={() => {
+                                this.setState({ isDriver: false });
+                            }}
+                        >
+                            <View style={localStyles.roundEdging}>
+                                {!this.state.isDriver ? <View style={localStyles.roundDot} /> : null}
+                            </View>
+                            <Text>Грузчик</Text>
+                        </TouchableOpacity>
                     </View>
-                    {this.state.showDatePicker && (
-                        <DateTimePicker
-                            mode="date"
-                            onChange={this._handleBirthdayChange}
-                            value={this.state.birthDate || this.props.store.birthDate}
+                    <View style={styles.inputContainer}>
+                        {/* [var_name]: "phone" */}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Номер телефона"
+                            placeholderTextColor="grey"
+                            onChangeText={(phone) => this.setState({ phone: phone.replace(/[ \(\)]/g, '') })}
+                            value={this.state.phone}
+                            fullWidth
                         />
-                    )}
-                    <TouchableOpacity style={styles.input} onPress={() => this.setState({ showDatePicker: true })}>
-                        <Text style={styles.datePickerText}>{this._getFormattedBirthDate()}</Text>
-                    </TouchableOpacity>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Имя"
+                            placeholderTextColor="grey"
+                            onChangeText={(firstName) => this.setState({ firstName })}
+                            value={this.state.firstName}
+                        />
 
-                    <View style={[localStyles.flexOne, localStyles.flexDirectionRow]}>
-                        {/* <NumericInput
+                        <PickerSelect
+                            style={{
+                                inputIOS: {
+                                    height: 45,
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    paddingLeft: 16,
+                                    marginBottom: 15,
+                                    fontSize: 16,
+                                    justifyContent: 'center',
+                                },
+                                placeholder: {
+                                    color: 'grey',
+                                },
+                            }}
+                            value={this.state.cityId}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({
+                                    cityId: itemValue,
+                                })
+                            }
+                            doneText="Готово"
+                            placeholder={{ label: 'Город', value: null }}
+                            useNativeAndroidPickerStyle={false}
+                            items={this.state.cities.map(({ name: city, id: id }) => ({
+                                label: city,
+                                value: id,
+                                key: id,
+                            }))}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Улица"
+                            placeholderTextColor="grey"
+                            onChangeText={(street) => this.setState({ street })}
+                            value={this.state.street}
+                        />
+                        <View style={[localStyles.flexOne, localStyles.flexDirectionRow]}>
+                            <NumericInput
+                                onlyNum
+                                style={styles.inputHalf}
+                                placeholder="Дом"
+                                onChangeText={(house) => this.setState({ house })}
+                                value={this.state.house}
+                            />
+                            <View style={localStyles.divider} />
+                            <NumericInput
+                                onlyNum
+                                style={styles.inputHalf}
+                                placeholder="Квартира"
+                                onChangeText={(flat) => this.setState({ flat })}
+                                value={this.state.flat}
+                            />
+                        </View>
+                        {this.state.showDatePicker && (
+                            <DateTimePicker
+                                mode="date"
+                                onChange={this._handleBirthdayChange}
+                                value={this.state.birthDate || this.props.store.birthDate}
+                            />
+                        )}
+                        <TouchableOpacity style={styles.input} onPress={() => this.setState({ showDatePicker: true })}>
+                            <Text style={styles.datePickerText}>{this._getFormattedBirthDate()}</Text>
+                        </TouchableOpacity>
+
+                        <View style={[localStyles.flexOne, localStyles.flexDirectionRow]}>
+                            {/* <NumericInput
                             onlyNum
                             style={styles.inputHalf}
                             placeholder="Рост (cм)"
@@ -229,20 +234,22 @@ class MyInfoScreen extends React.Component {
                             value={this.state.height ? this.state.height.toString() : ''}
                         />
                         <View style={localStyles.divider} /> */}
-                        <NumericInput
-                            onlyNum
-                            style={styles.inputHalf}
-                            placeholder="Вес (кг)"
-                            onChangeText={(weight) => this.setState({ weight })}
-                            value={this.state.weight ? this.state.weight.toString() : ''}
-                        />
+                            <NumericInput
+                                onlyNum
+                                style={styles.inputHalf}
+                                placeholder="Вес (кг)"
+                                onChangeText={(weight) => this.setState({ weight })}
+                                value={this.state.weight ? this.state.weight.toString() : ''}
+                            />
+                        </View>
                     </View>
-                </View>
-                <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
-                <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
-                    СОХРАНИТЬ
-                </LoadingButton>
-            </ScrollView>
+                    <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
+                    <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
+                        СОХРАНИТЬ
+                    </LoadingButton>
+                </ScrollView>
+                <KeyboardSpacer />
+            </>
         );
     }
 

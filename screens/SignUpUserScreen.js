@@ -38,7 +38,7 @@ class SignUpUserScreen extends React.Component {
         city: '',
         cityId: null,
         // height: '',
-        weight: '',
+        // weight: '',
         message: '',
         street: '',
         house: '',
@@ -140,8 +140,8 @@ class SignUpUserScreen extends React.Component {
         return (
             <>
                 <ScrollView
-                    contentContainerStyle={styles.registrationScreen}
                     contentInsetAdjustmentBehavior="automatic"
+                    contentContainerStyle={styles.registrationScreen}
                 >
                     <PhotoChoicer
                         onChange={(uri) => this.setState({ userImgUri: uri })}
@@ -275,23 +275,24 @@ class SignUpUserScreen extends React.Component {
                             }))}
                         />
 
-                        <TextInput
+                        <NumericInput
+                            onlyNum
                             style={styles.input}
                             placeholder="Год рождения"
-                            placeholderTextColor="grey"
                             onChangeText={(birthDate) => this.setState({ birthDate })}
+                            value={this.state.birthDate}
                         />
 
-                        {!this.state.isDriver && (
+                        {/* {!this.state.isDriver && (
                             <View style={{ flex: 1, flexDirection: 'row' }}>
-                                {/* <NumericInput
+                                <NumericInput
                                     onlyNum
                                     style={styles.inputHalf}
                                     placeholder="Рост (cм)"
                                     onChangeText={(height) => this.setState({ height })}
                                     value={this.state.height}
                                 />
-                                <View style={{ width: 15 }} /> */}
+                                <View style={{ width: 15 }} />
                                 <NumericInput
                                     onlyNum
                                     style={styles.inputHalf}
@@ -300,7 +301,7 @@ class SignUpUserScreen extends React.Component {
                                     value={this.state.weight}
                                 />
                             </View>
-                        )}
+                        )} */}
 
                         {this.state.isDriver && (
                             <View>
@@ -442,42 +443,11 @@ class SignUpUserScreen extends React.Component {
         return null;
     };
 
-    isUserNeedsCorrectWeight = async () => {
-        if (!this.state.isDriver && this.state.weight === '') {
-            try {
-                await new Promise((resolve, reject) => {
-                    Alert.alert(
-                        'Предупреждение',
-                        'Вы не сможете получать новые заявки пока не укажете вес. После регистрации вес можно указать в боковом меню на вкладке "Моя информация"',
-                        [
-                            {
-                                text: 'Отмена',
-                                style: 'cancel',
-                                onPress: reject,
-                            },
-                            { text: 'Продолжить', onPress: resolve },
-                        ],
-                        { onDismiss: reject },
-                    );
-                });
-            } catch (error) {
-                return true;
-            }
-        }
-        return false;
-    };
-
     _nextScreen = async () => {
         const errorMessage = await this.isValidFields();
 
         if (errorMessage !== null) {
             showAlert('Ошибка', errorMessage);
-            return;
-        }
-
-        const needsCorrection = await this.isUserNeedsCorrectWeight();
-
-        if (needsCorrection) {
             return;
         }
 
@@ -504,12 +474,6 @@ class SignUpUserScreen extends React.Component {
                 veh_loadingCap: this.state.loadCapacity,
                 veh_frameType: this.state.bodyType,
                 veh_stateCarNumber: this.state.veh_stateCarNumber,
-            };
-        } else {
-            userData = {
-                ...userData,
-                // height: this.state.height,
-                weight: this.state.weight,
             };
         }
 
