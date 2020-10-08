@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import NetworkRequests from '../mobx/NetworkRequests';
 import showAlert from './showAlert';
@@ -8,8 +8,16 @@ let _pendingParams = null;
 
 const TAG = '~NotificationListener~';
 
+// на ios приходит RemoteNotification из rnfirebase, а на android самописный массив из нативного кода
 export default async function NotificationListener(params) {
-    const [type, orderId, title, body] = params;
+    let type, orderId, title, body;
+    Platform.select({
+        android: () => ([type, orderId, title, body] = params),
+        ios: () => {
+            ({ type, orderId } = params.data);
+            ({ title, body } = params.notification);
+        },
+    })();
 
     console.log(TAG, 'Notification recieved, params: ', params);
 
@@ -29,7 +37,7 @@ export default async function NotificationListener(params) {
     if (recievedInForeground) {
         if (acceptNotification) {
             console.log(TAG, `type == ${type}, order id`, orderId);
-            
+
             // Иногда уведомления могут приходить когда пользователь разлогинился (удаляется FirebaseIinstanceId)
             // Наибольшая вероятность получить уведомление когда он разлогинится оффлайн
             const userAuthorized = await AsyncStorage.getItem('token');
@@ -49,7 +57,7 @@ export default async function NotificationListener(params) {
     }
 }
 
-const gotoOrderPreview = order_id => async () => {
+const gotoOrderPreview = (order_id) => async () => {
     try {
         const { data } = await NetworkRequests.getOrder(order_id);
         _navigation.navigate('OrderPreview', { order: data });
@@ -64,7 +72,7 @@ export function prepareNotificationListener(navigation) {
 
 export async function execPendingNotificationListener() {
     if (_pendingParams) {
-        await NotificationListener(_pendingParams); 
+        await NotificationListener(_pendingParams);
         _pendingParams = null;
     }
 }

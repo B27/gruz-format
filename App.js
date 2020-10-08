@@ -6,6 +6,7 @@ import Store from './mobx/Store';
 import AppContainer from './navigation/Navigation';
 import NotificationListener, { setPendingNotificationParams } from './utils/NotificationListener';
 import UniversalEventEmitter from './utils/UniversalEventEmitter';
+import messaging from '@react-native-firebase/messaging';
 import { URL } from './constants';
 
 axios.defaults.baseURL = URL; /* 'http://192.168.1.4:3008'; */
@@ -14,7 +15,6 @@ const TAG = '~App.js~';
 export default class App extends React.Component {
     componentDidMount() {
         if (!this.onMessageReceivedListener) {
-            console.log(TAG, 'add new NotificationListener');
             Platform.select({
                 android: () => {
                     this.onMessageReceivedListener = UniversalEventEmitter.addListener(
@@ -22,7 +22,9 @@ export default class App extends React.Component {
                         NotificationListener,
                     );
                 },
-                ios: () => {},
+                ios: () => {
+                    this.onMessageReceivedListener = messaging().onMessage(NotificationListener);
+                },
             })();
         }
 

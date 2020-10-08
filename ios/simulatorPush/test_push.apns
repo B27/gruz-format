@@ -1,0 +1,10 @@
+{
+    "aps": {
+        "alert": {
+            "title": "iOS App Templates",
+            "body": "This is the tutorial about push notification on simulators",
+            "sound": "default"
+        }
+    },
+    "Simulator Target Bundle": "ru.format.gruz"
+}

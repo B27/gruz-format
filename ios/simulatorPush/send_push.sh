@@ -1,0 +1,1 @@
+xcrun simctl push 8948B8AE-B56A-4BA8-8084-A34272B59C42 ./keys/test_push_copy.apns
