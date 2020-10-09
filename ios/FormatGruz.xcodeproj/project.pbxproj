@@ -14,7 +14,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1D1ABE4F24FBB63600BD207E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D1ABE4E24FBB63600BD207E /* GoogleService-Info.plist */; };
 		1D1ABE5024FBB63600BD207E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D1ABE4E24FBB63600BD207E /* GoogleService-Info.plist */; };
-		1DBB6B75252F45AA00DE28BF /* notification_sound_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1DBB6B74252F45AA00DE28BF /* notification_sound_1.mp3 */; };
+		1D725766253055AE00C34C89 /* notification_sound_1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1D725764253055AE00C34C89 /* notification_sound_1.caf */; };
+		1D725767253055AE00C34C89 /* notification_sound_2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1D725765253055AE00C34C89 /* notification_sound_2.caf */; };
 		1DE903A32519633200FEE47E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1DE903A22519633200FEE47E /* Launch Screen.storyboard */; };
 		1DEAA01C24E410E80094B74D /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DEAA01B24E410E80094B74D /* RNBackgroundFetch+AppDelegate.m */; };
 		5129260E1647D43D4E586EBC /* libPods-FormatGruz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C4399EDD42217933CB700E /* libPods-FormatGruz.a */; };
@@ -46,8 +47,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FormatGruz/main.m; sourceTree = "<group>"; };
 		173E52D36646D798129449DC /* Pods-FormatGruz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FormatGruz.release.xcconfig"; path = "Target Support Files/Pods-FormatGruz/Pods-FormatGruz.release.xcconfig"; sourceTree = "<group>"; };
 		1D1ABE4E24FBB63600BD207E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		1DBB6B74252F45AA00DE28BF /* notification_sound_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = notification_sound_1.mp3; sourceTree = "<group>"; };
-		1DBB6B7B252F469800DE28BF /* notification_sound_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_sound_2.mp3; path = "/Users/burun/Work/gruz-app-2/ios/Sounds/notification_sound_2.mp3"; sourceTree = "<absolute>"; };
+		1D725764253055AE00C34C89 /* notification_sound_1.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notification_sound_1.caf; sourceTree = "<group>"; };
+		1D725765253055AE00C34C89 /* notification_sound_2.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notification_sound_2.caf; sourceTree = "<group>"; };
 		1DE903A22519633200FEE47E /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		1DEAA01B24E410E80094B74D /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		1DFFD99124D6ECCD00A4D1D2 /* FormatGruz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FormatGruz.entitlements; path = FormatGruz/FormatGruz.entitlements; sourceTree = "<group>"; };
@@ -122,8 +123,8 @@
 		1DBB6B76252F45BA00DE28BF /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				1DBB6B7B252F469800DE28BF /* notification_sound_2.mp3 */,
-				1DBB6B74252F45AA00DE28BF /* notification_sound_1.mp3 */,
+				1D725764253055AE00C34C89 /* notification_sound_1.caf */,
+				1D725765253055AE00C34C89 /* notification_sound_2.caf */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -285,10 +286,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D725767253055AE00C34C89 /* notification_sound_2.caf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				1DBB6B75252F45AA00DE28BF /* notification_sound_1.mp3 in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				1DE903A32519633200FEE47E /* Launch Screen.storyboard in Resources */,
+				1D725766253055AE00C34C89 /* notification_sound_1.caf in Resources */,
 				1D1ABE4F24FBB63600BD207E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -579,7 +581,7 @@
 				CODE_SIGN_ENTITLEMENTS = FormatGruz/FormatGruz.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = F3MQA58UUP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -612,7 +614,7 @@
 				CODE_SIGN_ENTITLEMENTS = FormatGruz/FormatGruz.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = F3MQA58UUP;
 				INFOPLIST_FILE = FormatGruz/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

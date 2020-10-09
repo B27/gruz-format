@@ -3,7 +3,7 @@
         "alert": {
             "title": "Новый заказ",
             "body": "Нажмите чтобы открыть",
-            "sound": "notification_sound_1"
+            "sound": "notification_sound_1.caf"
         }
     },
     "type": "accept",
