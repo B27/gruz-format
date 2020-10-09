@@ -2,9 +2,9 @@
     "aps": {
         "alert": {
             "title": "Новый заказ",
-            "body": "Нажмите чтобы открыть",
-            "sound": "notification_sound_1.caf"
-        }
+            "body": "Нажмите чтобы открыть"
+        },
+        "sound": "notification_sound_1.caf"
     },
     "type": "accept",
     "order_id": "5f7d7ac9832bc22d3a789c70",

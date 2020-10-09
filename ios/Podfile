@@ -33,12 +33,3 @@ target 'FormatGruz' do
     flipper_post_install(installer)
   end
 end
-
-target 'FormatGruz-tvOS' do
-  # Pods for FormatGruz-tvOS
-
-  target 'FormatGruz-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-end
