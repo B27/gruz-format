@@ -1,18 +1,18 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import iid from '@react-native-firebase/iid';
+import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { ActivityIndicator, Platform, Text, NativeModules, TouchableOpacity, View, Alert } from 'react-native';
-import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
-import LoadingButton from '../components/LoadingButton';
-import { prepareNotificationListener, execPendingNotificationListener } from '../utils/NotificationListener';
-import styles from '../styles';
-import NetworkRequests from '../mobx/NetworkRequests';
-import Permissons from '../utils/Permissions';
+import { ActivityIndicator, Alert, NativeModules, Platform, Text, TouchableOpacity, View } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { RESULTS } from 'react-native-permissions';
-import messaging from '@react-native-firebase/messaging';
+import LoadingButton from '../components/LoadingButton';
+import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
+import styles from '../styles';
+import { execPendingNotificationListener, prepareNotificationListener } from '../utils/NotificationListener';
+import Permissons from '../utils/Permissions';
 
 const TAG = '~AuthLoadingScreen~';
 @inject('store')
@@ -120,13 +120,14 @@ class AuthLoadingScreen extends React.Component {
 
     _signOutAsync = async () => {
         try {
-            await NativeModules.RNFirebasePushToken.deleteInstanceId();
             await AsyncStorage.clear();
             await Platform.select({
                 android: async () => {
+                    await NativeModules.RNFirebasePushToken.deleteInstanceId();
                     await NativeModules.ForegroundTaskModule.stopService();
                 },
                 ios: async () => {
+                    await iid().delete();
                     await BackgroundGeolocation.stop();
                     await BackgroundGeolocation.destroyLocations();
                 },

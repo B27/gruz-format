@@ -10,7 +10,6 @@ import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import iid from '@react-native-firebase/iid';
-import firebase from '@react-native-firebase/app';
 import showAlert from '../utils/showAlert';
 
 const TAG = '~SettingsScreen~';
@@ -92,7 +91,7 @@ class SettingsScreen extends React.Component {
                     await NativeModules.ForegroundTaskModule.stopService();
                 },
                 ios: async () => {
-                    await firebase.iid().delete();
+                    await iid().delete();
                     await BackgroundGeolocation.stop();
                     await BackgroundGeolocation.destroyLocations();
                 },
