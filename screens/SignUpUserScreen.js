@@ -3,22 +3,11 @@ import CheckBox from '@react-native-community/checkbox';
 import axios from 'axios';
 import mime from 'mime/lite';
 import React from 'react';
-import {
-    Keyboard,
-    Linking,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    Alert,
-} from 'react-native';
+import { Keyboard, Linking, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import PickerSelect from 'react-native-picker-select';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
-import PickerSelect from '../components/PickerSelect';
 import { privacyPolicyURL } from '../constants';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
@@ -71,11 +60,6 @@ class SignUpUserScreen extends React.Component {
     static navigationOptions = {
         title: 'Регистрация',
         headerTintColor: 'black',
-        headerTitleStyle: {
-            textAlign: 'center',
-            flexGrow: 1,
-            alignSelf: 'center',
-        },
     };
 
     // choiceModalVisible: false,
@@ -255,6 +239,16 @@ class SignUpUserScreen extends React.Component {
                                     fontSize: 16,
                                     justifyContent: 'center',
                                 },
+                                inputAndroid: {
+                                    height: 45,
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    paddingLeft: 16,
+                                    marginBottom: 15,
+                                    fontSize: 16,
+                                    justifyContent: 'center',
+                                    color: 'black',
+                                },
                                 placeholder: {
                                     color: 'grey',
                                 },
@@ -315,6 +309,16 @@ class SignUpUserScreen extends React.Component {
                                             marginBottom: 15,
                                             fontSize: 16,
                                             justifyContent: 'center',
+                                        },
+                                        inputAndroid: {
+                                            height: 45,
+                                            borderWidth: 1,
+                                            borderRadius: 15,
+                                            paddingLeft: 16,
+                                            marginBottom: 15,
+                                            fontSize: 16,
+                                            justifyContent: 'center',
+                                            color: 'black',
                                         },
                                         placeholder: {
                                             color: 'grey',
@@ -408,7 +412,7 @@ class SignUpUserScreen extends React.Component {
                         ПРОДОЛЖИТЬ
                     </LoadingButton>
                 </ScrollView>
-                <KeyboardSpacer />
+                {Platform.OS === 'ios' && <KeyboardSpacer />}
             </>
         );
     }

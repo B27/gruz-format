@@ -1,16 +1,13 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
 import { inject, observer } from 'mobx-react/native';
-import NetworkRequests from '../mobx/NetworkRequests';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
+import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
-import axios from 'axios';
-import qs from 'qs';
-import md5 from 'md5';
-import LoadingButton from '../components/LoadingButton';
-import RNSimpleCrypto from 'react-native-simple-crypto';
 
 const axios2 = axios.create({
     baseURL: 'https://3dsec.sberbank.ru',

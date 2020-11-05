@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import { inject, observer } from 'mobx-react/native';
-import React, { Fragment } from 'react';
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View, NativeModules, Platform } from 'react-native';
+import React from 'react';
+import { Image, NativeModules, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
 import LoadingButton from '../components/LoadingButton';
@@ -8,9 +10,6 @@ import NumericInput from '../components/NumericInput';
 import StarRating from '../components/StarRating';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { values } from 'mobx';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const TAG = '~OrderCompleteScreen.js~';
 @inject('store')
@@ -311,7 +310,7 @@ class OrderCompleteScreen extends React.Component {
                             ГОТОВО
                         </LoadingButton>
                     </SafeAreaView>
-                    <KeyboardSpacer />
+                    {Platform.OS === 'ios' && <KeyboardSpacer />}
                 </View>
             </>
         );

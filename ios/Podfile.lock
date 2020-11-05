@@ -327,8 +327,6 @@ PODS:
     - React
   - react-native-netinfo (5.9.4):
     - React
-  - react-native-simple-crypto (0.2.14):
-    - React
   - react-native-webview (10.3.2):
     - React
   - React-RCTActionSheet (0.63.3):
@@ -472,7 +470,6 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
-  - react-native-simple-crypto (from `../node_modules/react-native-simple-crypto`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -568,8 +565,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
-  react-native-simple-crypto:
-    :path: "../node_modules/react-native-simple-crypto"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -668,7 +663,6 @@ SPEC CHECKSUMS:
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
   react-native-image-picker: 97bd3430fc91c7d1b82a51cf03a2a4e99e91c0b8
   react-native-netinfo: cd479ab1b67cdd1cb1403a99ecdb24190a6dd7ef
-  react-native-simple-crypto: 6969f86ad3e1c319a98623caa62095b29b4ebed3
   react-native-webview: 679b6f400176e2ea8a785acf7ae16cf282e7d1eb
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
@@ -697,6 +691,6 @@ SPEC CHECKSUMS:
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 67b1fbce2db8f6f8bec07f29947c40deae0791ff
+PODFILE CHECKSUM: 8cc1ae90d256c15ffd600d4770a57e7be9c357ce
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3

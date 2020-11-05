@@ -7,11 +7,11 @@ import { format } from 'date-fns';
 import mime from 'mime/lite';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { Keyboard, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Keyboard, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import PickerSelect from 'react-native-picker-select';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
-import PickerSelect from '../components/PickerSelect';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
@@ -171,6 +171,16 @@ class MyInfoScreen extends React.Component {
                                     fontSize: 16,
                                     justifyContent: 'center',
                                 },
+                                inputAndroid: {
+                                    height: 45,
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    paddingLeft: 16,
+                                    marginBottom: 15,
+                                    fontSize: 16,
+                                    justifyContent: 'center',
+                                    color: 'black',
+                                },
                                 placeholder: {
                                     color: 'grey',
                                 },
@@ -248,7 +258,7 @@ class MyInfoScreen extends React.Component {
                         СОХРАНИТЬ
                     </LoadingButton>
                 </ScrollView>
-                <KeyboardSpacer />
+                {Platform.OS === 'ios' && <KeyboardSpacer />}
             </>
         );
     }
@@ -303,7 +313,9 @@ class MyInfoScreen extends React.Component {
 
                 //console.log(res.data);
 
-                if (this.state.avatar) {
+                // когда в state.avatar картинка из сервера, то у неё нет расширения,
+                // а значит тип не получится определить
+                if (this.state.avatar && !!mime.getType(this.state.avatar)) {
                     const data = new FormData();
 
                     data.append('user', {
@@ -312,7 +324,7 @@ class MyInfoScreen extends React.Component {
                         name: 'imageFile',
                     });
 
-                    // console.log(data);
+                    console.log('avatar data', data);
 
                     await axios.patch('/worker/upload/' + id, data, { timeout: 10000 });
 
@@ -321,7 +333,7 @@ class MyInfoScreen extends React.Component {
 
                 this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
 
-                showAlert('Успешно!', 'Ваши данные сохраненны!');
+                showAlert('Успешно', 'Ваши данные сохраненны');
             } catch (error) {
                 console.log(error);
                 Object.keys(error).forEach((value) => {

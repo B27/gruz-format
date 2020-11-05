@@ -1,15 +1,15 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import iid from '@react-native-firebase/iid';
 import axios from 'axios';
 // import { TaskManager } from 'expo';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { NativeModules, Text, TextInput, View, Platform } from 'react-native';
+import { NativeModules, Platform, Text, TextInput, View } from 'react-native';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
-import BackgroundGeolocation from 'react-native-background-geolocation';
-import iid from '@react-native-firebase/iid';
 import showAlert from '../utils/showAlert';
 
 const TAG = '~SettingsScreen~';
@@ -77,7 +77,7 @@ class SettingsScreen extends React.Component {
                 >
                     ВЫЙТИ ИЗ АККАУНТА
                 </LoadingButton>
-                <KeyboardSpacer />
+                {Platform.OS === 'ios' && <KeyboardSpacer />}
             </View>
         );
     }

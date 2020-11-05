@@ -223,6 +223,7 @@ const AuthStack = createStackNavigator(
         RegisterPerson: SignUpUserScreen,
     },
     {
+        headerLayoutPreset: 'center',
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: '#FFC234',

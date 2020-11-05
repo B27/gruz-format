@@ -4,7 +4,7 @@ import axios from 'axios';
 import mime from 'mime/lite';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { Keyboard, Linking, ScrollView, Text, View, Platform } from 'react-native';
+import { Keyboard, Linking, Platform, ScrollView, Text, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
@@ -132,7 +132,7 @@ class MyDocumentsScreen extends React.Component {
                         ПРОДОЛЖИТЬ
                     </LoadingButton>
                 </ScrollView>
-                <KeyboardSpacer />
+                {Platform.OS === 'ios' && <KeyboardSpacer />}
             </>
         );
     }

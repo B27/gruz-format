@@ -3,12 +3,12 @@ import netInfo from '@react-native-community/netinfo';
 import axios from 'axios';
 import md5 from 'md5';
 import React from 'react';
-import { ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LoadingButton from '../components/LoadingButton';
 import bgImage from '../images/background.png';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 import styles from '../styles';
 
 const TAG = '~SignInScreen.js~';
@@ -96,7 +96,7 @@ class SignInScreen extends React.Component {
                         </Text>
                     </View>
                 </ImageBackground>
-                <KeyboardSpacer />
+                {Platform.OS === 'ios' && <KeyboardSpacer />}
             </>
             //</KeyboardAvoidingView>
         );

@@ -6,11 +6,11 @@ import mime from 'mime/lite';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import PickerSelect from 'react-native-picker-select';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
-import PickerSelect from '../components/PickerSelect';
-import showAlert from '../utils/showAlert';
 import styles from '../styles';
+import showAlert from '../utils/showAlert';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
 
 //import { ImageCacheManager } from 'react-native-cached-image';
@@ -108,6 +108,7 @@ class MyAutoScreen extends React.Component {
             const data = new FormData();
 
             this.state.vehicle0 &&
+                !!mime.getType(this.state.vehicle0) &&
                 data.append('vehicle0', {
                     uri: this.state.vehicle0,
                     type: mime.getType(this.state.vehicle0),
@@ -115,6 +116,7 @@ class MyAutoScreen extends React.Component {
                 });
 
             this.state.vehicle1 &&
+                !!mime.getType(this.state.vehicle1) &&
                 data.append('vehicle1', {
                     uri: this.state.vehicle1,
                     type: mime.getType(this.state.vehicle1),
@@ -122,6 +124,7 @@ class MyAutoScreen extends React.Component {
                 });
 
             this.state.vehicle2 &&
+                mime.getType(this.state.vehicle2) &&
                 data.append('vehicle2', {
                     uri: this.state.vehicle2,
                     type: mime.getType(this.state.vehicle2),
@@ -134,6 +137,7 @@ class MyAutoScreen extends React.Component {
             await axios.patch('/worker/upload/' + id, data);
             //await AsyncStorage.setItem("phoneNum", this.state.phone);
             this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+            showAlert('Успешно', 'Информация об авто сохранена');
             await this.props.store.refreshImages();
             //this.props.navigation.navigate('EditCar');
         } catch (err) {
@@ -168,6 +172,16 @@ class MyAutoScreen extends React.Component {
                                         marginBottom: 15,
                                         fontSize: 16,
                                         justifyContent: 'center',
+                                    },
+                                    inputAndroid: {
+                                        height: 45,
+                                        borderWidth: 1,
+                                        borderRadius: 15,
+                                        paddingLeft: 16,
+                                        marginBottom: 15,
+                                        fontSize: 16,
+                                        justifyContent: 'center',
+                                        color: 'black',
                                     },
                                     placeholder: {
                                         color: 'grey',

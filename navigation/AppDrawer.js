@@ -1,24 +1,18 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Linking, Image, SafeAreaView } from 'react-native';
-import { DrawerItems } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import styles from '../styles';
-import { privacyPolicyURL } from '../constants';
-import SwitchToggle from '../components/SwitchToggle';
-import BalanceScreen from '../screens/BalanceScreen';
-
 import { inject, observer } from 'mobx-react/native';
+import React from 'react';
+import { Image, Linking, SafeAreaView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { DrawerItems } from 'react-navigation';
+import { privacyPolicyURL } from '../constants';
+import styles from '../styles';
+
 
 @inject('store')
 @observer
 class CustomDrawerContentComponent extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     state = {
         workingStatus: false,
-        userName: 'Иванов И.И.',
+        userName: '',
     };
 
     // _onChangeSwitchValue = () => {
@@ -67,7 +61,8 @@ class CustomDrawerContentComponent extends React.Component {
         return (
             <View style={{ flex: 1 }}>
                 <SafeAreaView
-                    style={{ backgroundColor: '#FFC234' }}
+                    // currentHeight есть только в android, для ios отступ добавит SafeAreaView
+                    style={{ backgroundColor: '#FFC234', paddingTop: StatusBar.currentHeight }}
                     // forceInset={{ top: 'always', horizontal: 'never' }}
                 >
                     <TouchableOpacity style={styles.drawerUserContainer} onPress={this._userContainerPress}>
