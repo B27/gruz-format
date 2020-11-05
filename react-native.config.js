@@ -10,5 +10,20 @@ module.exports = {
                 android: null,
             },
         },
+        '@react-native-firebase/app': {
+            platforms: {
+                android: null,
+            },
+        },
+        '@react-native-firebase/iid': {
+            platforms: {
+                android: null,
+            },
+        },
+        '@react-native-firebase/messaging': {
+            platforms: {
+                android: null,
+            },
+        },
     },
 };
