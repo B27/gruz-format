@@ -132,6 +132,7 @@ class OrderDetailScreen extends React.Component {
             console.log(TAG, error);
             if (error.response.status === 400) {
                 showAlert('Ошибка', error.response.data.message);
+                return;
             }
             showAlert('Ошибка', error.message.toString());
         }
