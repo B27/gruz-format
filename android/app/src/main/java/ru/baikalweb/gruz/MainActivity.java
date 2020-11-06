@@ -88,6 +88,7 @@ public class MainActivity extends ReactActivity {
                 NotificationManager.IMPORTANCE_LOW
         );
         defaultCh.setDescription(getString(R.string.default_ncd));
+        defaultCh.setSound(null, null);
         channelsList.add(defaultCh);
 
         NotificationChannel newOrderCh = new NotificationChannel(

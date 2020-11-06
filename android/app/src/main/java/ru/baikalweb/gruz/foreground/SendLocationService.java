@@ -48,7 +48,6 @@ public class SendLocationService extends Service implements LocationListener {
     private double fusedLatitude = 0.0;
     private double fusedLongitude = 0.0;
     private Socket mSocket;
-    private String message = "В работе";
 
     @Override
     @TargetApi(Build.VERSION_CODES.M)
@@ -106,12 +105,13 @@ public class SendLocationService extends Service implements LocationListener {
     }
 
     private Notification getCompatNotification(String message) {
-        Log.d(TAG, "getCompatNotification");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.default_ncid));
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(APP_NAME).setContentText(message).setTicker(message).setWhen(System.currentTimeMillis())
-                .setChannelId(getResources().getString(R.string.default_ncid));
+                .setSound(null)
+                .setChannelId(getResources().getString(R.string.default_ncid))
+                .setPriority(NotificationCompat.PRIORITY_MIN);
         Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, startIntent, 0);
         builder.setContentIntent(contentIntent);
