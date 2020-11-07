@@ -1,13 +1,12 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import NetworkRequests from '../mobx/NetworkRequests';
-import axios from 'axios';
+import { toJS } from 'mobx';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
-import { Observer } from 'mobx-react';
 import React from 'react';
-import { FlatList, NativeModules, Platform, SafeAreaView, Text, View, YellowBox } from 'react-native';
+import { FlatList, NativeModules, Platform, Text, View, YellowBox } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import OrderCard from '../components/OrderCard';
+import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
 import showAlert from '../utils/showAlert';
 
@@ -105,7 +104,7 @@ class MainScreen extends React.Component {
         }
 
         if (store.orderIdOnWork) {
-            this.props.navigation.navigate('AuthLoading');
+            await store.pullFulfilingOrderInformation();
         }
 
         if (this.componentIsMount) {
@@ -120,10 +119,8 @@ class MainScreen extends React.Component {
                 );
                 this.showMessageAboutActivation = false;
             }
-        } else {
-            const userToken = await AsyncStorage.getItem('token');
-            console.log(TAG, 'user token: ', userToken);
         }
+
         Platform.select({
             android: () => {
                 NativeModules.ForegroundTaskModule.stopService();
@@ -216,6 +213,12 @@ class MainScreen extends React.Component {
                                 ) : store.docStatus === 'updated' ? (
                                     <Text style={styles.notificationMessage}>Ваши документы проверяются</Text>
                                 ) : null}
+                                {store.hasEndedOrder && (
+                                    <Text style={styles.errorMessage}>
+                                        {'Ожидайте завершения заказа диспетчером и списания комиссии\n' +
+                                            'Баланс можно пополнить сейчас'}
+                                    </Text>
+                                )}
                                 {/* <Context.Consumer>
 								{value => <Text style={styles.mainFontBalance}>{`${value.balance} руб.`}</Text>}
 							</Context.Consumer> */}
@@ -239,7 +242,13 @@ class MainScreen extends React.Component {
                     renderItem={this._renderItem}
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}
-                    ListEmptyComponent={<Text style={styles.mainFontUserType}>Нет доступных заявок</Text>}
+                    ListEmptyComponent={
+                        +store.balance > 0 ? (
+                            <Text style={styles.mainFontUserType}>Нет доступных заявок</Text>
+                        ) : (
+                            <Text style={styles.needUpBalance}>Для принятия заявок необходимо пополнить баланс</Text>
+                        )
+                    }
                     contentInsetAdjustmentBehavior="automatic"
                 />
             </>

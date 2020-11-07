@@ -12,20 +12,18 @@ import { MenuIcon } from '../components/MenuIcon';
 import AuthLoadingScreen from '../screens/AuthLoadingScreen';
 import BalanceScreen from '../screens/BalanceScreen';
 import ChatScreen from '../screens/Chat';
-
-import SignUpUserScreen from '../screens/SignUpUserScreen';
 import InstructionScreen from '../screens/InstructionScreen';
 import MainScreen from '../screens/MainScreen';
 import MyAutoScreen from '../screens/MyAutoScreen';
-import MyInfoScreen from '../screens/MyInfoScreen';
 import MyDocsScreen from '../screens/MyDocumentsScreen';
+import MyInfoScreen from '../screens/MyInfoScreen';
 import OrderCompleteScreen from '../screens/OrderCompleteScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import OrderPreviewScreen from '../screens/OrderPreviewScreen';
 import PayScreen from '../screens/PayScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SignInScreen from '../screens/SignInScreen';
-import WaitCompleteOrderScreen from '../screens/WaitCompleteOrder';
+import SignUpUserScreen from '../screens/SignUpUserScreen';
 import AppDrawer from './AppDrawer';
 
 const { height, width } = Dimensions.get('window');
@@ -72,7 +70,6 @@ const FulfillingOrderStack = createStackNavigator(
 const FulfillingOrderSwitch = createSwitchNavigator(
     {
         FulfillingOrder: FulfillingOrderStack,
-        WaitCompleteOrder: WaitCompleteOrderScreen,
     },
     { defaultNavigationOptions: yellowHeader },
 );

@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import iid from '@react-native-firebase/iid';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
-import { toJS } from 'mobx';
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
 import { ActivityIndicator, Alert, NativeModules, Platform, Text, TouchableOpacity, View } from 'react-native';
@@ -75,26 +74,19 @@ class AuthLoadingScreen extends React.Component {
 
                     await store.pullFulfilingOrderInformation();
 
-                    const workersData = toJS(store.order).workers.data;
-
-                    let sumEntered = true;
-                    // проверка на то, указал ли пользователь полученную сумму
-                    if (!workersData.find((wrkr) => wrkr.id._id == userId).sum) {
-                        sumEntered = false;
-                    }
-                    await Platform.select({
-                        android: async () => {
-                            NativeModules.ForegroundTaskModule.stopService();
-                            NativeModules.ForegroundTaskModule.startService(userToken, 'В работе');
-                        },
-                        ios: async () => {
-                            await this._startBackgroundGelocation(userId);
-                        },
-                    })();
-                    if (store.order.status === 'ended' && sumEntered) {
-                        screenNeedToGo = 'WaitCompleteOrder';
+                    if (store.hasEndedOrder) {
+                        screenNeedToGo = 'Main';
                     } else {
                         console.log(TAG, 'start foreground service');
+                        await Platform.select({
+                            android: async () => {
+                                NativeModules.ForegroundTaskModule.stopService();
+                                NativeModules.ForegroundTaskModule.startService(userToken, 'В работе');
+                            },
+                            ios: async () => {
+                                await this._startBackgroundGelocation(userId);
+                            },
+                        })();
 
                         screenNeedToGo = 'OrderDetail';
                     }

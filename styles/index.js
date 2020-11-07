@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform, StyleSheet } from 'react-native';
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
@@ -511,6 +511,16 @@ const styles = StyleSheet.create({
 
     mainFontUserType: {
         fontSize: 24,
+        textAlign: 'center',
+        paddingTop: 24,
+        color: '#4D443F',
+        fontWeight: Platform.OS === 'android' ? '100' : '300',
+        paddingBottom: 42,
+        //     padding: 12
+    },
+
+    needUpBalance: {
+        fontSize: 20,
         textAlign: 'center',
         paddingTop: 24,
         color: '#4D443F',
