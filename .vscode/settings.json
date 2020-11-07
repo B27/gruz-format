@@ -1,19 +1,19 @@
 {
-	"sshfs.configs": [
-		{
-			"host": "s5.ibb.su",
-			"name": "football",
-			"passphrase": "kkjl44",
-			"port": 2223,
-			"privateKeyPath": "Users/mac/.ssh/id_rsa",
-			"root": "/home/clockfake/",
-			"username": "clockfake"
-		}
-	],
-	"editor.wordWrapColumn": 120,
-	"editor.detectIndentation": false,
-	"javascript.implicitProjectConfig.experimentalDecorators": true,
+    "sshfs.configs": [
+        {
+            "host": "s5.ibb.su",
+            "name": "football",
+            "passphrase": "kkjl44",
+            "port": 2223,
+            "privateKeyPath": "Users/mac/.ssh/id_rsa",
+            "root": "/home/clockfake/",
+            "username": "clockfake"
+        }
+    ],
+    "editor.wordWrapColumn": 120,
+    "editor.detectIndentation": false,
+    "javascript.implicitProjectConfig.experimentalDecorators": true,
     "editor.formatOnType": true,
-	"git.autofetch": true,
-	"git.fetchOnPull": true
+    "git.autofetch": true,
+    "git.fetchOnPull": true
 }

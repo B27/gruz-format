@@ -14,7 +14,17 @@ class OrderCard extends React.Component {
     };
 
     render() {
-        const { orderType, cardStyle, buttonName, description, addresses = [], time, order, expandAlways, fullAddress } = this.props;
+        const {
+            orderType,
+            cardStyle,
+            buttonName,
+            description,
+            addresses = [],
+            time,
+            order,
+            expandAlways,
+            fullAddress,
+        } = this.props;
         let orderId = order ? order._id : 'id';
         return (
             <ExpandCardBase
@@ -25,15 +35,15 @@ class OrderCard extends React.Component {
                 OpenComponent={
                     <Fragment>
                         <View style={styles.orderRow}>
-                            <Icon name='clock-outline' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Icon name="clock-outline" color="#FFC234" size={20} style={styles.orderIcon} />
                             <Text style={styles.textInput}>{formatDate(time)}</Text>
                         </View>
                         <View style={styles.orderRow}>
-                            <Icon name='account-multiple' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Icon name="account-multiple" color="#FFC234" size={20} style={styles.orderIcon} />
                             <Text style={styles.clockText}>{orderType}</Text>
                         </View>
                         <View style={styles.orderRow}>
-                            <Icon name='map-marker' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Icon name="map-marker" color="#FFC234" size={20} style={styles.orderIcon} />
                             <View>
                                 {addresses.map((location, index) => {
                                     return (
@@ -42,7 +52,7 @@ class OrderCard extends React.Component {
                                                 style={styles.locationPointNameText}
                                                 key={index + 'b'}
                                             >{`Пункт ${String.fromCharCode(
-                                                0x0410 + index // 0x0410 - код русской буквы А в Unicode
+                                                0x0410 + index, // 0x0410 - код русской буквы А в Unicode
                                             )}: `}</Text>
                                             <Text style={styles.locationText} key={index + 'c'}>
                                                 {generateAddress(location, fullAddress)}
@@ -58,7 +68,7 @@ class OrderCard extends React.Component {
                 HiddenComponent={
                     <Fragment>
                         <View style={styles.orderRow}>
-                            <Icon name='message-text' color='#FFC234' size={20} style={styles.orderIcon} />
+                            <Icon name="message-text" color="#FFC234" size={20} style={styles.orderIcon} />
                             <Text style={styles.descriptionText}>{description}</Text>
                         </View>
                         {buttonName && (

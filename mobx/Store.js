@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {action, observable, runInAction} from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import io from 'socket.io-client';
-import {URL} from '../constants';
+import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';
 
 const TAG = '~Store.js~';
@@ -111,7 +111,6 @@ class ObservableStore {
                 vehicle2 && (this.vehicle2 = URL + response.data.photos.vehicle2);
             }
 
-
             this.veh_stateCarNumber = response.data.veh_stateCarNumber;
             this.passportNumber = response.data.passportNumber;
             this.passportSeries = response.data.passportSeries;
@@ -170,9 +169,7 @@ class ObservableStore {
     }
 
     @action async pullFulfilingOrderInformation(id) {
-
-
-        console.log('[Store].pullFulfilingOrderInformation() id', id)
+        console.log('[Store].pullFulfilingOrderInformation() id', id);
 
         if (!id) {
             id = this.orderIdOnWork;
@@ -192,22 +189,19 @@ class ObservableStore {
         const PromisePullDispatcher = this.pullDispatcherById(order.creating_dispatcher);
         const PromisePullWorkers = this.setWorkersByArray(order.workers.data, order.workers.thirdPartyWorkers);
 
-
         await Promise.all([PromisePullDispatcher, PromisePullWorkers]);
     }
 
-    async addThirdPartyWorkerToOrder(){
+    async addThirdPartyWorkerToOrder() {
         try {
-            await NetworkRequests.addThirdPartyWorker(this.userId, this.orderIdOnWork)
+            await NetworkRequests.addThirdPartyWorker(this.userId, this.orderIdOnWork);
         } catch (e) {
-            throw e
+            throw e;
         }
-
     }
-    async deleteThirdPartyWorkerToOrder(){
-         await NetworkRequests.deleteThirdPartyWorker(this.userId, this.orderIdOnWork)
+    async deleteThirdPartyWorkerToOrder() {
+        await NetworkRequests.deleteThirdPartyWorker(this.userId, this.orderIdOnWork);
     }
-
 
     async startFulfillingOrder(id) {
         await NetworkRequests.startOrder(id);
@@ -227,14 +221,13 @@ class ObservableStore {
     }
 
     @action async setWorkersByArray(workers, thirdPartyWorkers) {
+        const mapWorkers = {};
 
-        const mapWorkers = {}
+        workers.forEach((worker) => {
+            mapWorkers[worker.id._id] = worker.id;
+        });
 
-        workers.forEach(worker => {
-            mapWorkers[worker.id._id] = worker.id
-        })
-
-        let workersData = workers.map(worker => {
+        let workersData = workers.map((worker) => {
             if (worker.id.photos) {
                 return {
                     id: worker.id._id,
@@ -254,12 +247,11 @@ class ObservableStore {
             }
         });
 
-
-        const myWorkers = []
-        let index = 0
-        thirdPartyWorkers.forEach(thirdPartyWorker => {
+        const myWorkers = [];
+        let index = 0;
+        thirdPartyWorkers.forEach((thirdPartyWorker) => {
             const tempThirdPartyWorker = {
-                id: thirdPartyWorker.invitedByWorker+'-'+index++,
+                id: thirdPartyWorker.invitedByWorker + '-' + index++,
                 invitedByWorker: thirdPartyWorker.invitedByWorker,
                 phoneNum: mapWorkers[thirdPartyWorker.invitedByWorker].phoneNum,
                 avatar: null,
@@ -267,22 +259,19 @@ class ObservableStore {
                 isDriver: false,
             };
 
-            workersData.push(tempThirdPartyWorker)
+            workersData.push(tempThirdPartyWorker);
 
-            if(tempThirdPartyWorker.invitedByWorker === this.userId){
-                tempThirdPartyWorker.name = 'Мой грузчик'
-                myWorkers.push(tempThirdPartyWorker)
+            if (tempThirdPartyWorker.invitedByWorker === this.userId) {
+                tempThirdPartyWorker.name = 'Мой грузчик';
+                myWorkers.push(tempThirdPartyWorker);
             }
         });
-
 
         runInAction(() => {
             this.workers = workersData;
             this.myThirdPartyWorkers = myWorkers;
         });
     }
-
-
 
     @action async refreshImages() {
         runInAction(() => {

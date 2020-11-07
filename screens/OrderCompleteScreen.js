@@ -118,9 +118,6 @@ class OrderCompleteScreen extends React.Component {
             if (!this.state.sumTextForThirdPartyWorkers[i]) {
                 return 'Укажите полученную вашим ' + (i + 1) + ' грузчиком сумму в рублях';
             }
-            if (this.state.sumTextForThirdPartyWorkers[i] === '') {
-                return 'Укажите полученную вашим ' + (i + 1) + ' грузчиком сумму в рублях';
-            }
         }
 
         return null;
@@ -154,12 +151,12 @@ class OrderCompleteScreen extends React.Component {
                 ios: () => {},
             })();
             this.props.navigation.navigate('AuthLoading');
-        } catch (error) {
+        } catch (err) {
             this.setState({
                 buttonDisabled: false,
             });
-            this._showErrorMessage(error);
-            console.log(TAG, error);
+            this._showErrorMessage(err);
+            console.log(TAG, err);
         }
     };
 

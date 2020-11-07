@@ -3,7 +3,7 @@ import { Easing } from 'react-native';
 import Rating from 'react-native-rating';
 
 export default class StarRating extends React.Component {
-    onChangeRating = rating => {
+    onChangeRating = (rating) => {
         this.props.onChange(this.props.id, rating);
     };
 
@@ -18,13 +18,13 @@ export default class StarRating extends React.Component {
                 unselectedStar={starUnfilled}
                 config={{
                     easing: Easing.inOut(Easing.ease),
-                    duration: 200
+                    duration: 200,
                 }}
                 stagger={20}
                 maxScale={0.2}
                 starStyle={{
                     width: 32,
-                    height: 32
+                    height: 32,
                 }}
             />
         );

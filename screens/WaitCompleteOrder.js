@@ -7,7 +7,7 @@ import styles from '../styles';
 @observer
 class WaitCompleteOrder extends React.Component {
     state = {
-        message: ''
+        message: '',
     };
 
     render() {
@@ -18,7 +18,7 @@ class WaitCompleteOrder extends React.Component {
                     height: '100%',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    alignSelf: 'center'
+                    alignSelf: 'center',
                 }}
             >
                 <Text style={{ textAlign: 'center', fontSize: 16 }}>

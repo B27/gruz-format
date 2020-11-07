@@ -6,7 +6,6 @@ import { DrawerItems } from 'react-navigation';
 import { privacyPolicyURL } from '../constants';
 import styles from '../styles';
 
-
 @inject('store')
 @observer
 class CustomDrawerContentComponent extends React.Component {

@@ -15,7 +15,7 @@ async function checkOrRequestPermissions({ iosPermissions = undefined, androidPe
             }
 
             let permissionsForRequest = [];
-            androidPermissions.forEach(permission => {
+            androidPermissions.forEach((permission) => {
                 if (statuses[permission] !== RESULTS.UNAVAILABLE && statuses[permission] !== RESULTS.GRANTED) {
                     permissionsForRequest.push(permission);
                 }
@@ -30,7 +30,7 @@ async function checkOrRequestPermissions({ iosPermissions = undefined, androidPe
                     return;
                 }
 
-                permissionsForRequest.forEach(permission => {
+                permissionsForRequest.forEach((permission) => {
                     if (statuses[permission] !== RESULTS.UNAVAILABLE && statuses[permission] !== RESULTS.GRANTED) {
                         return statuses[permission];
                     }

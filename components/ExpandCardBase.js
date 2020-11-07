@@ -5,12 +5,12 @@ import styles from '../styles';
 
 class ExpandCardBase extends React.Component {
     state = {
-        cardExpanded: false
+        cardExpanded: false,
     };
 
     _pressExpand = () => {
         this.setState({
-            cardExpanded: !this.state.cardExpanded
+            cardExpanded: !this.state.cardExpanded,
         });
     };
 
@@ -44,9 +44,9 @@ class ExpandCardBase extends React.Component {
                         {expandAlways || (
                             <TouchableOpacity style={styles.orderChevronIcon} onPress={this._pressExpand}>
                                 {cardExpanded ? (
-                                    <Icon name='chevron-up' size={42} color='#c4c4c4' />
+                                    <Icon name="chevron-up" size={42} color="#c4c4c4" />
                                 ) : (
-                                    <Icon name='chevron-down' size={42} color='#c4c4c4' />
+                                    <Icon name="chevron-down" size={42} color="#c4c4c4" />
                                 )}
                             </TouchableOpacity>
                         )}

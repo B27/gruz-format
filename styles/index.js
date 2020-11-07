@@ -4,36 +4,36 @@ const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     flex1: {
-        flex: 1
+        flex: 1,
     },
 
     backgroundContainer: {
         flex: 1,
         width: null,
-        height: null
+        height: null,
     },
 
     logoContainer: {
         marginLeft: 24,
         flex: 1,
         justifyContent: 'flex-end',
-        paddingBottom: '5%'
+        paddingBottom: '5%',
     },
 
     logoText: {
         color: 'white',
         fontSize: 32,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
 
     logoIcon: {
-        marginTop: 15
+        marginTop: 15,
     },
 
     inputBlock: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     input: {
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingLeft: 15,
         marginBottom: 15,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     inputSumComplete: {
@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         marginHorizontal: 12,
         marginTop: 12,
-        marginBottom: 6
+        marginBottom: 6,
     },
 
     datePickerText: {
         fontSize: 16,
-        color: 'black'
+        color: 'black',
     },
 
     inputHalf: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         fontSize: 16,
         paddingLeft: 15,
-        marginBottom: 15
+        marginBottom: 15,
     },
 
     inputWithIcon: {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 15,
         fontSize: 16,
-        paddingLeft: 48
+        paddingLeft: 48,
     },
 
     inputWithIconCountryCode: {
@@ -86,42 +86,40 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 15,
         fontSize: 16,
-        paddingLeft: 71
+        paddingLeft: 71,
     },
 
     countryCode: {
         position: 'absolute',
         top: 12,
         paddingLeft: 48,
-        fontSize: 16
+        fontSize: 16,
     },
 
     inputIcon: {
         position: 'absolute',
         top: 8,
-        left: 15
+        left: 15,
     },
 
     inputContainer: {
         width: WIDTH - 55,
         marginHorizontal: 25,
         marginTop: 10,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
         //        flex: 1
     },
-
-
 
     policy: {
         marginHorizontal: 45,
         flexDirection: 'row',
-        flex: 1
+        flex: 1,
     },
 
     btnEye: {
         position: 'absolute',
         top: 8,
-        right: 20
+        right: 20,
     },
 
     button: {
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: 'black',
         justifyContent: 'center',
-        marginTop: 10
+        marginTop: 10,
     },
 
     buttonConfirmAlone: {
@@ -139,7 +137,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: '#FFC234',
         alignSelf: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     buttonConfirm: {
@@ -147,7 +145,7 @@ const styles = StyleSheet.create({
         height: 45,
         borderRadius: 25,
         backgroundColor: '#FFC234',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     buttonCancel: {
@@ -156,7 +154,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 25,
         backgroundColor: 'white',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     buttonAddWorker: {
@@ -165,7 +163,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         backgroundColor: 'white',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     buttonDeleteWorker: {
@@ -175,8 +173,6 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         justifyContent: 'center',
         marginLeft: 5,
-
-
     },
 
     buttonBottom: {
@@ -186,40 +182,40 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         justifyContent: 'center',
         marginTop: 10,
-        marginBottom: 20
+        marginBottom: 20,
     },
 
     text: {
         color: '#FFC234',
         fontSize: 16,
-        textAlign: 'center'
+        textAlign: 'center',
     },
 
     redText: {
         color: '#ff3737',
         fontSize: 16,
-        textAlign: 'center'
+        textAlign: 'center',
     },
 
     buttonText: {
         fontSize: 16,
-        textAlign: 'center'
+        textAlign: 'center',
     },
 
     blackText: {
         color: 'black',
         fontSize: 16,
-        textAlign: 'center'
+        textAlign: 'center',
     },
 
     mainMenuItemText: {
         color: 'black',
-        fontSize: 20
+        fontSize: 20,
         //   textAlign: 'center'
     },
 
     h2: {
-        fontSize: 18
+        fontSize: 18,
     },
 
     description: {
@@ -227,14 +223,14 @@ const styles = StyleSheet.create({
         marginHorizontal: 35,
         textAlign: 'center',
         top: 10,
-        marginBottom: 10
+        marginBottom: 10,
     },
 
     descriptionTwo: {
         color: 'grey',
         marginHorizontal: 6,
         textAlign: 'left',
-        marginBottom: 10
+        marginBottom: 10,
     },
 
     //for ScrollView
@@ -242,11 +238,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         flexDirection: 'column',
-        paddingTop: 10
+        paddingTop: 10,
     },
 
     registrationPhoto: {
-        width: '100%'
+        width: '100%',
     },
 
     camButton: {
@@ -255,10 +251,8 @@ const styles = StyleSheet.create({
         width: 45,
         height: 45,
         borderRadius: 25,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
-
-
 
     choiceCameraRoll: {
         height: 200,
@@ -266,7 +260,7 @@ const styles = StyleSheet.create({
         shadowColor: 'black',
         width: WIDTH * 0.9,
         elevation: 5,
-        borderRadius: 10
+        borderRadius: 10,
     },
 
     choiceCameraRollItem: {
@@ -275,7 +269,7 @@ const styles = StyleSheet.create({
         margin: 5,
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     choiceCameraRollCancel: {
@@ -284,7 +278,7 @@ const styles = StyleSheet.create({
         margin: 5,
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     preview: {
@@ -292,23 +286,23 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         height: HEIGHT,
-        width: WIDTH
+        width: WIDTH,
     },
 
     photoButtonContainer: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginBottom: 16
+        marginBottom: 16,
     },
 
     fullScreenPicture: {
-        marginVertical: 10
+        marginVertical: 10,
     },
 
     registrationQuestion: {
         marginTop: 10,
-        fontSize: 16
+        fontSize: 16,
     },
 
     drawerUserContainer: {
@@ -326,19 +320,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#4D443F',
         fontWeight: '100',
-        width:'20%'
-
+        width: '20%',
     },
-
 
     drawerUserName: {
         flex: 2,
         textAlign: 'center',
         fontSize: 24,
-        paddingLeft: 6
+        paddingLeft: 6,
     },
-
-
 
     drawerTopItem: {
         flexDirection: 'row',
@@ -347,11 +337,11 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         height: 56,
         borderColor: '#C4C4C4',
-        padding: 12
+        padding: 12,
     },
 
     drawerFontTopItem: {
-        fontSize: 16
+        fontSize: 16,
     },
 
     drawerLicenseAgreement: {
@@ -360,29 +350,29 @@ const styles = StyleSheet.create({
         //   paddingTop: 120,
         //   Self: 'flex-end',
 
-        paddingBottom: 16
+        paddingBottom: 16,
     },
 
     instructionBase: {
         marginHorizontal: 15,
-        marginTop: 10
+        marginTop: 10,
     },
 
     instructionView: {
         padding: 5,
         borderRadius: 3,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     instructionViewTitle: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: 40,
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     instructionTitle: {
-        fontSize: 16
+        fontSize: 16,
     },
 
     instructionText: {
@@ -397,7 +387,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         marginHorizontal: 12,
-        paddingVertical: 4
+        paddingVertical: 4,
         // borderWidth: 1, borderColor: 'green'
     },
 
@@ -407,7 +397,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         marginHorizontal: 12,
-        paddingVertical: 4
+        paddingVertical: 4,
         // borderWidth: 1, borderColor: 'green'
     },
 
@@ -415,31 +405,31 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 16,
         marginLeft: 16,
-        marginVertical: 12
+        marginVertical: 12,
     },
 
     cardH2: {
         color: 'black',
         fontSize: 16,
-        marginLeft: 16
+        marginLeft: 16,
         //   textAlign: 'center'
     },
 
     cardRowTopContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     cardMargins: {
         marginHorizontal: 12,
-        marginVertical: 6
+        marginVertical: 6,
     },
 
     orderText: {
         flex: 1,
         justifyContent: 'flex-start',
-        padding: 10
+        padding: 10,
     },
 
     telephone: {
@@ -450,16 +440,16 @@ const styles = StyleSheet.create({
     },
 
     orderChevronIcon: {
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
     },
 
     orderIcon: {
-        marginRight: 12
+        marginRight: 12,
     },
 
     buttonRow: {
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
 
     cardBase: {
@@ -469,7 +459,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
         // borderWidth: 1,
         // borderColor: 'red',
-        borderRadius: 10
+        borderRadius: 10,
     },
 
     cardChat: {
@@ -479,44 +469,44 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
         borderRadius: 10,
         marginHorizontal: 12,
-        marginTop: 6
+        marginTop: 6,
     },
 
     cardButtonText: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
 
     cardButton: {
-        padding: 12
+        padding: 12,
     },
 
     clockText: {
-        marginTop: 2
+        marginTop: 2,
     },
 
     locationText: {
         marginLeft: 8,
-        marginRight: 12
+        marginRight: 12,
     },
 
     locationPointNameText: {
-        marginRight: 12
+        marginRight: 12,
     },
 
     descriptionText: {
-        marginRight: 32
+        marginRight: 32,
     },
 
     mainTopBackground: {
         flex: 1,
         backgroundColor: '#FFC234',
-        padding: 18
+        padding: 18,
     },
 
     mainFontUserName: {
         fontSize: 32,
         textAlign: 'center',
-        paddingBottom: 6
+        paddingBottom: 6,
     },
 
     mainFontUserType: {
@@ -524,15 +514,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingTop: 24,
         color: '#4D443F',
-        fontWeight: Platform.OS === "android" ? '100' : '300',
-        paddingBottom: 42
+        fontWeight: Platform.OS === 'android' ? '100' : '300',
+        paddingBottom: 42,
         //     padding: 12
     },
 
     mainFontBalance: {
         fontSize: 24,
         textAlign: 'center',
-        paddingBottom: 6
+        paddingBottom: 6,
     },
 
     mainFontTopUpBalance: {
@@ -540,7 +530,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textDecorationLine: 'underline',
         color: '#4D443F',
-        paddingBottom: 8
+        paddingBottom: 8,
     },
 
     mainWorkingItem: {
@@ -548,70 +538,70 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         height: 56,
-        padding: 12
+        padding: 12,
     },
 
     buttonContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
 
     buttonContainerAlone: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
 
     absoluteButtonContainer: {
         position: 'absolute',
         left: 25,
         right: 25,
-        bottom: 16
+        bottom: 16,
     },
 
     executorBase: {
         marginHorizontal: 15,
-        marginBottom: 5
+        marginBottom: 5,
     },
 
     spaceBottom: {
-        marginBottom: 16 + 45 + 16
+        marginBottom: 16 + 45 + 16,
     },
 
     cardDescription: {
         flex: 1,
         justifyContent: 'flex-start',
         paddingVertical: 5,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
 
     executorText: {
         marginBottom: 10,
-        marginTop: 10
+        marginTop: 10,
     },
 
     executorTextDisp: {
-        marginBottom: 10
+        marginBottom: 10,
     },
 
     executorImage: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        marginRight: 12
+        marginRight: 12,
     },
 
     errorMessage: {
         color: 'red',
         textAlign: 'center',
-        fontSize: 16
+        fontSize: 16,
     },
 
     notificationMessage: {
         color: '#A67911',
         textAlign: 'center',
-        fontSize: 16
-    }
+        fontSize: 16,
+    },
 });
 export default styles;
