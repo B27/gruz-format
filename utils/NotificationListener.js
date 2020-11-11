@@ -5,6 +5,7 @@ import showAlert from './showAlert';
 
 let _navigation = null;
 let _pendingParams = null;
+let _refreshCallback = null;
 
 const TAG = '~NotificationListener~';
 
