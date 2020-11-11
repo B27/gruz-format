@@ -8,6 +8,7 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 import OrderCard from '../components/OrderCard';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
+import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
 
 // const LOCATION_TASK_NAME = 'background-location-task';
@@ -39,6 +40,7 @@ class MainScreen extends React.Component {
     componentDidMount() {
         this.componentIsMount = true;
         this._onRefresh();
+        NotificationListener.setRefreshCallback(this._onRefresh);
     }
 
     componentWillUnmount() {
@@ -47,6 +49,7 @@ class MainScreen extends React.Component {
         }
         this.timeoutsSet.clear();
         this.componentIsMount = false;
+        NotificationListener.setRefreshCallback(null);
     }
 
     _topUpBalance = () => {

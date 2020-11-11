@@ -113,6 +113,13 @@ public class MainActivity extends ReactActivity {
         rejectOrderCh.setSound(notificationSound1, attr);
         channelsList.add(rejectOrderCh);
 
+        NotificationChannel endOrderCh = new NotificationChannel(
+                getString(R.string.end_order_ncid),
+                getString(R.string.end_order_ncn),
+                NotificationManager.IMPORTANCE_HIGH);
+        endOrderCh.setSound(notificationSound1, attr);
+        channelsList.add(endOrderCh);
+
         NotificationChannel inactiveUserCh = new NotificationChannel(
                 getString(R.string.inactive_user_ncid),
                 getString(R.string.inactive_user_ncn),

@@ -8,4 +8,5 @@
     <string name="inactive_user_ncn">Вы неактивны</string>
     <string name="new_message_ncn">Новое сообщение</string>
     <string name="default_ncd">Уведомления сервиса переднего плана для отправки геолокации</string>
+    <string name="end_order_ncn" translatable="false">Завершение заказа</string>
 </resources>
