@@ -1,19 +1,21 @@
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
-import React, { Fragment } from 'react';
+import React from 'react';
 import {
     Alert,
     AppState,
     Image,
+    Linking,
+    NativeModules,
+    Platform,
     RefreshControl,
-    SafeAreaView,
     ScrollView,
     Text,
     TouchableOpacity,
     View,
-    NativeModules,
-    Platform,
 } from 'react-native';
+import BackgroundGeolocation from 'react-native-background-geolocation';
+import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -21,7 +23,6 @@ import OrderCard from '../components/OrderCard';
 import styles from '../styles';
 import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
-import BackgroundGeolocation from 'react-native-background-geolocation';
 
 const TAG = '~OrderDetailScreen.js~';
 
@@ -62,6 +63,19 @@ class OrderDetailScreen extends React.Component {
 
         this.componentIsMount = false;
     }
+
+    _makeCall = async () => {
+        let phoneNumber;
+        let number = await AsyncStorage.getItem('numberCallToClient');
+
+        if (!number) {
+            showAlert('Ошибка', 'В данный момент звонок невозможен: администратор не указал номер для звонка');
+            return;
+        }
+        phoneNumber = `tel:${number}`;
+
+        Linking.openURL(phoneNumber);
+    };
 
     _orderRefresher = () => {
         const { lastOrderPullTime } = this.props.store;
@@ -302,7 +316,7 @@ class OrderDetailScreen extends React.Component {
         }
 
         return (
-            <Fragment>
+            <>
                 <ScrollView
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh} />}
                 >
@@ -317,6 +331,11 @@ class OrderDetailScreen extends React.Component {
                         description={order.comment}
                         cardStyle={styles.cardMargins}
                     />
+
+                    <TouchableOpacity style={styles.buttonCallClient} onPress={this._makeCall}>
+                        <Text style={styles.buttonSmallText}>ПОЗВОНИТЬ ЗАКАЗЧИКУ</Text>
+                    </TouchableOpacity>
+
                     <ExpandCardBase
                         OpenComponent={
                             <Text style={styles.cardH2}>
@@ -325,7 +344,7 @@ class OrderDetailScreen extends React.Component {
                             </Text>
                         }
                         HiddenComponent={
-                            <Fragment>
+                            <>
                                 <View style={styles.cardDescription}>
                                     {dispatcher && (
                                         <View>
@@ -349,65 +368,8 @@ class OrderDetailScreen extends React.Component {
 
                                     {driver && this.renderWorkerInfo([driver], 'Водитель', false)}
                                     {this.renderWorkerInfo(movers, movers.length > 1 ? 'Грузчики:' : 'Грузчик', false)}
-
-                                    {/*{driver && (
-                                        <View>
-                                            <Text style={styles.executorText}>Водитель:</Text>
-                                            <View style={styles.executorsRow}>
-                                                <View>
-                                                    {driver.avatar ? (
-                                                        <Image
-                                                            style={styles.executorImage}
-                                                            source={{ uri: driver.avatar }}
-                                                        />
-                                                    ) : (
-                                                            <IconCam
-                                                                name={'camera'}
-                                                                color={'#FFC234'}
-                                                                size={50}
-                                                                style={styles.orderIcon}
-                                                            />
-                                                        )}
-                                                </View>
-                                                <View>
-                                                    <Text>{driver.name}</Text>
-                                                    <Text>{driver.phoneNum}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )}
-                                    {movers.length != 0 && (
-                                        <View>
-                                            <Text style={styles.executorText}>
-                                                {movers.length > 1 ? 'Грузчики:' : 'Грузчик'}
-                                            </Text>
-                                            {movers.map(mover => (
-                                                <View key={mover.id} style={styles.executorsRow}>
-                                                    <View>
-                                                        {mover.avatar ? (
-                                                            <Image
-                                                                style={styles.executorImage}
-                                                                source={{ uri: mover.avatar }}
-                                                            />
-                                                        ) : (
-                                                                <IconCam
-                                                                    name={'camera'}
-                                                                    color={'#FFC234'}
-                                                                    size={50}
-                                                                    style={styles.orderIcon}
-                                                                />
-                                                            )}
-                                                    </View>
-                                                    <View>
-                                                        <Text>{mover.name}</Text>
-                                                        <Text>{mover.phoneNum}</Text>
-                                                    </View>
-                                                </View>
-                                            ))}
-                                        </View>
-                                    )}*/}
                                 </View>
-                            </Fragment>
+                            </>
                         }
                         cardStyle={styles.cardMargins}
                     />
@@ -416,7 +378,7 @@ class OrderDetailScreen extends React.Component {
                         expanded
                         OpenComponent={<Text style={styles.cardH2}>Мои грузчики</Text>}
                         HiddenComponent={
-                            <Fragment>
+                            <>
                                 <View style={styles.cardDescription}>
                                     {/*{this.renderWorkerInfo([driver], 'Водитель')}
                                     {this.renderWorkerInfo(movers, movers.length > 1 ? 'Грузчики:' : 'Грузчик')}*/}
@@ -432,7 +394,7 @@ class OrderDetailScreen extends React.Component {
                                         <Text style={styles.buttonText}>Добавить</Text>
                                     </TouchableOpacity>
                                 </View>
-                            </Fragment>
+                            </>
                         }
                         cardStyle={styles.cardMargins}
                     />
@@ -440,7 +402,7 @@ class OrderDetailScreen extends React.Component {
                     <ExpandCardBase
                         OpenComponent={<Text style={styles.cardH2}>Комментарий к заказу</Text>}
                         HiddenComponent={
-                            <Fragment>
+                            <>
                                 <View style={styles.cardDescription}>
                                     <Text style={styles.instructionText}>{order.comment}</Text>
                                     {isDriver ? (
@@ -449,28 +411,26 @@ class OrderDetailScreen extends React.Component {
                                         <Text style={styles.instructionText}>{order.loader_comment}</Text>
                                     )}
                                 </View>
-                            </Fragment>
+                            </>
                         }
                         cardStyle={styles.cardMargins}
                     />
-                    <TouchableOpacity style={[styles.cardChat, styles.spaceBottom]} onPress={this._chatPress}>
+                    <TouchableOpacity style={styles.cardChat} onPress={this._chatPress}>
                         <View style={styles.cardRowTopContainer}>
                             <Text style={styles.cardH2}>Чат</Text>
                             <Icon name="chevron-right" size={42} color="#c4c4c4" />
                         </View>
                     </TouchableOpacity>
-                </ScrollView>
-                <View style={styles.absoluteButtonContainer}>
-                    <SafeAreaView style={styles.buttonContainer}>
+                    <View style={styles.buttonContainerBottom}>
                         <TouchableOpacity style={styles.buttonCancel} onPress={this._cancelOrderPress}>
                             <Text style={styles.buttonText}>ОТМЕНА</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonConfirm} onPress={this._completeOrderPress}>
                             <Text style={styles.buttonText}>ЗАВЕРШИТЬ</Text>
                         </TouchableOpacity>
-                    </SafeAreaView>
-                </View>
-            </Fragment>
+                    </View>
+                </ScrollView>
+            </>
         );
     }
 }

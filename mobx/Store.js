@@ -227,7 +227,8 @@ class ObservableStore {
     }
 
     async startFulfillingOrder(id) {
-        await NetworkRequests.startOrder(id);
+        const response = await NetworkRequests.startOrder(id);
+        await AsyncStorage.setItem('numberCallToClient', response.data.numberCallToClient);
 
         await this.pullFulfilingOrderInformation(id);
     }

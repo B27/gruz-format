@@ -159,11 +159,22 @@ const styles = StyleSheet.create({
 
     buttonAddWorker: {
         width: '100%',
-        height: 30,
+        height: 32,
         borderWidth: 1,
         borderRadius: 5,
         backgroundColor: 'white',
         justifyContent: 'center',
+    },
+
+    buttonCallClient: {
+        height: 42,
+        borderWidth: 1,
+        borderRadius: 5,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        marginHorizontal: 12,
+        marginVertical: 8,
+        borderRadius: 25,
     },
 
     buttonDeleteWorker: {
@@ -199,6 +210,11 @@ const styles = StyleSheet.create({
 
     buttonText: {
         fontSize: 16,
+        textAlign: 'center',
+    },
+
+    buttonSmallText: {
+        fontSize: 14,
         textAlign: 'center',
     },
 
@@ -555,6 +571,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+
+    buttonContainerBottom: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 24,
     },
 
     buttonContainerAlone: {
