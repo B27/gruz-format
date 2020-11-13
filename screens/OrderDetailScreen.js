@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
@@ -15,7 +16,6 @@ import {
     View,
 } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
-import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
@@ -242,8 +242,8 @@ class OrderDetailScreen extends React.Component {
                                 <IconCam name={'camera'} color={'#FFC234'} size={50} style={styles.orderIcon} />
                             )}
                         </View>
-                        <View>
-                            <Text>{worker.name}</Text>
+                        <View style={styles.flex1}>
+                            <Text>{`${worker.name} ${worker.isDriver && `(${worker.stateCarNumber})`}`}</Text>
                             <Text>{worker.phoneNum}</Text>
                         </View>
                         {canDelete && (

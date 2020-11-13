@@ -251,25 +251,14 @@ class ObservableStore {
             mapWorkers[worker.id._id] = worker.id;
         });
 
-        let workersData = workers.map((worker) => {
-            if (worker.id.photos) {
-                return {
-                    id: worker.id._id,
-                    name: worker.id.name,
-                    phoneNum: worker.id.phoneNum,
-                    avatar: URL + worker.id.photos.user,
-                    isDriver: worker.id.isDriver,
-                };
-            } else {
-                return {
-                    id: worker.id._id,
-                    name: worker.id.name,
-                    phoneNum: worker.id.phoneNum,
-                    avatar: null,
-                    isDriver: worker.id.isDriver,
-                };
-            }
-        });
+        let workersData = workers.map((worker) => ({
+            id: worker.id._id,
+            name: worker.id.name,
+            phoneNum: worker.id.phoneNum,
+            avatar: worker.id.photos ? URL + worker.id.photos.user : null,
+            isDriver: worker.id.isDriver,
+            stateCarNumber: worker.id.veh_stateCarNumber,
+        }));
 
         const myWorkers = [];
         let index = 0;
