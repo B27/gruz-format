@@ -243,7 +243,7 @@ class OrderDetailScreen extends React.Component {
                             )}
                         </View>
                         <View style={styles.flex1}>
-                            <Text>{`${worker.name} ${worker.isDriver && `(${worker.stateCarNumber})`}`}</Text>
+                            <Text>{`${worker.name} ${worker.isDriver ? `(${worker.stateCarNumber})` : ''}`}</Text>
                             <Text>{worker.phoneNum}</Text>
                         </View>
                         {canDelete && (
