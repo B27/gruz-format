@@ -1,8 +1,10 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import {
+    Modal,
     Alert,
     AppState,
     Image,
@@ -14,12 +16,15 @@ import {
     Text,
     TouchableOpacity,
     View,
+    TextInput,
 } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconCam from 'react-native-vector-icons/MaterialIcons';
 import ExpandCardBase from '../components/ExpandCardBase';
+import LoadingButton from '../components/LoadingButton';
 import OrderCard from '../components/OrderCard';
+import Store from '../mobx/Store';
 import styles from '../styles';
 import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
@@ -32,6 +37,8 @@ class OrderDetailScreen extends React.Component {
     state = {
         message: false,
         refreshing: false,
+        phoneNumberModalVisible: false,
+        phone: '',
     };
 
     static navigationOptions = {
@@ -178,6 +185,28 @@ class OrderDetailScreen extends React.Component {
         }
     };
 
+    _savePhoneNum = async () => {
+        const id = this.props.store.userId;
+
+        if (this.state.phone === '') {
+            showAlert('Ошибка', 'Заполните номер');
+            return;
+        }
+        if (/^8/g.test(this.state.phone) && this.state.phone.length !== 11) {
+            showAlert('Ошибка', 'Ваш номер должен содержать ровно 11 цифр');
+            return;
+        }
+        if (/^\+7/g.test(this.state.phone) && this.state.phone.length !== 12) {
+            showAlert('Ошибка', 'Ваш номер должен содержать ровно 12 символов');
+            return;
+        }
+        await axios.patch('/worker/' + id, {
+            phoneNum: this.state.phone,
+        });
+        this.setState({ phoneNumberModalVisible: false });
+        this._onRefresh();
+    };
+
     _DeleteThirdPartyWorker = async () => {
         try {
             await this.props.store.deleteThirdPartyWorkerToOrder();
@@ -246,6 +275,15 @@ class OrderDetailScreen extends React.Component {
                             <Text>{`${worker.name} ${worker.isDriver ? `(${worker.stateCarNumber})` : ''}`}</Text>
                             <Text>{worker.phoneNum}</Text>
                         </View>
+                        {this.props.store.userId === worker.id && (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({ phoneNumberModalVisible: true });
+                                }}
+                            >
+                                <Icon name="pencil" size={24} />
+                            </TouchableOpacity>
+                        )}
                         {canDelete && (
                             <View>
                                 <TouchableOpacity
@@ -260,33 +298,6 @@ class OrderDetailScreen extends React.Component {
                 ))}
             </View>
         );
-
-        /*return workers.map((worker, index) => {
-            return <View key={name+index}>
-                <Text style={styles.executorText}>{name}</Text>
-                <View style={styles.executorsRow}>
-                    <View>
-                        {worker.avatar ? (
-                            <Image
-                                style={styles.executorImage}
-                                source={{ uri: worker.avatar }}
-                            />
-                        ) : (
-                            <IconCam
-                                name={'camera'}
-                                color={'#FFC234'}
-                                size={50}
-                                style={styles.orderIcon}
-                            />
-                        )}
-                    </View>
-                    <View>
-                        <Text>{worker.name}</Text>
-                        <Text>{worker.phoneNum}</Text>
-                    </View>
-                </View>
-            </View>
-        })*/
     }
 
     render() {
@@ -303,6 +314,7 @@ class OrderDetailScreen extends React.Component {
 
         const driver = workers.find((worker) => worker.isDriver);
         const movers = workers.filter((worker) => !worker.isDriver);
+        const me = workers.find((worker) => this.props.store.userId === worker.id);
 
         let orderType = '';
         if (order) {
@@ -317,6 +329,46 @@ class OrderDetailScreen extends React.Component {
 
         return (
             <>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.phoneNumberModalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}
+                    onShow={() => this.setState({ phone: me.phoneNum })}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalHeaderText}>Изменение номера телефона</Text>
+                            <TextInput
+                                style={[styles.input, { alignSelf: 'stretch', marginHorizontal: 12, marginBottom: 2 }]}
+                                placeholder="Номер телефона"
+                                keyboardType="numeric"
+                                placeholderTextColor="grey"
+                                onChangeText={(phone) => this.setState({ phone: phone.replace(/[ \(\)]/g, '') })}
+                                value={this.state.phone}
+                                fullWidth
+                            />
+                            <Text style={styles.modalDesctiption}>
+                                На этот номер вам будут звонить другие участники заказа
+                            </Text>
+                            <View style={styles.modalBottomButtons}>
+                                <TouchableOpacity
+                                    style={styles.buttonCancelBottomModal}
+                                    onPress={() => {
+                                        this.setState({ phoneNumberModalVisible: !this.state.phoneNumberModalVisible });
+                                    }}
+                                >
+                                    <Text style={styles.buttonText}>ОТМЕНА</Text>
+                                </TouchableOpacity>
+                                <LoadingButton style={styles.buttonSaveBottomModal} onPress={this._savePhoneNum}>
+                                    СОХРАНИТЬ
+                                </LoadingButton>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 <ScrollView
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh} />}
                 >

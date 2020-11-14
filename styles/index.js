@@ -36,6 +36,37 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+
+    modalView: {
+        width: '90%',
+        margin: 10,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        paddingTop: 14,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+
+    modalBottomButtons: { alignSelf: 'stretch', justifyContent: 'space-around', flexDirection: 'row' },
+
+    modalDesctiption: {
+        alignSelf: 'stretch',
+        marginHorizontal: 18,
+        marginBottom: 12,
+    },
+
     input: {
         height: 45,
         borderWidth: 1,
@@ -194,6 +225,31 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 10,
         marginBottom: 20,
+    },
+
+    buttonSaveBottomModal: {
+        height: 45,
+        borderRadius: 25,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+
+    buttonCancelBottomModal: {
+        height: 45,
+        borderRadius: 25,
+        borderWidth: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10,
     },
 
     text: {
@@ -498,6 +554,11 @@ const styles = StyleSheet.create({
 
     clockText: {
         marginTop: 2,
+    },
+
+    modalHeaderText: {
+        fontSize: 18,
+        marginBottom: 14,
     },
 
     locationText: {
