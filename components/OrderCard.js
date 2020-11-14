@@ -26,6 +26,8 @@ class OrderCard extends React.Component {
             fullAddress,
         } = this.props;
         let orderId = order ? order._id : 'id';
+        const timeOffset = order.city.timeOffset;
+
         return (
             <ExpandCardBase
                 expandAlways={expandAlways}
@@ -36,7 +38,7 @@ class OrderCard extends React.Component {
                     <Fragment>
                         <View style={styles.orderRow}>
                             <Icon name="clock-outline" color="#FFC234" size={20} style={styles.orderIcon} />
-                            <Text style={styles.textInput}>{formatDate(time)}</Text>
+                            <Text style={styles.textInput}>{formatDate(time, timeOffset)}</Text>
                         </View>
                         <View style={styles.orderRow}>
                             <Icon name="account-multiple" color="#FFC234" size={20} style={styles.orderIcon} />
@@ -94,8 +96,8 @@ function generateAddress(location, fullAddress) {
     return address;
 }
 
-function formatDate(date) {
-    return moment(date).format('DD.MM.YY HH:mm');
+function formatDate(date, timeOffset) {
+    return moment.utc(date).add(timeOffset, 'm').format('DD.MM.YY HH:mm');
 }
 
 export default OrderCard;
