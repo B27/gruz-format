@@ -1,10 +1,10 @@
+import { inject, observer } from 'mobx-react/native';
 import React, { Fragment } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ExpandCardBase from './ExpandCardBase';
 import styles from '../styles';
-import moment from 'moment';
-import { inject, observer } from 'mobx-react/native';
+import { getLocaleDateTimeString } from '../utils/Time';
+import ExpandCardBase from './ExpandCardBase';
 
 @inject('store')
 @observer
@@ -38,7 +38,7 @@ class OrderCard extends React.Component {
                     <Fragment>
                         <View style={styles.orderRow}>
                             <Icon name="clock-outline" color="#FFC234" size={20} style={styles.orderIcon} />
-                            <Text style={styles.textInput}>{formatDate(time, timeOffset)}</Text>
+                            <Text style={styles.textInput}>{getLocaleDateTimeString(time, timeOffset)}</Text>
                         </View>
                         <View style={styles.orderRow}>
                             <Icon name="account-multiple" color="#FFC234" size={20} style={styles.orderIcon} />
@@ -94,10 +94,6 @@ function generateAddress(location, fullAddress) {
         if (location.apartment) address += `, кв. ${location.apartment}`;
     }
     return address;
-}
-
-function formatDate(date, timeOffset) {
-    return moment.utc(date).add(timeOffset, 'm').format('DD.MM.YY HH:mm');
 }
 
 export default OrderCard;

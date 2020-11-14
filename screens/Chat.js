@@ -1,12 +1,14 @@
+import AsyncStorage from '@react-native-community/async-storage';
+import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { Text, View, SafeAreaView } from 'react-native';
+import { SafeAreaView, Text, View } from 'react-native';
 import { GiftedChat, Send } from 'react-native-gifted-chat';
-import { toJS } from 'mobx';
-import NetworkRequests from '../mobx/NetworkRequests';
-import { URL } from '../constants';
 import io from 'socket.io-client';
-import AsyncStorage from '@react-native-community/async-storage';
+import { URL } from '../constants';
+import '../locale/ru';
+import NetworkRequests from '../mobx/NetworkRequests';
+import { getLocaleDateTime } from '../utils/Time';
 //const socket = (async()=>{await getChatSocket('5ce66399dcc0097d8b95dc17')})();
 
 const TAGdidMount = '~Chat.js componentDidMount() ~';
@@ -28,10 +30,11 @@ class Chat extends React.Component {
 
     workersChatData = []; // имена и аватарки людей в чате
 
-    setMessage(id, text, sender, name, avatar) {
+    setMessage(id, text, sender, name, avatar, createdAt) {
         return {
             _id: id,
             text: text,
+            createdAt: createdAt,
             user: {
                 _id: sender,
                 name: name,
@@ -41,6 +44,7 @@ class Chat extends React.Component {
     }
 
     componentDidMount = async () => {
+        const timeOffset = this.props.store.order.city.timeOffset;
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
             (async () => {
                 console.log('WILL FOCUS');
@@ -59,16 +63,18 @@ class Chat extends React.Component {
                     //console.log(result);
                     this.setState({ chatHistory: [] });
                     for (const item of result) {
-                        const { text, sender } = item;
+                        const { _id, text, sender, createdAt } = item;
+                        const localCreatedAt = getLocaleDateTime(createdAt, timeOffset);
                         const { name, avatar } = await this.idToName(sender);
-                        this.addChatMessage(this.setMessage(Math.random(), text, sender, name, avatar));
+                        this.addChatMessage(this.setMessage(_id, text, sender, name, avatar, localCreatedAt));
                     }
                 });
 
                 socket.on('chat message', async (result) => {
-                    const { sender, text } = result;
+                    const { _id, sender, text, createdAt } = result;
+                    const localCreatedAt = getLocaleDateTime(createdAt, timeOffset);
                     const { name, avatar } = await this.idToName(sender);
-                    this.addChatMessage(this.setMessage(Math.random(), text, sender, name, avatar));
+                    this.addChatMessage(this.setMessage(_id, text, sender, name, avatar, localCreatedAt));
                     //console.log(result);
                 });
             })();
@@ -157,6 +163,7 @@ class Chat extends React.Component {
                     renderSend={this.renderSend}
                     placeholder="Введите сообщение..."
                     renderUsernameOnMessage={true}
+                    locale="ru"
                 />
             </View>
         );
@@ -181,10 +188,7 @@ class Chat extends React.Component {
         });
 
         this.setState({
-            chatHistory: GiftedChat.append([...this.state.chatHistory], messages).map((v) => ({
-                ...v,
-                createdAt: undefined,
-            })),
+            chatHistory: GiftedChat.append([...this.state.chatHistory], messages),
         });
     }
 }
