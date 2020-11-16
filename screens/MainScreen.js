@@ -246,7 +246,7 @@ class MainScreen extends React.Component {
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}
                     ListEmptyComponent={
-                        +store.balance > 0 ? (
+                        +store.balance >= 0 ? (
                             <Text style={styles.mainFontUserType}>Нет доступных заявок</Text>
                         ) : (
                             <Text style={styles.needUpBalance}>Для принятия заявок необходимо пополнить баланс</Text>
