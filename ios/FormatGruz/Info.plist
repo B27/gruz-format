@@ -42,7 +42,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Чтобы сделать фото предоставьте доступ к камере</string>
+	<string>Доступ к камере необходим чтобы сделать и загрузить фотографию</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Информация о местоположении используется при выполнении и при подборе заказа</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -52,7 +52,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>Акселерометр используется для уменьшения потребления энергии путём отключения отслеживания гелокоации когда телефон находится в состоянии покоя</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Чтобы выбрать фото предоставьте доступ к галерее</string>
+	<string>Доступ к галерее необходим для выбора фотографии</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>
