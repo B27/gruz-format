@@ -61,7 +61,9 @@ public class SendLocationService extends Service implements LocationListener {
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
         stopFusedLocation();
-        mSocket.disconnect();
+        if (mSocket != null) {
+            mSocket.disconnect();
+        }
         super.onDestroy();
     }
 
