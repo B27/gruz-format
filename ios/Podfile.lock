@@ -398,6 +398,8 @@ PODS:
     - React
   - RNCCheckbox (0.4.2):
     - React
+  - RNCPicker (1.9.2):
+    - React-Core
   - RNDateTimePicker (2.6.0):
     - React
   - RNDefaultPreference (1.4.3):
@@ -483,6 +485,7 @@ DEPENDENCIES:
   - RNBackgroundGeolocation (from `../node_modules/react-native-background-geolocation`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDefaultPreference (from `../node_modules/react-native-default-preference`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -592,6 +595,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCCheckbox:
     :path: "../node_modules/@react-native-community/checkbox"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNDefaultPreference:
@@ -673,6 +678,7 @@ SPEC CHECKSUMS:
   RNBackgroundGeolocation: dc849f37ad483aa318364c85bab2309077cd2071
   RNCAsyncStorage: d059c3ee71738c39834a627476322a5a8cd5bf36
   RNCCheckbox: 357578d3b42652c78ee9a1bb9bcfc3195af6e161
+  RNCPicker: 4850f485a2b6a51788c7582d90d4b7d0e1644036
   RNDateTimePicker: e386ff4ef3300964ed0cad97ce6f206e0effbfdb
   RNDefaultPreference: 2f8d6d54230edbd78708ada8d63bb275e5a8415b
   RNFBApp: e4321cad5dd23b43b3b4f0ca060300b9f85cb7a4
