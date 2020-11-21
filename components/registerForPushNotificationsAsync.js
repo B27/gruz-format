@@ -34,7 +34,7 @@ export default async function registerForPushNotificationsAsync(userHasPushToken
             break;
 
         case 'ios':
-            body.appVersion = { android: 0, ios: 13 };
+            body.appVersion = { android: 0, ios: 14 };
             break;
     }
 
