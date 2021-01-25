@@ -60,7 +60,7 @@ class ObservableStore {
     @observable chatHistory = [];
 
     @computed get hasEndedOrder() {
-        if (this.orderIdOnWork && this.order) {
+        if (this.orderIdOnWork && this.order && this.order.workers.data.lenght > 0) {
             const workersData = this.order.workers.data;
 
             let sumEntered = true;
@@ -204,6 +204,10 @@ class ObservableStore {
 
         const { data: order } = await NetworkRequests.getOrder(id);
 
+        if (order.numberCallToClient) {
+            await AsyncStorage.setItem('numberCallToClient', order.numberCallToClient);
+        }
+
         runInAction(() => {
             this.order = order;
             this.lastOrderPullTime = Date.now();
@@ -227,9 +231,7 @@ class ObservableStore {
     }
 
     async startFulfillingOrder(id) {
-        const response = await NetworkRequests.startOrder(id);
-        await AsyncStorage.setItem('numberCallToClient', response.data.numberCallToClient);
-
+        await NetworkRequests.startOrder(id);
         await this.pullFulfilingOrderInformation(id);
     }
 
