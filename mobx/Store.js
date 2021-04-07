@@ -60,7 +60,7 @@ class ObservableStore {
     @observable chatHistory = [];
 
     @computed get hasEndedOrder() {
-        if (this.orderIdOnWork && this.order && this.order.workers.data.lenght > 0) {
+        if (this.orderIdOnWork && this.order && this.order.workers.data.length > 0) {
             const workersData = this.order.workers.data;
 
             let sumEntered = true;
