@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import netInfo from '@react-native-community/netinfo';
+import crashlytics from '@react-native-firebase/crashlytics';
 import axios from 'axios';
 import md5 from 'md5';
 import React from 'react';
@@ -7,11 +8,13 @@ import { ImageBackground, Platform, Text, TextInput, TouchableOpacity, View } fr
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import analytics from '@react-native-firebase/analytics';
 import LoadingButton from '../components/LoadingButton';
 import bgImage from '../images/background.png';
 import styles from '../styles';
+import { logButtonPress, logError, logScreenView, logSignIn, setUserIdForFirebase } from '../utils/FirebaseAnalyticsLogger';
 
-const TAG = '~SignInScreen.js~';
+const TAG = '~SignInScreen~';
 
 class SignInScreen extends React.Component {
     state = {
@@ -28,7 +31,16 @@ class SignInScreen extends React.Component {
 
     timeoutsSet = new Set();
 
+    componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            logScreenView(TAG);
+        });
+    }
+
     componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
         for (let timeout of this.timeoutsSet) {
             clearTimeout(timeout);
         }
@@ -84,7 +96,11 @@ class SignInScreen extends React.Component {
                         </View>
                         <Text style={{ color: 'red' }}>{this.state.message}</Text>
 
-                        <LoadingButton style={styles.button} onPress={this._signInAsync}>
+                        <LoadingButton
+                            style={styles.button}
+                            onPress={this._signInAsync}
+                            // eslint-disable-next-line react-native/no-raw-text
+                        >
                             ВОЙТИ
                         </LoadingButton>
 
@@ -103,12 +119,12 @@ class SignInScreen extends React.Component {
     }
 
     goToRegistartionScreen = () => {
-        console.log(TAG, 'goToRegistartionScreen');
-
+        logButtonPress({ TAG, info: 'goToRegistrationScreen' });
         this.props.navigation.navigate('RegisterPerson');
     };
 
     _signInAsync = async () => {
+        logButtonPress({ TAG, info: 'signIn' });
         this._showErrorMessage('');
         if (!this.state.phone || !this.state.password) {
             this._showErrorMessage('Введите логин и пароль');
@@ -118,7 +134,9 @@ class SignInScreen extends React.Component {
                     login: this.state.phone,
                     password: this.state.password,
                 });
-                console.log(TAG, response.data);
+
+                await setUserIdForFirebase({ id: response.data._id });
+                logSignIn();
 
                 let promiseArr = [];
                 promiseArr.push(AsyncStorage.setItem('password', md5(this.state.password)));
@@ -133,6 +151,7 @@ class SignInScreen extends React.Component {
 
                 this.props.navigation.navigate('AuthLoading');
             } catch (error) {
+                logError({ TAG, info: '_signInAsync()', error });
                 if (error.isAxiosError) {
                     if (error.response) {
                         console.log(TAG, 'error post /login', error.response.status, error.response.data.message);

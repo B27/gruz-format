@@ -10,10 +10,12 @@ import { RESULTS } from 'react-native-permissions';
 import LoadingButton from '../components/LoadingButton';
 import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import styles from '../styles';
+import { logError, logInfo, logScreenView, logSignOut, logUserOnWork, setUserIdForFirebase } from '../utils/FirebaseAnalyticsLogger';
 import { execPendingNotificationListener, prepareNotificationListener } from '../utils/NotificationListener';
 import Permissons from '../utils/Permissions';
 
 const TAG = '~AuthLoadingScreen~';
+
 @inject('store')
 class AuthLoadingScreen extends React.Component {
     state = {
@@ -21,6 +23,9 @@ class AuthLoadingScreen extends React.Component {
     };
 
     componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            logScreenView(TAG);
+        });
         this._bootstrapAsync();
     }
 
@@ -45,7 +50,7 @@ class AuthLoadingScreen extends React.Component {
         prepareNotificationListener(navigation);
 
         const userToken = await AsyncStorage.getItem('token');
-        console.log(TAG, 'user token: ', userToken);
+        // console.log(TAG, 'user token: ', userToken);
 
         const userId = await AsyncStorage.getItem('userId');
         this.props.store.setUserId(userId);
@@ -58,6 +63,7 @@ class AuthLoadingScreen extends React.Component {
             };
             await Platform.select({
                 android: async () => {
+                    logInfo({ TAG, info: 'restart work manager' });
                     NativeModules.WorkManager.stopWorkManager();
                     NativeModules.WorkManager.startWorkManager(userToken);
                 },
@@ -66,17 +72,22 @@ class AuthLoadingScreen extends React.Component {
                 },
             })();
             try {
+                logInfo({ TAG, info: 'pull user info' });
                 await store.getUserInfo();
                 registerForPushNotificationsAsync(store.hasPushToken);
+                await setUserIdForFirebase({ id: userId });
 
                 if (store.orderIdOnWork) {
                     console.log(TAG, 'user has an order in work, order id:', store.orderIdOnWork);
+                    logUserOnWork({ TAG, info: store.orderIdOnWork });
 
                     await store.pullFulfilingOrderInformation();
 
                     if (store.hasEndedOrder) {
+                        await logInfo({ TAG, info: 'user has ended order' });
                         screenNeedToGo = 'Main';
                     } else {
+                        await logInfo({ TAG, info: 'user has active order' });
                         console.log(TAG, 'start foreground service');
                         await Platform.select({
                             android: async () => {
@@ -91,10 +102,11 @@ class AuthLoadingScreen extends React.Component {
                         screenNeedToGo = 'OrderDetail';
                     }
                 } else {
+                    logInfo({ TAG, info: 'no order go to main screen' });
                     screenNeedToGo = 'Main';
                 }
             } catch (error) {
-                console.log(TAG, error);
+                logError({ TAG, error, info: 'error in AuthLoadingScreen process' });
 
                 if (error === 'Ошибка 403,  Not authorized') {
                     screenNeedToGo = 'SignIn';
@@ -112,6 +124,7 @@ class AuthLoadingScreen extends React.Component {
 
     _signOutAsync = async () => {
         try {
+            await logInfo({ TAG, info: 'user sign out' });
             await AsyncStorage.clear();
             await Platform.select({
                 android: async () => {
@@ -124,24 +137,26 @@ class AuthLoadingScreen extends React.Component {
                     await BackgroundGeolocation.destroyLocations();
                 },
             })();
+
+            logSignOut();
             this.props.navigation.navigate('SignIn');
         } catch (error) {
+            logError({ TAG, error, info: 'sign out' });
             this.setState({ error: error.toString() });
         }
     };
 
     _requestNotificationsPermission = async () => {
         const authStatus = await messaging().requestPermission();
-        const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        // const enabled =
+        //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-        if (enabled) {
-            console.log('Authorization status:', authStatus);
-        }
+        logInfo({ TAG, info: `iOS notifications permissions status: ${authStatus}` });
     };
 
     _startBackgroundGelocation = async (userId) => {
+        logInfo({ TAG, info: 'start background geolocation on iOS' });
         try {
             const state = await BackgroundGeolocation.ready({
                 elasticityMultiplier: 2,
@@ -157,7 +172,7 @@ class AuthLoadingScreen extends React.Component {
                 BackgroundGeolocation.start();
             }
         } catch (error) {
-            console.error('error in location', error);
+            logError({ TAG, info: 'start background location iOS', error });
         }
     };
 

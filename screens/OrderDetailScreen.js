@@ -26,10 +26,11 @@ import LoadingButton from '../components/LoadingButton';
 import OrderCard from '../components/OrderCard';
 import Store from '../mobx/Store';
 import styles from '../styles';
+import { logError, logCancelOrder, logButtonPress, logMakeCall, logScreenView, logInfo } from '../utils/FirebaseAnalyticsLogger';
 import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
 
-const TAG = '~OrderDetailScreen.js~';
+const TAG = '~OrderDetailScreen~';
 
 @inject('store')
 @observer
@@ -72,19 +73,23 @@ class OrderDetailScreen extends React.Component {
     }
 
     _makeCall = async () => {
+        await logButtonPress({ TAG, info: 'make call' });
         let phoneNumber;
         let number = await AsyncStorage.getItem('numberCallToClient');
 
         if (!number) {
             showAlert('Ошибка', 'В данный момент звонок невозможен: администратор не указал номер для звонка');
+            await logError({ TAG, info: 'number not exist' });
             return;
         }
         phoneNumber = `tel:${number}`;
 
+        logMakeCall({ TAG });
         Linking.openURL(phoneNumber);
     };
 
     _orderRefresher = () => {
+        logScreenView(TAG);
         const { lastOrderPullTime } = this.props.store;
         const timeDiff = Date.now() - lastOrderPullTime;
         if (timeDiff > 5 * 60 * 1000) {
@@ -119,6 +124,7 @@ class OrderDetailScreen extends React.Component {
     };
 
     _cancelOrderPress = () => {
+        logButtonPress({ TAG, info: 'cancel_order' });
         Alert.alert(
             'Вы уверены, что хотите отменить заказ ?',
             'За отказ вам будет выставлена минимальная оценка.',
@@ -149,8 +155,9 @@ class OrderDetailScreen extends React.Component {
                 },
             })();
             this.props.navigation.navigate('Main');
+            await logCancelOrder({ TAG, orderId: this.props.store.orderIdOnWork });
         } catch (error) {
-            console.log(TAG, error);
+            await logError({ TAG, error, info: 'cancel order' });
             if (error.response.status === 400) {
                 showAlert('Ошибка', error.response.data.message);
                 return;
@@ -160,32 +167,36 @@ class OrderDetailScreen extends React.Component {
     };
 
     _completeOrderPress = () => {
+        logButtonPress({ TAG, info: 'complete order' });
         this.props.navigation.navigate('OrderComplete');
     };
 
     _chatPress = () => {
+        logButtonPress({ TAG, info: 'chat' });
         this.props.navigation.navigate('OrderChat');
     };
 
     _addThirdPartyWorker = async () => {
         try {
+            logInfo({ TAG, info: 'add third party worker' });
             await this.props.store.addThirdPartyWorkerToOrder();
             await this._onRefresh();
-        } catch (e) {
-            console.log('[OrderDetailScreen]._AddThirdPartyWorker() e', e);
-            if (e.toString().indexOf('allowed') !== -1) {
+        } catch (error) {
+            logError({ TAG, error, info: 'add third party worker' });
+            if (error.toString().indexOf('allowed') !== -1) {
                 showAlert('Ошибка', 'Вы не можете добавлять больше рабочих');
-            } else if (e.toString().indexOf('anymore') !== -1) {
+            } else if (error.toString().indexOf('anymore') !== -1) {
                 showAlert('Ошибка', 'Набрано максимум рабочих на заказе');
-            } else if (e.toString().indexOf('need loaders') !== -1) {
+            } else if (error.toString().indexOf('need loaders') !== -1) {
                 showAlert('Ошибка', 'В заказе рабочие не нужны');
             } else {
-                showAlert('Ошибка при добавлении', e);
+                showAlert('Ошибка при добавлении', error);
             }
         }
     };
 
     _savePhoneNum = async () => {
+        logButtonPress({ TAG, info: 'save new number' });
         const id = this.props.store.userId;
 
         if (this.state.phone === '') {
@@ -200,22 +211,29 @@ class OrderDetailScreen extends React.Component {
             showAlert('Ошибка', 'Ваш номер должен содержать ровно 12 символов');
             return;
         }
-        await axios.patch('/worker/' + id, {
-            phoneNum: this.state.phone,
-        });
-        this.setState({ phoneNumberModalVisible: false });
-        this._onRefresh();
+        try {
+            logInfo({ TAG, info: 'save new number' });
+            await axios.patch('/worker/' + id, {
+                phoneNum: this.state.phone,
+            });
+            this.setState({ phoneNumberModalVisible: false });
+            this._onRefresh();
+        } catch (error) {
+            logError({ TAG, error, info: 'save new number' });
+        }
     };
 
-    _DeleteThirdPartyWorker = async () => {
+    _deleteThirdPartyWorker = async () => {
+        logButtonPress({ TAG, info: 'delete third party worker' });
         try {
             await this.props.store.deleteThirdPartyWorkerToOrder();
             this._onRefresh();
-        } catch (e) {
-            if (e.response) {
-                showAlert('Ошибка при удалении', e.response.data.message);
+        } catch (error) {
+            logError({ TAG, error, info: 'delete third party worker' });
+            if (error.response) {
+                showAlert('Ошибка при удалении', error.response.data.message);
             } else {
-                showAlert('Ошибка при удалении', e);
+                showAlert('Ошибка при удалении', error);
             }
         }
     };
@@ -288,7 +306,7 @@ class OrderDetailScreen extends React.Component {
                             <View>
                                 <TouchableOpacity
                                     style={styles.buttonDeleteWorker}
-                                    onPress={this._DeleteThirdPartyWorker}
+                                    onPress={this._deleteThirdPartyWorker}
                                 >
                                     <Text style={styles.buttonText}>X</Text>
                                 </TouchableOpacity>
@@ -362,7 +380,11 @@ class OrderDetailScreen extends React.Component {
                                 >
                                     <Text style={styles.buttonText}>ОТМЕНА</Text>
                                 </TouchableOpacity>
-                                <LoadingButton style={styles.buttonSaveBottomModal} onPress={this._savePhoneNum}>
+                                <LoadingButton
+                                    style={styles.buttonSaveBottomModal}
+                                    onPress={this._savePhoneNum}
+                                    // eslint-disable-next-line react-native/no-raw-text
+                                >
                                     СОХРАНИТЬ
                                 </LoadingButton>
                             </View>

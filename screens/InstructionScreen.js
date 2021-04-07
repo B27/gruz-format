@@ -3,6 +3,9 @@ import { ScrollView, Text, View } from 'react-native';
 import ExpandCardBase from '../components/ExpandCardBase';
 import styles from '../styles';
 import axios from 'axios';
+import { logScreenView } from '../utils/FirebaseAnalyticsLogger';
+
+const TAG = '~InstructionScreen~';
 
 class InstructionScreen extends React.Component {
     static navigationOptions = {
@@ -14,6 +17,7 @@ class InstructionScreen extends React.Component {
     };
     async componentDidMount() {
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', async () => {
+            logScreenView(TAG);
             const res = await axios.get('admin/instructions');
             console.log(res.data);
 

@@ -10,10 +10,13 @@ import PickerSelect from 'react-native-picker-select';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
+import { logButtonPress, logError, logInfo, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
 
 //import { ImageCacheManager } from 'react-native-cached-image';
+const TAG = '~MyAutoScreen~';
+
 @inject('store')
 @observer
 class MyAutoScreen extends React.Component {
@@ -43,21 +46,20 @@ class MyAutoScreen extends React.Component {
     };
 
     componentDidMount() {
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
-            (async () => {
-                try {
-                    await this.props.store.getUserInfo();
-                    //await CacheManager.clearCache();
-                } catch (error) {
-                    // TODO добавить вывод ошибки пользователю
-                    console.log(error);
-                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');
-                    return;
-                }
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', async () => {
+            logScreenView(TAG);
+            try {
+                await this.props.store.getUserInfo();
+                //await CacheManager.clearCache();
+            } catch (error) {
+                // TODO добавить вывод ошибки пользователю
+                console.log(error);
+                console.log('Ошибка при получении новых данных, проверьте подключение к сети');
+                return;
+            }
 
-                this.setState({ ...this.props.store, message: '' });
-                console.log('[MyAutoScreen].() this.props.store', this.state);
-            })();
+            this.setState({ ...this.props.store, message: '' });
+            console.log('[MyAutoScreen].() this.props.store', this.state);
         });
 
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -74,7 +76,8 @@ class MyAutoScreen extends React.Component {
         }
     }
 
-    _nextScreen = async () => {
+    _saveAutoInfo = async () => {
+        logButtonPress({ TAG, info: 'save info about auto' });
         if (
             !this.state.vehicle0 ||
             !this.state.vehicle1 ||
@@ -137,11 +140,13 @@ class MyAutoScreen extends React.Component {
             await axios.patch('/worker/upload/' + id, data);
             //await AsyncStorage.setItem("phoneNum", this.state.phone);
             this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
+            logInfo({ TAG, info: 'save info about auto' });
             showAlert('Успешно', 'Информация об авто сохранена');
             await this.props.store.refreshImages();
             //this.props.navigation.navigate('EditCar');
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            logError({ TAG, error, info: 'save info about auto' });
+            console.log(error);
         }
     };
 
@@ -252,7 +257,7 @@ class MyAutoScreen extends React.Component {
                             </View>
                         </View>
 
-                        <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
+                        <LoadingButton style={styles.buttonBottom} onPress={this._saveAutoInfo}>
                             СОХРАНИТЬ
                         </LoadingButton>
                     </ScrollView>

@@ -10,7 +10,7 @@ import messaging from '@react-native-firebase/messaging';
 import { URL } from './constants';
 
 axios.defaults.baseURL = URL; /* 'http://192.168.1.4:3008'; */
-const TAG = '~App.js~';
+const TAG = '~App~';
 
 export default class App extends React.Component {
     componentDidMount() {

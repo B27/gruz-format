@@ -10,6 +10,7 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
 import styles from '../styles';
+import { logButtonPress, logError, logInfo, logScreenView, logSignOut } from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
 
 const TAG = '~SettingsScreen~';
@@ -30,7 +31,15 @@ class SettingsScreen extends React.Component {
 
     timeoutsSet = new Set();
 
+    componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            logScreenView(TAG);
+        });
+    }
     componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
         for (let timeout of this.timeoutsSet) {
             clearTimeout(timeout);
         }
@@ -66,7 +75,11 @@ class SettingsScreen extends React.Component {
                     />
                 </View>
                 <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
-                <LoadingButton style={styles.buttonBottom} onPress={() => this._submitPassword()}>
+                <LoadingButton
+                    style={styles.buttonBottom}
+                    onPress={() => this._submitPassword()}
+                    // eslint-disable-next-line react-native/no-raw-text
+                >
                     СОХРАНИТЬ
                 </LoadingButton>
 
@@ -74,6 +87,7 @@ class SettingsScreen extends React.Component {
                     blackText
                     style={[styles.buttonConfirm, { width: styles.buttonConfirm.width * 2 }]}
                     onPress={this._signOutAsync}
+                    // eslint-disable-next-line react-native/no-raw-text
                 >
                     ВЫЙТИ ИЗ АККАУНТА
                 </LoadingButton>
@@ -84,6 +98,7 @@ class SettingsScreen extends React.Component {
 
     _signOutAsync = async () => {
         try {
+            await logButtonPress({ TAG, info: 'sign out' });
             await AsyncStorage.clear();
             await Platform.select({
                 android: async () => {
@@ -96,13 +111,16 @@ class SettingsScreen extends React.Component {
                     await BackgroundGeolocation.destroyLocations();
                 },
             })();
+            await logSignOut();
             this.props.navigation.navigate('SignIn');
         } catch (error) {
+            logError({ TAG, error, info: 'user sign out' });
             showAlert('Ошибка', error.toString());
         }
     };
 
     _submitPassword = async () => {
+        await logButtonPress({ TAG, info: 'submit password' });
         const id = await AsyncStorage.getItem('userId');
         if (this.state.currentPassword === '' || this.state.newPassword === '' || this.state.confirmPassword === '') {
             this._showErrorMessage('Все поля должны быть заполнены', 'red');
@@ -111,13 +129,13 @@ class SettingsScreen extends React.Component {
                 const pass = await AsyncStorage.getItem('password');
                 if (md5(this.state.currentPassword) === pass) {
                     try {
+                        await logInfo({ TAG, info: 'patch worker' });
                         const res = await axios.patch('/worker/' + id, {
                             password: this.state.newPassword,
                         });
-                        console.log(res.data);
                         this._showErrorMessage('Данные успешно сохранены', 'green');
                     } catch (error) {
-                        console.log(error);
+                        logError({ TAG, error, info: 'patch worker' });
                     }
                 } else this._showErrorMessage('Вы ввели неверный пароль', 'red');
             } else this._showErrorMessage('Пароли не совпадают', 'red');

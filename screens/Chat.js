@@ -8,11 +8,13 @@ import io from 'socket.io-client';
 import { URL } from '../constants';
 import '../locale/ru';
 import NetworkRequests from '../mobx/NetworkRequests';
+import { logButtonPress, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 import { getLocaleDateTime } from '../utils/Time';
 //const socket = (async()=>{await getChatSocket('5ce66399dcc0097d8b95dc17')})();
 
 const TAGdidMount = '~Chat.js componentDidMount() ~';
 const TAGidToName = '~Chat.js idToName() ~';
+const TAG = '~Chat~';
 let socket;
 
 @inject('store')
@@ -45,39 +47,36 @@ class Chat extends React.Component {
 
     componentDidMount = async () => {
         const timeOffset = this.props.store.order.city.timeOffset;
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
-            (async () => {
-                console.log('WILL FOCUS');
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', async () => {
+            logScreenView(TAG);
+            socket = io(URL + '/chat', {
+                query: {
+                    token: await AsyncStorage.getItem('token'),
+                    order_id: this.props.store.orderIdOnWork,
+                },
+            });
+            //console.log(TAGdidMount, 'socketChat.connected from store:', socket.connected);
 
-                socket = io(URL + '/chat', {
-                    query: {
-                        token: await AsyncStorage.getItem('token'),
-                        order_id: this.props.store.orderIdOnWork,
-                    },
-                });
-                //console.log(TAGdidMount, 'socketChat.connected from store:', socket.connected);
+            socket.on('history', async (result) => {
+                console.log(TAGdidMount, 'callback socket.on "history" called');
 
-                socket.on('history', async (result) => {
-                    console.log(TAGdidMount, 'callback socket.on "history" called');
-
-                    //console.log(result);
-                    this.setState({ chatHistory: [] });
-                    for (const item of result) {
-                        const { _id, text, sender, createdAt } = item;
-                        const localCreatedAt = getLocaleDateTime(createdAt, timeOffset);
-                        const { name, avatar } = await this.idToName(sender);
-                        this.addChatMessage(this.setMessage(_id, text, sender, name, avatar, localCreatedAt));
-                    }
-                });
-
-                socket.on('chat message', async (result) => {
-                    const { _id, sender, text, createdAt } = result;
+                //console.log(result);
+                this.setState({ chatHistory: [] });
+                for (const item of result) {
+                    const { _id, text, sender, createdAt } = item;
                     const localCreatedAt = getLocaleDateTime(createdAt, timeOffset);
                     const { name, avatar } = await this.idToName(sender);
                     this.addChatMessage(this.setMessage(_id, text, sender, name, avatar, localCreatedAt));
-                    //console.log(result);
-                });
-            })();
+                }
+            });
+
+            socket.on('chat message', async (result) => {
+                const { _id, sender, text, createdAt } = result;
+                const localCreatedAt = getLocaleDateTime(createdAt, timeOffset);
+                const { name, avatar } = await this.idToName(sender);
+                this.addChatMessage(this.setMessage(_id, text, sender, name, avatar, localCreatedAt));
+                //console.log(result);
+            });
         });
         let storeDispatcher = toJS(this.props.store.dispatcher);
         console.log(TAGdidMount, 'dispatcher from store:', storeDispatcher);
@@ -181,6 +180,7 @@ class Chat extends React.Component {
     }
 
     onSend(messages = []) {
+        logButtonPress({ TAG, info: 'send message' });
         messages.forEach((message) => {
             //console.log(message);
 

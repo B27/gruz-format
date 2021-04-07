@@ -3,7 +3,7 @@ import axios from 'axios';
 import { errorPayUrl, succesfulPayUrl } from '../constants';
 import networkErrorHandler from '../utils/networkErrorHandler';
 
-const TAG = '~NetworkRequest.js~';
+const TAG = '~NetworkRequest~';
 
 async function getDispatcher(id) {
     let response;

@@ -10,8 +10,9 @@ import NumericInput from '../components/NumericInput';
 import StarRating from '../components/StarRating';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
+import { logButtonPress, logError, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 
-const TAG = '~OrderCompleteScreen.js~';
+const TAG = '~OrderCompleteScreen~';
 @inject('store')
 @observer
 class OrderCompleteScreen extends React.Component {
@@ -32,6 +33,9 @@ class OrderCompleteScreen extends React.Component {
     timeoutsSet = new Set();
 
     componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            logScreenView(TAG);
+        });
         const { workers: workersObservable, dispatcher, userId, myThirdPartyWorkers } = this.props.store;
         const sumTextForThirdPartyWorkers = [];
         myThirdPartyWorkers.forEach((values) => {
@@ -59,6 +63,9 @@ class OrderCompleteScreen extends React.Component {
     }
 
     componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
         for (let timeout of this.timeoutsSet) {
             clearTimeout(timeout);
         }
@@ -73,14 +80,9 @@ class OrderCompleteScreen extends React.Component {
             this.requestData.data = [...data, workerRating];
         } else {
             this.requestData.data = data.map((wrkRtng) => {
-                console.log(wrkRtng.worker_id == workerId);
                 return wrkRtng.worker_id == workerId ? workerRating : wrkRtng;
             });
         }
-
-        console.log('starsRating set _onChangeStarRating:', this.starsSet);
-
-        console.log('request data _onChangeStarRating:', this.requestData);
     };
 
     _onChangeSum = (text) => {
@@ -100,6 +102,7 @@ class OrderCompleteScreen extends React.Component {
     };
 
     _cancelPress = () => {
+        logButtonPress({ TAG, info: 'cancel' });
         this.props.navigation.goBack();
     };
 
@@ -124,10 +127,11 @@ class OrderCompleteScreen extends React.Component {
     }
 
     _confirmPress = async () => {
-        const error = this.checkFields();
-        if (error) {
-            this._showErrorMessage(error);
-            console.log(error);
+        await logButtonPress({ TAG, info: 'completeOrder' });
+        const errorString = this.checkFields();
+        if (errorString) {
+            this._showErrorMessage(errorString);
+            console.log(errorString);
             return;
         }
 
@@ -151,12 +155,12 @@ class OrderCompleteScreen extends React.Component {
                 ios: () => {},
             })();
             this.props.navigation.navigate('AuthLoading');
-        } catch (err) {
+        } catch (error) {
+            await logError({ TAG, error, info: 'complete order' });
             this.setState({
                 buttonDisabled: false,
             });
-            this._showErrorMessage(err);
-            console.log(TAG, err);
+            this._showErrorMessage(error);
         }
     };
 
@@ -303,6 +307,7 @@ class OrderCompleteScreen extends React.Component {
                             style={styles.buttonConfirm}
                             disabled={this.state.buttonDisabled}
                             onPress={this._confirmPress}
+                            // eslint-disable-next-line react-native/no-raw-text
                         >
                             ГОТОВО
                         </LoadingButton>

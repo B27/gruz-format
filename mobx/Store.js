@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import { URL } from '../constants';
 import NetworkRequests from './NetworkRequests';
 
-const TAG = '~Store.js~';
+const TAG = '~Store~';
 
 class ObservableStore {
     lastOrderPullTime = null;

@@ -7,18 +7,15 @@ import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
+import { logButtonPress, logError, logInfo, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
 
-const axios2 = axios.create({
-    baseURL: 'https://3dsec.sberbank.ru',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-});
+const TAG = '~BalanceScreen~';
 
 @inject('store')
 @observer
 class BalanceScreen extends React.Component {
     state = {
-        sum: null,
         message: '',
         sum: '',
     };
@@ -29,20 +26,19 @@ class BalanceScreen extends React.Component {
     };
 
     componentDidMount() {
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
-            (async () => {
-                try {
-                    await this.props.store.getUserInfo();
-                    //await CacheManager.clearCache();
-                } catch (error) {
-                    // TODO добавить вывод ошибки пользователю
-                    console.log(error);
-                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');
-                    return;
-                }
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', async () => {
+            await logScreenView(TAG);
+            try {
+                await this.props.store.getUserInfo();
+            } catch (error) {
+                // TODO добавить вывод ошибки пользователю
+                logError({ TAG, info: 'get user info' });
+                console.log(error);
+                console.log('Ошибка при получении новых данных, проверьте подключение к сети');
+                return;
+            }
 
-                this.setState({ ...this.props.store, message: '' });
-            })();
+            this.setState({ ...this.props.store, message: '' });
         });
     }
 
@@ -57,7 +53,7 @@ class BalanceScreen extends React.Component {
             <View contentContainerStyle={styles.registrationScreen}>
                 <View style={styles.inputContainer}>
                     <Text style={{ marginBottom: 15, fontSize: 16 }}>
-                        Ваш баланс: <Text style={{ marginBottom: 10, fontSize: 16 }}>{this.props.store.balance}</Text>{' '}
+                        Ваш баланс: <Text style={{ marginBottom: 10, fontSize: 16 }}>{this.props.store.balance}</Text>
                         р.
                     </Text>
                     <Text style={{ marginBottom: 15, fontSize: 16 }}>
@@ -82,6 +78,7 @@ class BalanceScreen extends React.Component {
     }
 
     _goToPay = async () => {
+        await logButtonPress({ TAG, info: 'goToPay', data: '' + this.state.sum });
         if (!this.state.sum) {
             showAlert('Ошибка', "Необходимо заполнить поле 'Сумма'");
             return;
@@ -90,13 +87,16 @@ class BalanceScreen extends React.Component {
         let url;
 
         try {
+            await logInfo({ TAG, info: 'register order' });
             const response = await NetworkRequests.registerOrder(this.props.store.userId, `${this.state.sum}00`);
             url = response.data.formUrl;
         } catch (error) {
+            await logError({ TAG, error, info: 'register order' });
             showAlert('Ошибка', error.toString());
             return;
         }
 
+        logInfo({ TAG, info: 'navigate to PayScreen' });
         this.props.navigation.navigate('Pay', {
             url,
             sum: this.state.sum,

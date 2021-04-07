@@ -10,8 +10,11 @@ import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import { privacyPolicyURL } from '../constants';
 import styles from '../styles';
+import { logButtonPress, logError, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
+
+const TAG = '~SignUpUserScreen~';
 
 class SignUpUserScreen extends React.Component {
     state = {
@@ -83,6 +86,9 @@ class SignUpUserScreen extends React.Component {
     // userId: null
     componentDidMount() {
         (async () => {
+            this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+                logScreenView(TAG);
+            });
             try {
                 (async () =>
                     this.setState({
@@ -104,6 +110,9 @@ class SignUpUserScreen extends React.Component {
     }
 
     componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
         if (this.keyboardDidHideListener) {
             this.keyboardDidHideListener.remove();
         }
@@ -448,6 +457,7 @@ class SignUpUserScreen extends React.Component {
     };
 
     _nextScreen = async () => {
+        logButtonPress({ TAG, info: 'next screen' });
         const errorMessage = await this.isValidFields();
 
         if (errorMessage !== null) {
@@ -482,13 +492,11 @@ class SignUpUserScreen extends React.Component {
         }
 
         try {
-            console.log('Data to server: ', userData);
             const res = await axios.post('/worker', userData);
-            //console.log('REGISTRATION: ', res);
             this.setState({ userId: res.data._id });
             await AsyncStorage.setItem('userId', this.state.userId);
         } catch (error) {
-            console.log('ERROR_POST:', error);
+            await logError({ TAG, error, info: 'registration new user' });
             if (error.response) {
                 if (error.response.data.message.indexOf('duplicate key error') !== -1) {
                     showAlert('Ошибка', 'Пользователь с таким номером телефона уже зарегистрирован');
@@ -516,7 +524,7 @@ class SignUpUserScreen extends React.Component {
                 Authorization: 'Bearer ' + response.data.token,
             };
         } catch (error) {
-            console.log('ОШИБКА', error);
+            await logError({ TAG, error, info: 'login after registration' });
             if (error.response) {
                 showAlert(
                     'Регистрация успешна, но произошла ошибка ',
@@ -550,8 +558,7 @@ class SignUpUserScreen extends React.Component {
             await axios.patch('/worker/upload/' + this.state.userId, data);
             this.props.navigation.navigate('AuthLoading');
         } catch (error) {
-            console.log('Download photos error: ', error);
-            console.dir(error, { depth: null });
+            logError({ TAG, error, info: 'upload new user photo' });
             if (error.response) {
                 showAlert('Ошибка при загрузке фото', 'Попробуйте сделать это позже\n' + error.response.data.message);
             } else {

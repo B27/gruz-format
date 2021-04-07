@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { toJS } from 'mobx';
+import { autorun, toJS } from 'mobx';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
@@ -8,6 +8,7 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 import OrderCard from '../components/OrderCard';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
+import { logButtonPress, logError, logInfo, logScreenView, logOrdersViews } from '../utils/FirebaseAnalyticsLogger';
 import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
 
@@ -41,15 +42,31 @@ class MainScreen extends React.Component {
         this.componentIsMount = true;
         this._onRefresh();
         NotificationListener.setRefreshCallback(this._onRefresh);
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            logScreenView(TAG);
+        });
+        this.disposeAutorun = autorun(() => {
+            const ordersIds = this.props.store.orders
+                .slice()
+                .sort((a, b) => a.start_time < b.start_time)
+                .map((order) => ({ item_name: order.start_time, item_list_id: order._id, item_id: order._id }));
+            logOrdersViews({ TAG, ids: ordersIds });
+        });
     }
 
     componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
         for (let timeout of this.timeoutsSet) {
             clearTimeout(timeout);
         }
         this.timeoutsSet.clear();
         this.componentIsMount = false;
         NotificationListener.setRefreshCallback(null);
+        if (this.disposeAutorun) {
+            this.disposeAutorun();
+        }
     }
 
     _topUpBalance = () => {
@@ -77,6 +94,7 @@ class MainScreen extends React.Component {
     // };
 
     _onPressOrderItemButton = (order) => {
+        logButtonPress({ TAG, info: 'goToOrderPreview', data: order._id });
         this.props.navigation.navigate('OrderPreview', { order });
     };
 
@@ -84,11 +102,12 @@ class MainScreen extends React.Component {
         //  const {updateUserInfo, getOrders} = this.props.store; так делать нельзя! mobx не сможет отследить вызов функции
         const { store } = this.props;
         try {
+            await logInfo({ TAG, info: 'refresh orders list' });
             this.setState({ refreshing: true });
 
             await Promise.all([store.updateUserInfo(), store.getOrders()]);
         } catch (error) {
-            console.log(TAG, error);
+            logError({ TAG, error, info: 'refresh orders list' });
             if (error.response) {
                 this._showErrorMessage(error.response.data.message);
             } else {
@@ -107,6 +126,7 @@ class MainScreen extends React.Component {
         }
 
         if (store.orderIdOnWork) {
+            await logInfo({ TAG, info: `on refresh detect then user has order ${store.orderIdOnWork}` });
             await store.pullFulfilingOrderInformation();
         }
 
@@ -148,6 +168,7 @@ class MainScreen extends React.Component {
 
     _sendGeolocation = async (userId) => {
         try {
+            logInfo({ TAG, info: 'send geo on iOS' });
             await BackgroundGeolocation.ready({ locationAuthorizationRequest: 'Always' });
 
             const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
@@ -157,7 +178,7 @@ class MainScreen extends React.Component {
             await AsyncStorage.setItem('lastSendGeo', Date.now().toString());
             await BackgroundGeolocation.stop();
         } catch (error) {
-            console.error('error in location', error);
+            logError({ TAG, error, info: 'send geo on iOS' });
         }
     };
 
@@ -197,6 +218,8 @@ class MainScreen extends React.Component {
 
     render() {
         const { store } = this.props;
+        const orders = store.orders.slice().sort((a, b) => a.start_time < b.start_time); // возможно, эта сортировка когда-то будет работать неправильно
+
         return (
             // <SafeAreaView style={{ backgroundColor: 'red' }}>
             <>
@@ -241,7 +264,7 @@ class MainScreen extends React.Component {
                         </View>
                     }
                     keyExtractor={this._keyExtractor}
-                    data={store.orders.slice().sort((a, b) => a.start_time < b.start_time)} // возможно, эта сортировка когда-то будет работать неправильно
+                    data={orders}
                     renderItem={this._renderItem}
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}

@@ -10,7 +10,9 @@ import styles from '../styles';
 import AsyncStorage from '@react-native-community/async-storage';
 import showAlert from '../utils/showAlert';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { logAcceptOrder, logButtonPress, logError, logInfo, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 
+const TAG = '~OrderPreviewScreen~';
 @inject('store')
 class OrderPreview extends React.Component {
     static navigationOptions = {
@@ -18,7 +20,23 @@ class OrderPreview extends React.Component {
         headerTintColor: 'black',
     };
 
+    componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+            const order = this.props.navigation.getParam('order');
+
+            logScreenView(TAG);
+            logInfo({ TAG, info: `view order ${order._id}` });
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.willFocusSubscription) {
+            this.willFocusSubscription.remove();
+        }
+    }
+
     _acceptOrder = async () => {
+        await logButtonPress({ TAG, info: 'accept order' });
         const { store, navigation } = this.props;
         if (this.props.store.isDriver && this.props.store.veh_width === '') {
             Alert.alert('Ошибка', 'Заполните данные об автомобиле');
@@ -45,9 +63,9 @@ class OrderPreview extends React.Component {
                 },
             })();
             navigation.navigate('OrderDetail');
-            console.log('Accept order successful');
+            logAcceptOrder({ TAG, orderId: order._id });
         } catch (error) {
-            console.log('error in OrderPreviewScreen acceptOrder:', error);
+            logError({ TAG, error, info: 'accept order' });
             if (error.response.status === 400) {
                 showAlert('Ошибка принятия заказа', 'В заказе набрано необходимое количество исполнителей');
             } else {
@@ -58,6 +76,7 @@ class OrderPreview extends React.Component {
 
     _startBackgroundGelocation = async (userId) => {
         try {
+            logInfo({ TAG, info: 'start background geo on iOS' });
             const state = await BackgroundGeolocation.ready({
                 elasticityMultiplier: 2,
                 url: `${axios.defaults.baseURL}/worker/location/${userId}`,
@@ -72,7 +91,7 @@ class OrderPreview extends React.Component {
                 BackgroundGeolocation.start();
             }
         } catch (error) {
-            console.error('error in location', error);
+            logError({ TAG, error, info: 'start background geo on iOS' });
         }
     };
 
@@ -156,7 +175,12 @@ class OrderPreview extends React.Component {
                 </ScrollView>
                 <SafeAreaView style={styles.absoluteButtonContainer}>
                     <View style={styles.buttonContainerAlone}>
-                        <LoadingButton blackText style={styles.buttonConfirmAlone} onPress={this._acceptOrder}>
+                        <LoadingButton
+                            blackText
+                            style={styles.buttonConfirmAlone}
+                            onPress={this._acceptOrder}
+                            // eslint-disable-next-line react-native/no-raw-text
+                        >
                             ПРИНЯТЬ
                         </LoadingButton>
                     </View>

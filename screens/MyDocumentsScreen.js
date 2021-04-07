@@ -10,6 +10,7 @@ import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import { privacyPolicyURL } from '../constants';
 import styles from '../styles';
+import { logButtonPress, logError, logInfo, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
 
@@ -40,19 +41,19 @@ class MyDocumentsScreen extends React.Component {
             Keyboard.dismiss();
         });
 
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
-            (async () => {
-                try {
-                    await this.props.store.getUserInfo();
-                    //await CacheManager.clearCache();
-                    this.setState({ ...this.props.store, message: '' });
-                } catch (error) {
-                    // TODO добавить вывод ошибки пользователю
-                    console.log(error);
-                    console.log('Ошибка при получении новых данных, проверьте подключение к сети');
-                    return;
-                }
-            })();
+        this.willFocusSubscription = this.props.navigation.addListener('willFocus', async () => {
+            await logScreenView(TAG);
+            try {
+                await this.props.store.getUserInfo();
+                //await CacheManager.clearCache();
+                this.setState({ ...this.props.store, message: '' });
+            } catch (error) {
+                // TODO добавить вывод ошибки пользователю
+                logError({ TAG, error, info: 'get user info on focus' });
+                console.log(error);
+                console.log('Ошибка при получении новых данных, проверьте подключение к сети');
+                return;
+            }
         });
 
         this.setState(this.props.store);
@@ -126,7 +127,7 @@ class MyDocumentsScreen extends React.Component {
                     <Text style={{ color: 'red' }}>{this.state.message}</Text>
                     <LoadingButton
                         style={styles.buttonBottom}
-                        onPress={this._nextScreen}
+                        onPress={this._saveInfo}
                         // eslint-disable-next-line react-native/no-raw-text
                     >
                         ПРОДОЛЖИТЬ
@@ -139,6 +140,7 @@ class MyDocumentsScreen extends React.Component {
 
     async uploadImages({ passPic, passRegPic }) {
         try {
+            logInfo({ TAG, info: 'upload images' });
             const data = new FormData();
             //console.log(this.state.pictureUri);
             if (passPic) {
@@ -159,7 +161,7 @@ class MyDocumentsScreen extends React.Component {
 
             await axios.patch('/worker/upload/' + this.state.userId, data);
         } catch (error) {
-            console.log('Download photos error: ', error);
+            logError({ TAG, error, info: 'upload images' });
             if (error.response) {
                 showAlert('Ошибка при отправке данных', 'Попробуйте сделать это позже\n' + error.response.data.message);
             } else {
@@ -168,7 +170,8 @@ class MyDocumentsScreen extends React.Component {
         }
     }
 
-    _nextScreen = async () => {
+    _saveInfo = async () => {
+        logButtonPress({ TAG, info: 'save info' });
         if (this.state.policy === false) {
             this.setState({
                 message: 'Для продолжения необходимо принять условия сублицензионного соглашения',
@@ -206,15 +209,13 @@ class MyDocumentsScreen extends React.Component {
             };
 
             try {
-                console.log('Data to server: ', dataToSend);
+                logInfo({ TAG, info: 'patch user info' });
                 const id = await AsyncStorage.getItem('userId');
-                console.log('[MyDocumentsScreen]._nextScreen() user_id', id);
-                const res = await axios.patch('/worker/' + id, dataToSend);
-                console.log('[MyDocumentsScreen]._nextScreen() res from server', res);
+                await axios.patch('/worker/' + id, dataToSend);
                 await this.uploadImages({ passPic, passRegPic });
                 showAlert('Успешно', 'Данные обновлены!');
             } catch (error) {
-                console.log('[MyDocumentsScreen]._nextScreen() err', error);
+                logError({ TAG, error, info: 'patch user info' });
                 if (error.response) {
                     showAlert(
                         'Ошибка при отправке данных',

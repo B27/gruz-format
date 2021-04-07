@@ -13,9 +13,11 @@ import PickerSelect from 'react-native-picker-select';
 import LoadingButton from '../components/LoadingButton';
 import NumericInput from '../components/NumericInput';
 import styles from '../styles';
+import { logButtonPress, logError, logInfo, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
 import PhotoChoicer from './modals/ChoiceCameraRoll';
 
+const TAG = '~MyInfoScreen~';
 @inject('store')
 @observer
 class MyInfoScreen extends React.Component {
@@ -51,9 +53,11 @@ class MyInfoScreen extends React.Component {
 
     componentDidMount() {
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', async () => {
+            logScreenView(TAG);
             console.log('Listener willFocus in MyInfoScreen');
             this.setState({ message: '' });
             try {
+                logInfo({ TAG, info: 'load cities' });
                 const res = await axios.get('/cities/1000/1');
                 console.log('cities res.data', res.data);
                 const cities = [
@@ -65,14 +69,14 @@ class MyInfoScreen extends React.Component {
                 ];
                 this.setState({ cities });
                 console.log('[MyInfoScreen].() cities', this.state.cities);
-            } catch (err) {
-                console.log(err);
+            } catch (error) {
+                logError({ TAG, error, info: 'load cities' });
             }
             try {
+                logInfo({ TAG, info: 'load user info' });
                 await this.props.store.getUserInfo();
             } catch (error) {
-                // TODO добавить вывод ошибки пользователю
-                console.log('Ошибка при получении новых данных, проверьте подключение к сети');
+                logError({ TAG, error, info: 'load user info' });
                 if (error.response) {
                     showAlert('Ошибка', 'Ошибка при обновлении данных\n' + error.response.data.message);
                 } else {
@@ -80,9 +84,7 @@ class MyInfoScreen extends React.Component {
                 }
                 return;
             }
-            console.log('Store list', this.props.store);
             this.setState({ ...this.props.store, phone: this.props.store.login });
-            console.log('[MyInfoScreen].() cityId', this.state.cityId);
         });
 
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -254,7 +256,11 @@ class MyInfoScreen extends React.Component {
                         </View>
                     </View>
                     <Text style={{ color: this.state.colorMessage }}>{this.state.message}</Text>
-                    <LoadingButton style={styles.buttonBottom} onPress={this._nextScreen}>
+                    <LoadingButton
+                        style={styles.buttonBottom}
+                        onPress={this._saveInfo}
+                        // eslint-disable-next-line react-native/no-raw-text
+                    >
                         СОХРАНИТЬ
                     </LoadingButton>
                 </ScrollView>
@@ -288,7 +294,8 @@ class MyInfoScreen extends React.Component {
         return null;
     };
 
-    _nextScreen = async () => {
+    _saveInfo = async () => {
+        logButtonPress({ TAG, info: 'save worker data' });
         //console.log(this.state);
         this.setState({ message: '' });
 
@@ -299,6 +306,7 @@ class MyInfoScreen extends React.Component {
             this.setState({ message: fieldsNotValid, colorMessage: 'red' });
         } else {
             try {
+                logInfo({ TAG, info: 'patch worker' });
                 await axios.patch('/worker/' + id, {
                     name: `${this.state.lastName} ${this.state.firstName} ${this.state.patronymic}`,
                     login: this.state.phone,
@@ -335,6 +343,7 @@ class MyInfoScreen extends React.Component {
 
                 showAlert('Успешно', 'Ваши данные сохраненны');
             } catch (error) {
+                logError({ TAG, error, info: 'patch worker' });
                 console.log(error);
                 Object.keys(error).forEach((value) => {
                     console.log(error[value]);
@@ -386,14 +395,6 @@ const localStyles = StyleSheet.create({
         width: 12,
         borderRadius: 6,
         backgroundColor: '#000',
-    },
-    cityPicker: {
-        height: 45,
-        borderWidth: 1,
-        borderRadius: 15,
-        paddingLeft: 5,
-        marginBottom: 15,
-        justifyContent: 'center',
     },
     divider: { width: 15 },
     flexDirectionRow: { flexDirection: 'row' },
