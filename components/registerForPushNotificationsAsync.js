@@ -1,29 +1,14 @@
+import iid from '@react-native-firebase/iid';
 import axios from 'axios';
-import { Platform, NativeModules } from 'react-native';
-import DefaultPreference from 'react-native-default-preference';
-import RNFirebase from '@react-native-firebase/app';
+import { Platform } from 'react-native';
 
 const TAG = '~registerForPushNotificationsAsync~';
 
-export default async function registerForPushNotificationsAsync(userHasPushToken) {
-    let pushToken = await DefaultPreference.get('pushToken');
-    if (!pushToken && !userHasPushToken) {
-        try {
-            await Platform.select({
-                android: async () => {
-                    ({ pushToken } = await NativeModules.RNFirebasePushToken.getToken());
-                },
-                ios: async () => {
-                    pushToken = await RNFirebase.messaging().getToken();
-                },
-            })();
-        } catch (error) {
-            console.log(TAG, error);
-        }
-    }
+export default async function registerForPushNotificationsAsync(pushToken) {
+    let curPushToken = await iid().getToken();
 
-    if (!pushToken) {
-        console.log(TAG, 'push token empty, return');
+    if (curPushToken === pushToken) {
+        console.log(TAG, 'push tokens equals, return');
         return;
     }
 
@@ -41,7 +26,6 @@ export default async function registerForPushNotificationsAsync(userHasPushToken
     try {
         await axios.post('/push_token', body);
         console.log(TAG, 'send token to server succesful');
-        await DefaultPreference.clear('pushToken');
     } catch (error) {
         if (error.isAxiosError) {
             if (error.response) {

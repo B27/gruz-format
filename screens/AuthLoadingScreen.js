@@ -81,7 +81,7 @@ class AuthLoadingScreen extends React.Component {
             try {
                 logInfo({ TAG, info: 'pull user info' });
                 await store.getUserInfo();
-                registerForPushNotificationsAsync(store.hasPushToken);
+                registerForPushNotificationsAsync(store.pushToken);
                 await setUserIdForFirebase({ id: userId });
 
                 if (store.orderIdOnWork) {

@@ -22,7 +22,7 @@ class ObservableStore {
     @observable orderIdOnWork = '';
     // @observable hasEndedOrder = false;
     @observable userId = '';
-    @observable hasPushToken = false;
+    pushToken = '';
 
     @observable avatar = '';
 
@@ -90,7 +90,6 @@ class ObservableStore {
             this.isDriver = response.data.isDriver;
             this.orderIdOnWork = response.data.order;
             this.docStatus = response.data.docStatus;
-            this.hasPushToken = !!response.data.push_token_id;
             response.data.photos && (this.avatar = URL + response.data.photos.user);
             console.log('avatar ', this.avatar);
         });
@@ -136,7 +135,7 @@ class ObservableStore {
             });
 
             this.balance = (+response.data.balance).toFixed(2);
-            this.hasPushToken = !!response.data.push_token_id;
+            this.pushToken = response.data.push_token_id;
 
             this.orderIdOnWork = response.data.order; // null когда грузчиком не выполняется заказ
             response.data.photos && (this.avatar = URL + response.data.photos.user);

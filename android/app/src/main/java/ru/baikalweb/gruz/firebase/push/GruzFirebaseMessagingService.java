@@ -52,17 +52,4 @@ public class GruzFirebaseMessagingService extends FirebaseMessagingService {
             manager.cancel(tag, 0);
         }
     }
-
-    @Override
-    public void onNewToken(String token) {
-        Log.d(TAG, "onNewToken recieved: " + token);
-
-        // стандартное название файла в библиотеке react-native-default-preference: "react-native"
-        SharedPreferences sp = getApplicationContext().getSharedPreferences("react-native", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-
-        editor.putString("pushToken", token);
-
-        editor.apply();
-    }
 }
