@@ -3,6 +3,7 @@ package ru.baikalweb.gruz;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import androidx.core.view.ViewCompat;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import com.facebook.react.bridge.WritableNativeArray;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
@@ -25,6 +27,8 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
+
+import ru.baikalweb.gruz.bridge.EventHelper;
 
 public class MainActivity extends ReactActivity {
 
@@ -141,6 +145,28 @@ public class MainActivity extends ReactActivity {
                 getSystemService(NotificationManager.class);
 
         notificationManager.createNotificationChannels(channelsList);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent fired");
+
+        Bundle data = intent.getExtras();
+
+        if (data != null) {
+            for (String key : data.keySet()) {
+                Object value = data.get(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
+
+            WritableNativeArray params = new WritableNativeArray();
+
+            params.pushString(data.getString("type"));
+            params.pushString(data.getString("order_id"));
+
+            EventHelper.sendEvent("onMessageReceived", this, params);
+        }
     }
 
     /**

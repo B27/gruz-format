@@ -46,6 +46,9 @@ export async function logInfo(params) {
  */
 export async function logScreenView(name) {
     try {
+        if (__DEV__) {
+            console.log('screen view', name);
+        }
         await analytics().logScreenView({ screen_name: name });
     } catch (error) {
         console.error(TAG, error);

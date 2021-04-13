@@ -10,7 +10,14 @@ import { RESULTS } from 'react-native-permissions';
 import LoadingButton from '../components/LoadingButton';
 import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import styles from '../styles';
-import { logError, logInfo, logScreenView, logSignOut, logUserOnWork, setUserIdForFirebase } from '../utils/FirebaseAnalyticsLogger';
+import {
+    logError,
+    logInfo,
+    logScreenView,
+    logSignOut,
+    logUserOnWork,
+    setUserIdForFirebase,
+} from '../utils/FirebaseAnalyticsLogger';
 import { execPendingNotificationListener, prepareNotificationListener } from '../utils/NotificationListener';
 import Permissons from '../utils/Permissions';
 

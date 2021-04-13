@@ -140,13 +140,13 @@ class MyAutoScreen extends React.Component {
             await axios.patch('/worker/upload/' + id, data);
             //await AsyncStorage.setItem("phoneNum", this.state.phone);
             this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
-            logInfo({ TAG, info: 'save info about auto' });
             showAlert('Успешно', 'Информация об авто сохранена');
             await this.props.store.refreshImages();
+            await logInfo({ TAG, info: 'save info about auto' });
             //this.props.navigation.navigate('EditCar');
         } catch (error) {
-            logError({ TAG, error, info: 'save info about auto' });
-            console.log(error);
+            await logError({ TAG, error, info: 'save info about auto' });
+            console.dir(error);
         }
     };
 
@@ -257,7 +257,11 @@ class MyAutoScreen extends React.Component {
                             </View>
                         </View>
 
-                        <LoadingButton style={styles.buttonBottom} onPress={this._saveAutoInfo}>
+                        <LoadingButton
+                            style={styles.buttonBottom}
+                            onPress={this._saveAutoInfo}
+                            // eslint-disable-next-line react-native/no-raw-text
+                        >
                             СОХРАНИТЬ
                         </LoadingButton>
                     </ScrollView>

@@ -53,10 +53,17 @@ export default async function NotificationListener(params) {
     } else {
         if (acceptNotification) {
             console.log(TAG, 'call gotoOrderPreview(order)()');
-            gotoOrderPreview(orderId)();
+            gotoMainScreen();
         }
     }
 }
+
+const gotoMainScreen = async () => {
+    _navigation.navigate('MainScreen');
+    if (_refreshCallback) {
+        _refreshCallback();
+    }
+};
 
 const gotoOrderPreview = (order_id) => async () => {
     try {
