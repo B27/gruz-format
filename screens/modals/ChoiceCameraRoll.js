@@ -19,23 +19,9 @@ function PhotoChoicer({ onChange, size, uri, refreshImage, containerStyle, image
     );
 
     const _onPressSelectImage = useCallback(async () => {
-        ImagePicker.showImagePicker(
+        ImagePicker.launchImageLibrary(
             {
-                title: null,
-                cancelButtonTitle: 'Отмена',
-                takePhotoButtonTitle: 'Сделать фото',
-                chooseFromLibraryButtonTitle: 'Выбрать из галереи',
-                permissionDenied: {
-                    title: 'Разрешения не предоставлены',
-                    text: 'Для загрузки фотографии необходимо предоставить разрешения',
-                    reTryTitle: 'Разрешить',
-                    okTitle: 'Понятно',
-                },
                 noData: true,
-                storageOptions: {
-                    skipBackup: true,
-                    privateDirectory: true,
-                },
                 quality: 0.5,
             },
             _handleImagePickerResponse,
