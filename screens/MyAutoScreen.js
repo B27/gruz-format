@@ -36,6 +36,9 @@ class MyAutoScreen extends React.Component {
         vehicle0: null,
         vehicle1: null,
         vehicle2: null,
+        veh0changed: false,
+        veh1changed: false,
+        veh2changed: false,
         veh_frameType: null,
         veh_is_open: null,
     };
@@ -110,40 +113,24 @@ class MyAutoScreen extends React.Component {
             console.log(res.data);
             const data = new FormData();
 
-            this.state.vehicle0 &&
-                !!mime.getType(this.state.vehicle0) &&
-                data.append('vehicle0', {
-                    uri: this.state.vehicle0,
-                    type: mime.getType(this.state.vehicle0),
-                    name: 'image.jpg',
-                });
+            for (let i = 0; i < 3; i++) {
+                this.state[`veh${i}changed`] &&
+                    !!mime.getType(this.state[`vehicle${i}`]) &&
+                    data.append(`vehicle${i}`, {
+                        uri: this.state[`vehicle${i}`],
+                        type: mime.getType(this.state[`vehicle${i}`]),
+                        name: 'image.jpg',
+                    });
+            }
 
-            this.state.vehicle1 &&
-                !!mime.getType(this.state.vehicle1) &&
-                data.append('vehicle1', {
-                    uri: this.state.vehicle1,
-                    type: mime.getType(this.state.vehicle1),
-                    name: 'image.jpg',
-                });
-
-            this.state.vehicle2 &&
-                mime.getType(this.state.vehicle2) &&
-                data.append('vehicle2', {
-                    uri: this.state.vehicle2,
-                    type: mime.getType(this.state.vehicle2),
-                    name: 'image.jpg',
-                });
-            //ImageCacheManager.clearCache();
-
-            console.log(data);
-
-            await axios.patch('/worker/upload/' + id, data);
-            //await AsyncStorage.setItem("phoneNum", this.state.phone);
+            if (data._parts.length > 0) {
+                await axios.patch('/worker/upload/' + id, data);
+            }
             this.setState({ message: 'Данные успешно сохранены', colorMessage: 'green' });
-            showAlert('Успешно', 'Информация об авто сохранена');
-            await this.props.store.refreshImages();
             await logInfo({ TAG, info: 'save info about auto' });
-            //this.props.navigation.navigate('EditCar');
+            showAlert('Успешно', 'Информация об авто сохранена');
+
+            await this.props.store.refreshImages();
         } catch (error) {
             await logError({ TAG, error, info: 'save info about auto' });
             console.dir(error);
@@ -251,7 +238,9 @@ class MyAutoScreen extends React.Component {
                                         imageStyle={localStyles.photoChoicer}
                                         uri={this.state[`vehicle${num}`] || this.props.store[`vehicle${num}`]}
                                         refreshImage={this.props.store.refreshImage}
-                                        onChange={(uri) => this.setState({ [`vehicle${num}`]: uri })}
+                                        onChange={(uri) => {
+                                            this.setState({ [`vehicle${num}`]: uri, [`veh${num}changed`]: true });
+                                        }}
                                     />
                                 ))}
                             </View>
