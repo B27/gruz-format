@@ -234,8 +234,8 @@ class MainScreen extends React.Component {
                                     <Text style={styles.errorMessage}>Не указан вес</Text>
                                 )}
                                 {store.disabled && <Text style={styles.errorMessage}>Учетная запись неактивна</Text>}
-                                {store.docStatus === 'notUploaded' ? (
-                                    <Text style={styles.errorMessage}>Загрузите документы!</Text>
+                                {(store.docStatus === 'notUploaded', true) ? (
+                                    <Text style={styles.infoMessage}>Загрузите документы!</Text>
                                 ) : store.docStatus === 'updated' ? (
                                     <Text style={styles.notificationMessage}>Ваши документы проверяются</Text>
                                 ) : null}

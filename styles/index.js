@@ -696,5 +696,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
     },
+    
+    infoMessage: {
+        color: '#4D443F',
+        textAlign: 'center',
+        fontSize: 16,
+    },
 });
 export default styles;
