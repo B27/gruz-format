@@ -14,10 +14,6 @@ class CustomDrawerContentComponent extends React.Component {
         userName: '',
     };
 
-    // _onChangeSwitchValue = () => {
-    // 	this.props.store.setOnWork(!this.props.store.onWork);
-    // };
-
     _licenseAgreementPress = () => {
         Linking.openURL(privacyPolicyURL);
     };
@@ -80,12 +76,6 @@ class CustomDrawerContentComponent extends React.Component {
                     </TouchableOpacity>
                 </SafeAreaView>
                 <View>
-                    {/* <View style={styles.drawerTopItem}>
-							<Text style={styles.drawerFontTopItem}>Работаю</Text>
-							<View>
-								<SwitchToggle switchOn={this.props.store.onWork} onPress={this._onChangeSwitchValue} />
-							</View>
-						</View> */}
                     <TouchableOpacity style={styles.drawerTopItem} onPress={this._balancePress}>
                         <Text style={styles.drawerFontTopItem}>Баланс</Text>
 

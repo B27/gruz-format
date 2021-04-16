@@ -75,24 +75,6 @@ class MainScreen extends React.Component {
 
     _keyExtractor = (item, index) => ' ' + item._id; // для идентификации каждой строки нужен key типа String
 
-    // _onChangeSwitchValue = async () => {
-
-    //     if (!this.props.store.onWork) {
-    //         if (!Platform.OS === 'android') {
-    //             console.log('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
-    //         } else {
-    //             this.props.store.setOnWork(!this.props.store.onWork);
-
-    //             await NativeModules.ForegroundTaskModule.startService(await AsyncStorage.getItem('token'));
-    //             this._onRefresh();
-    //         }
-    //     } else {
-    //         this.props.store.setOnWork(!this.props.store.onWork);
-    //         await NativeModules.ForegroundTaskModule.stopService();
-    //         this._onRefresh();
-    //     }
-    // };
-
     _onPressOrderItemButton = (order) => {
         logButtonPress({ TAG, info: 'goToOrderPreview', data: order._id });
         this.props.navigation.navigate('OrderPreview', { order });
@@ -230,11 +212,14 @@ class MainScreen extends React.Component {
                                 <Text style={styles.errorMessage}>{this.state.message}</Text>
                                 <Text style={styles.mainFontUserName}>{store.name}</Text>
                                 <Text style={styles.mainFontUserType}>{store.isDriver ? 'Водитель' : 'Грузчик'}</Text>
+                                {!store.onWork && (
+                                    <Text style={styles.errorMessage}>Уведомления о новых заказах отключены</Text>
+                                )}
                                 {store.isDriver || !!store.weight || (
                                     <Text style={styles.errorMessage}>Не указан вес</Text>
                                 )}
                                 {store.disabled && <Text style={styles.errorMessage}>Учетная запись неактивна</Text>}
-                                {(store.docStatus === 'notUploaded', true) ? (
+                                {store.docStatus === 'notUploaded' ? (
                                     <Text style={styles.infoMessage}>Загрузите документы!</Text>
                                 ) : store.docStatus === 'updated' ? (
                                     <Text style={styles.notificationMessage}>Ваши документы проверяются</Text>
@@ -255,12 +240,6 @@ class MainScreen extends React.Component {
                                     Пополнить баланс
                                 </Text>
                             </View>
-                            {/* <View style={styles.mainWorkingItem}>
-                            <Text style={styles.drawerFontTopItem}>Работаю</Text>
-                            <View>
-                                <SwitchToggle switchOn={store.onWork} onPress={this._onChangeSwitchValue} />
-                            </View>
-                        </View> */}
                         </View>
                     }
                     keyExtractor={this._keyExtractor}

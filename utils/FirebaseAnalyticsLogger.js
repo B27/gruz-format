@@ -55,6 +55,28 @@ export async function logScreenView(name) {
     }
 }
 
+export async function logDisableOrderNotification() {
+    try {
+        if (__DEV__) {
+            console.log(TAG, 'disable order notification');
+        }
+        await analytics().logEvent('disable_order_notification');
+    } catch (error) {
+        console.error(TAG, error);
+    }
+}
+
+export async function logEnableOrderNotification() {
+    try {
+        if (__DEV__) {
+            console.log(TAG, 'enable order notification');
+        }
+        await analytics().logEvent('enable_order_notification');
+    } catch (error) {
+        console.error(TAG, error);
+    }
+}
+
 /**
  *
  * @param {Object} params

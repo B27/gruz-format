@@ -136,7 +136,18 @@ async function registerOrder(userId, amount) {
     return response;
 }
 
+async function setOnWork(userId, value) {
+    try {
+        await axios.patch(`/worker/${userId}`, {
+            onWork: value,
+        });
+    } catch (error) {
+        await networkErrorHandler(TAG, error, `patch /worker/${userId}`);
+    }
+}
+
 export default {
+    setOnWork,
     cancelOrder,
     getDispatcher,
     startOrder,

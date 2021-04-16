@@ -18,7 +18,7 @@ class ObservableStore {
     @observable balance = '';
     @observable name = '';
     @observable isDriver = false;
-    @observable onWork = true; // на данный момент всегда true, необходимо смотреть response.data.order
+    @observable onWork = true;
     @observable orderIdOnWork = '';
     // @observable hasEndedOrder = false;
     @observable userId = '';
@@ -242,6 +242,13 @@ class ObservableStore {
         const response = await NetworkRequests.getDispatcher(id);
         runInAction(() => {
             this.dispatcher = response.data;
+        });
+    }
+
+    @action async setOnWork(value) {
+        await NetworkRequests.setOnWork(this.userId, value);
+        runInAction(() => {
+            this.onWork = value;
         });
     }
 

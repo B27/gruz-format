@@ -5,13 +5,24 @@ import axios from 'axios';
 import md5 from 'md5';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
-import { NativeModules, Platform, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, NativeModules, Platform, Switch, Text, TextInput, View } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
+import messaging from '@react-native-firebase/messaging';
 import styles from '../styles';
-import { logButtonPress, logError, logInfo, logScreenView, logSignOut } from '../utils/FirebaseAnalyticsLogger';
+import {
+    logButtonPress,
+    logDisableOrderNotification,
+    logEnableOrderNotification,
+    logError,
+    logInfo,
+    logScreenView,
+    logSignOut,
+} from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import NetworkRequests from '../mobx/NetworkRequests';
 
 const TAG = '~SettingsScreen~';
 @inject('store')
@@ -23,6 +34,7 @@ class SettingsScreen extends React.Component {
         newPassword: '',
         confirmPassword: '',
         colorMessage: 'red',
+        loadOnWork: false,
     };
 
     static navigationOptions = {
@@ -49,6 +61,30 @@ class SettingsScreen extends React.Component {
     render() {
         return (
             <View style={styles.registrationScreen}>
+                <View
+                    style={{
+                        alignSelf: 'stretch',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        height: 48,
+                        justifyContent: 'space-between',
+                        marginHorizontal: 16,
+                        marginBottom: 16,
+                    }}
+                >
+                    <Text onPress={this._changeNotificationsEnabled} style={{ fontSize: 18, flexWrap: 'wrap' }}>
+                        Уведомления о новых заказах
+                    </Text>
+                    {this.state.loadOnWork ? (
+                        <ActivityIndicator size="large" color="#FFC234" />
+                    ) : (
+                        <Switch
+                            style={styles.flex1}
+                            onValueChange={this._changeNotificationsEnabled}
+                            value={this.props.store.onWork}
+                        />
+                    )}
+                </View>
                 <Text style={{ fontSize: 18, marginBottom: 10 }}>Изменение пароля</Text>
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -95,6 +131,23 @@ class SettingsScreen extends React.Component {
             </View>
         );
     }
+
+    _changeNotificationsEnabled = async (value) => {
+        this.setState({ loadOnWork: true });
+        try {
+            await this.props.store.setOnWork(value);
+            if (value) {
+                await logEnableOrderNotification();
+            } else {
+                await logDisableOrderNotification();
+            }
+        } catch (error) {
+            logError({ TAG, error, info: `switch onWork to ${value}` });
+            showAlert('Ошибка', error.toString());
+        } finally {
+            this.setState({ loadOnWork: false });
+        }
+    };
 
     _signOutAsync = async () => {
         try {
