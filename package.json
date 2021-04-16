@@ -20,7 +20,7 @@
         "@react-native-firebase/iid": "^11.2.0",
         "@react-native-firebase/messaging": "^11.2.0",
         "@react-native-picker/picker": "^1.9.2",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "date-fns": "^2.14.0",
         "dayjs": "^1.9.6",
         "md5": "^2.2.1",
