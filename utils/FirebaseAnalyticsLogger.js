@@ -186,7 +186,9 @@ export async function logError(params) {
             console.error(_TAG, info, error);
         }
         await analytics().logEvent('error_catch', { info, error: error ? error.toString() : undefined });
-        crashlytics().recordError(error);
+        if (error instanceof Error) {
+            crashlytics().recordError(error);
+        }
     } catch (error) {
         console.error(TAG, error);
     }
