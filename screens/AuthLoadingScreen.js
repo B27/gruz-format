@@ -4,9 +4,8 @@ import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import { inject } from 'mobx-react/native';
 import React, { Fragment } from 'react';
-import { ActivityIndicator, Alert, NativeModules, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, NativeModules, Platform, Text, TouchableOpacity, View } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
-import { RESULTS } from 'react-native-permissions';
 import LoadingButton from '../components/LoadingButton';
 import registerForPushNotificationsAsync from '../components/registerForPushNotificationsAsync';
 import styles from '../styles';
@@ -19,7 +18,6 @@ import {
     setUserIdForFirebase,
 } from '../utils/FirebaseAnalyticsLogger';
 import { execPendingNotificationListener, prepareNotificationListener } from '../utils/NotificationListener';
-import Permissons from '../utils/Permissions';
 
 const TAG = '~AuthLoadingScreen~';
 
@@ -42,18 +40,6 @@ class AuthLoadingScreen extends React.Component {
 
         this.setState({ error: '' });
 
-        await Platform.select({
-            android: async () => {
-                const locationPermissionResult = await Permissons.askLocation();
-                console.log('locations permission result', locationPermissionResult);
-
-                if (locationPermissionResult !== RESULTS.GRANTED) {
-                    Alert.alert('Внимание', 'Для работы с приложением вам необходимо предоставить доступ к геолокации');
-                    return;
-                }
-            },
-            ios: async () => {},
-        })();
         prepareNotificationListener(navigation);
 
         const userToken = await AsyncStorage.getItem('token');

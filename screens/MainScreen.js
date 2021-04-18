@@ -1,14 +1,16 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { autorun, toJS } from 'mobx';
+import { autorun } from 'mobx';
 // import { Constants, Location, Notifications, Permissions, TaskManager } from 'expo';
 import { inject, observer } from 'mobx-react/native';
 import React from 'react';
 import { FlatList, NativeModules, Platform, Text, View, YellowBox } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+import DefaultPreference from 'react-native-default-preference';
+import { checkMultiple, PERMISSIONS, requestMultiple, RESULTS } from 'react-native-permissions';
 import OrderCard from '../components/OrderCard';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
-import { logButtonPress, logError, logInfo, logScreenView, logOrdersViews } from '../utils/FirebaseAnalyticsLogger';
+import { logButtonPress, logError, logInfo, logOrdersViews, logScreenView } from '../utils/FirebaseAnalyticsLogger';
 import * as NotificationListener from '../utils/NotificationListener';
 import showAlert from '../utils/showAlert';
 
@@ -44,6 +46,7 @@ class MainScreen extends React.Component {
         NotificationListener.setRefreshCallback(this._onRefresh);
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
             logScreenView(TAG);
+            this._checkAndroidLocationPermissions();
         });
         this.disposeAutorun = autorun(() => {
             const ordersIds = this.props.store.orders
@@ -66,6 +69,40 @@ class MainScreen extends React.Component {
         NotificationListener.setRefreshCallback(null);
         if (this.disposeAutorun) {
             this.disposeAutorun();
+        }
+    }
+
+    async _checkAndroidLocationPermissions() {
+        const isInfoDisclosureShown = await DefaultPreference.get('isInfoDisclosureShown');
+        const results = await checkMultiple([
+            PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
+            PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        ]);
+
+        const locationGranted =
+            results[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED &&
+            (results[PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION] === RESULTS.UNAVAILABLE ||
+                results[PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION] === RESULTS.GRANTED);
+
+        if (locationGranted) {
+            return;
+        }
+
+        if (!isInfoDisclosureShown) {
+            showAlert(
+                '',
+                'Чтобы поддерживать работу функции контроля за выполнением принятого заказа приложение собирает данные о местоположении, даже когда приложение закрыто или не используется',
+                {
+                    cancelable: true,
+                    okFn: async () => {
+                        await requestMultiple([
+                            PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+                            PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
+                        ]);
+                    },
+                },
+            );
+            await DefaultPreference.set('isInfoDisclosureShown', 'y');
         }
     }
 
