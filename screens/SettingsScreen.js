@@ -9,7 +9,6 @@ import { ActivityIndicator, NativeModules, Platform, Switch, Text, TextInput, Vi
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import LoadingButton from '../components/LoadingButton';
-import messaging from '@react-native-firebase/messaging';
 import styles from '../styles';
 import {
     logButtonPress,
@@ -21,8 +20,6 @@ import {
     logSignOut,
 } from '../utils/FirebaseAnalyticsLogger';
 import showAlert from '../utils/showAlert';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import NetworkRequests from '../mobx/NetworkRequests';
 
 const TAG = '~SettingsScreen~';
 @inject('store')
@@ -80,6 +77,8 @@ class SettingsScreen extends React.Component {
                     ) : (
                         <Switch
                             style={styles.flex1}
+                            trackColor={{ true: '#ffe096' }}
+                            thumbColor={this.props.store.onWork ? '#FFC234' : '#f4f3f4'}
                             onValueChange={this._changeNotificationsEnabled}
                             value={this.props.store.onWork}
                         />
@@ -132,7 +131,8 @@ class SettingsScreen extends React.Component {
         );
     }
 
-    _changeNotificationsEnabled = async (value) => {
+    _changeNotificationsEnabled = async () => {
+        const value = !this.props.store.onWork;
         this.setState({ loadOnWork: true });
         try {
             await this.props.store.setOnWork(value);
