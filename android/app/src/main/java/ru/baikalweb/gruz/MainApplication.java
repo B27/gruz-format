@@ -14,8 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
-import ru.baikalweb.gruz.foreground.ForegroundTaskPackage;
-import ru.baikalweb.gruz.foreground.WorkManagerPackage;
+import ru.baikalweb.gruz.foreground.LocationPackage;
 import ru.baikalweb.gruz.firebase.push.RNFirebasePushTokenPackage;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -35,8 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
                     // packages.add(new MyReactNativePackage());
                     packages.addAll(Arrays.asList(
                             new RNFirebasePushTokenPackage(),
-                            new ForegroundTaskPackage(),
-                            new WorkManagerPackage()
+                            new LocationPackage()
                     ));
                     return packages;
                 }

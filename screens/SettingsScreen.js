@@ -156,7 +156,7 @@ class SettingsScreen extends React.Component {
             await Platform.select({
                 android: async () => {
                     await NativeModules.RNFirebasePushToken.deleteInstanceId();
-                    await NativeModules.ForegroundTaskModule.stopService();
+                    await NativeModules.LocationModule.stopSendLocations();
                 },
                 ios: async () => {
                     await iid().delete();

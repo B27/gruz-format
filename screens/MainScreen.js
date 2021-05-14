@@ -17,7 +17,7 @@ import showAlert from '../utils/showAlert';
 // const LOCATION_TASK_NAME = 'background-location-task';
 
 const TAG = '~MainScreen~';
-const pauseBetweenSendGeo = 1000 * 60 * 30;
+const PAUSE_BETWEEN_SEND_LOCATION = 1000 * 60 * 30;
 
 YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?',
@@ -135,7 +135,7 @@ class MainScreen extends React.Component {
 
             await Platform.select({
                 android: async () => {
-                    await NativeModules.ForegroundTaskModule.stopService();
+                    await NativeModules.LocationModule.stopSendLocations();
                 },
                 ios: async () => {
                     await BackgroundGeolocation.stop();
@@ -163,42 +163,47 @@ class MainScreen extends React.Component {
             }
         }
 
-        Platform.select({
-            android: () => {
-                NativeModules.ForegroundTaskModule.stopService();
-            },
-            ios: async () => {
-                const needSendGeo = await this._checkNeedSendGeolocation();
-                if (needSendGeo) {
-                    await this._sendGeolocation(store.userId);
-                }
-            },
-        })();
-        //console.log('[MainScreen]._onRefresh() store', this.props.store)
+        const needSendGeo = await this._checkNeedSendGeolocation();
+        if (needSendGeo) {
+            await this._sendGeolocationOnce(store.userId);
+        }
     };
 
     _checkNeedSendGeolocation = async () => {
         const lastSendGeo = await AsyncStorage.getItem('lastSendGeo');
-        if (+lastSendGeo + pauseBetweenSendGeo < Date.now()) {
+        if (+lastSendGeo + PAUSE_BETWEEN_SEND_LOCATION < Date.now()) {
             return true;
         }
         return false;
     };
 
-    _sendGeolocation = async (userId) => {
-        try {
-            logInfo({ TAG, info: 'send geo on iOS' });
-            await BackgroundGeolocation.ready({ locationAuthorizationRequest: 'Always' });
+    _sendGeolocationOnce = async (userId) => {
+        await Platform.select({
+            android: async () => {
+                try {
+                    logInfo({ TAG, info: 'send geo on Android once' });
+                    const token = await AsyncStorage.getItem('token');
+                    await NativeModules.LocationModule.sendOneLocation(token);
+                } catch (error) {
+                    logError({ TAG, error, info: 'send geo on Android once' });
+                }
+            },
+            ios: async () => {
+                try {
+                    logInfo({ TAG, info: 'send geo on iOS once' });
+                    await BackgroundGeolocation.ready({ locationAuthorizationRequest: 'Always' });
 
-            const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
-            // console.log('location recieved', location);
+                    const location = await BackgroundGeolocation.getCurrentPosition({ timeout: 30 });
+                    // console.log('location recieved', location);
 
-            await NetworkRequests.sendLocation({ location }, userId);
-            await AsyncStorage.setItem('lastSendGeo', Date.now().toString());
-            await BackgroundGeolocation.stop();
-        } catch (error) {
-            logError({ TAG, error, info: 'send geo on iOS' });
-        }
+                    await NetworkRequests.sendLocation({ location }, userId);
+                    await AsyncStorage.setItem('lastSendGeo', Date.now().toString());
+                    await BackgroundGeolocation.stop();
+                } catch (error) {
+                    logError({ TAG, error, info: 'send geo on iOS once' });
+                }
+            },
+        })();
     };
 
     _showErrorMessage = (message) => {

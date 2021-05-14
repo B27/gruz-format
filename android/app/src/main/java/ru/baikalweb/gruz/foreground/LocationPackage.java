@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ForegroundTaskPackage implements ReactPackage {
+public class LocationPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
@@ -22,7 +22,7 @@ public class ForegroundTaskPackage implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
         //We import the module file here
-        modules.add(new ForegroundTaskModule(reactContext));
+        modules.add(new LocationModule(reactContext));
 
         return modules;
     }

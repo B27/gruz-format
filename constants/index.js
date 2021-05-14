@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 
 export const URL = __DEV__
     ? Platform.select({
-          android: () => 'http://10.0.2.2:3008',
+          android: () => /*'http://localhost:3008',*/ 'http://10.0.2.2:3008',
           ios: () => 'http://localhost:3008',
       })()
     : 'https://api.gruzformat.ru';

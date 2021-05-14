@@ -147,7 +147,7 @@ class OrderDetailScreen extends React.Component {
             await this.props.store.cancelFulfillingOrder();
             await Platform.select({
                 android: async () => {
-                    await NativeModules.ForegroundTaskModule.stopService();
+                    await NativeModules.LocationModule.stopSendLocations();
                 },
                 ios: async () => {
                     await BackgroundGeolocation.stop();

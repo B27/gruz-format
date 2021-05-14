@@ -55,11 +55,7 @@ class AuthLoadingScreen extends React.Component {
                 Authorization: 'Bearer ' + userToken,
             };
             await Platform.select({
-                android: async () => {
-                    logInfo({ TAG, info: 'restart work manager' });
-                    NativeModules.WorkManager.stopWorkManager();
-                    NativeModules.WorkManager.startWorkManager(userToken);
-                },
+                android: async () => {},
                 ios: async () => {
                     await this._requestNotificationsPermission();
                 },
@@ -82,15 +78,7 @@ class AuthLoadingScreen extends React.Component {
                     } else {
                         await logInfo({ TAG, info: 'user has active order' });
                         console.log(TAG, 'start foreground service');
-                        await Platform.select({
-                            android: async () => {
-                                NativeModules.ForegroundTaskModule.stopService();
-                                NativeModules.ForegroundTaskModule.startService(userToken, 'В работе');
-                            },
-                            ios: async () => {
-                                await this._startBackgroundGelocation(userId);
-                            },
-                        })();
+                        await this._startBackgroundGelocation(userId, userToken);
 
                         screenNeedToGo = 'OrderDetail';
                     }
@@ -122,7 +110,7 @@ class AuthLoadingScreen extends React.Component {
             await Platform.select({
                 android: async () => {
                     await NativeModules.RNFirebasePushToken.deleteInstanceId();
-                    await NativeModules.ForegroundTaskModule.stopService();
+                    await NativeModules.LocationModule.stopSendLocations();
                 },
                 ios: async () => {
                     await iid().delete();
@@ -148,25 +136,37 @@ class AuthLoadingScreen extends React.Component {
         logInfo({ TAG, info: `iOS notifications permissions status: ${authStatus}` });
     };
 
-    _startBackgroundGelocation = async (userId) => {
-        logInfo({ TAG, info: 'start background geolocation on iOS' });
-        try {
-            const state = await BackgroundGeolocation.ready({
-                elasticityMultiplier: 2,
-                url: `${axios.defaults.baseURL}/worker/location/${userId}`,
-                logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-                distanceFilter: 250,
-                autoSync: true,
-                autoSyncThreshold: 0,
-                maxRecordsToPersist: 1,
-                headers: axios.defaults.headers,
-            });
-            if (!state.enabled) {
-                BackgroundGeolocation.start();
-            }
-        } catch (error) {
-            logError({ TAG, info: 'start background location iOS', error });
-        }
+    _startBackgroundGelocation = async (userId, userToken) => {
+        await Platform.select({
+            android: async () => {
+                logInfo({ TAG, info: 'start background geolocation on Android' });
+                try {
+                    NativeModules.LocationModule.startSendLocations(userToken);
+                } catch (error) {
+                    logError({ TAG, info: 'start background location Android', error });
+                }
+            },
+            ios: async () => {
+                try {
+                    logInfo({ TAG, info: 'start background geolocation on iOS' });
+                    const state = await BackgroundGeolocation.ready({
+                        elasticityMultiplier: 2,
+                        url: `${axios.defaults.baseURL}/worker/location/${userId}`,
+                        logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                        distanceFilter: 250,
+                        autoSync: true,
+                        autoSyncThreshold: 0,
+                        maxRecordsToPersist: 1,
+                        headers: axios.defaults.headers,
+                    });
+                    if (!state.enabled) {
+                        BackgroundGeolocation.start();
+                    }
+                } catch (error) {
+                    logError({ TAG, info: 'start background location iOS', error });
+                }
+            },
+        })();
     };
 
     render() {

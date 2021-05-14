@@ -51,17 +51,7 @@ class OrderPreview extends React.Component {
 
         try {
             await store.startFulfillingOrder(order._id);
-            await Platform.select({
-                android: async () => {
-                    await NativeModules.ForegroundTaskModule.startService(
-                        await AsyncStorage.getItem('token'),
-                        'В работе',
-                    );
-                },
-                ios: async () => {
-                    await this._startBackgroundGelocation(store.userId);
-                },
-            })();
+            await this._startBackgroundGelocation(store.userId);
             navigation.navigate('OrderDetail');
             logAcceptOrder({ TAG, orderId: order._id });
         } catch (error) {
@@ -75,24 +65,37 @@ class OrderPreview extends React.Component {
     };
 
     _startBackgroundGelocation = async (userId) => {
-        try {
-            logInfo({ TAG, info: 'start background geo on iOS' });
-            const state = await BackgroundGeolocation.ready({
-                elasticityMultiplier: 2,
-                url: `${axios.defaults.baseURL}/worker/location/${userId}`,
-                logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-                distanceFilter: 250,
-                autoSync: true,
-                autoSyncThreshold: 0,
-                maxRecordsToPersist: 1,
-                headers: axios.defaults.headers,
-            });
-            if (!state.enabled) {
-                BackgroundGeolocation.start();
-            }
-        } catch (error) {
-            logError({ TAG, error, info: 'start background geo on iOS' });
-        }
+        await Platform.select({
+            android: async () => {
+                logInfo({ TAG, info: 'start background geolocation on Android' });
+                const token = await AsyncStorage.getItem('token');
+                try {
+                    NativeModules.LocationModule.startSendLocations(token);
+                } catch (error) {
+                    logError({ TAG, info: 'start background location Android', error });
+                }
+            },
+            ios: async () => {
+                logInfo({ TAG, info: 'start background geolocation on iOS' });
+                try {
+                    const state = await BackgroundGeolocation.ready({
+                        elasticityMultiplier: 2,
+                        url: `${axios.defaults.baseURL}/worker/location/${userId}`,
+                        logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                        distanceFilter: 250,
+                        autoSync: true,
+                        autoSyncThreshold: 0,
+                        maxRecordsToPersist: 1,
+                        headers: axios.defaults.headers,
+                    });
+                    if (!state.enabled) {
+                        BackgroundGeolocation.start();
+                    }
+                } catch (error) {
+                    logError({ TAG, info: 'start background location iOS', error });
+                }
+            },
+        })();
     };
 
     render() {

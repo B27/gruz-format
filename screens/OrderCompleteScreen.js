@@ -147,13 +147,6 @@ class OrderCompleteScreen extends React.Component {
 
         try {
             await NetworkRequests.completeOrder(requestData);
-            const userToken = await AsyncStorage.getItem('token');
-            Platform.select({
-                android: () => {
-                    NativeModules.WorkManager.startWorkManager(userToken);
-                },
-                ios: () => {},
-            })();
             this.props.navigation.navigate('AuthLoading');
         } catch (error) {
             await logError({ TAG, error, info: 'complete order' });
