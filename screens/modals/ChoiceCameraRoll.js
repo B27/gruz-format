@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal, Image } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 const placeholder = require('../../images/unknown.png');
 
 function PhotoChoicer({ onChange, size, uri, refreshImage, containerStyle, imageStyle }) {
@@ -10,6 +10,7 @@ function PhotoChoicer({ onChange, size, uri, refreshImage, containerStyle, image
                 console.log('User cancelled image picker');
             } else if (response.error) {
                 console.error('error in select image');
+                console.error(response.error);
             } else {
                 onChange(response.uri);
                 // await _cropImage(response.uri);
@@ -19,9 +20,9 @@ function PhotoChoicer({ onChange, size, uri, refreshImage, containerStyle, image
     );
 
     const _onPressSelectImage = useCallback(async () => {
-        ImagePicker.launchImageLibrary(
+        launchImageLibrary(
             {
-                noData: true,
+                mediaType: 'photo',
                 quality: 0.5,
             },
             _handleImagePickerResponse,

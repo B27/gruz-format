@@ -6213,10 +6213,10 @@ react-native-gifted-chat@^0.16.3:
     react-native-typing-animation "^0.1.7"
     uuid "3.4.0"
 
-react-native-image-picker@2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-2.3.4.tgz#1c31dbe9872ade17e2ed6457b0c669d63c322590"
-  integrity sha512-4UHu+zOyDT570r5mIbjH6h1iMrKIq/qfsKiAVUEZwncVegh0usJiEYNyJw4CEVwNeehmye/ia5sLDsa+kzIE4g==
+react-native-image-picker@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-3.6.0.tgz#7defd37c61d20650f2e89f30b4b637511aeb0140"
+  integrity sha512-5Qs4w1aN4hzESKl8qqYhSuXa84AYy1E9Je/owG7c1N+Gb4fWkmSL/fldiMJ/UYMXg4Ae/1tikLLAbJDTofCkAQ==
 
 react-native-iphone-x-helper@^1.0.3, react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"
