@@ -146,7 +146,18 @@ async function setOnWork(userId, value) {
     }
 }
 
+async function setAppVersion(userId, appVersion) {
+    try {
+        await axios.patch(`/worker/${userId}`, {
+            appVersion,
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export default {
+    setAppVersion,
     setOnWork,
     cancelOrder,
     getDispatcher,

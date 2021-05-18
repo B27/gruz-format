@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, autorun, computed, observable, runInAction } from 'mobx';
 import io from 'socket.io-client';
 import { URL } from '../constants';
+import appVersion from '../utils/appVersion';
 import NetworkRequests from './NetworkRequests';
 
 const TAG = '~Store~';
@@ -43,6 +44,7 @@ class ObservableStore {
     @observable passportSeries = '';
     @observable docStatus = '';
     @observable disabled = false;
+    @observable appVersion = null; //{ android: 0, ios: 0 };
 
     @observable veh_is_open = false;
     @observable veh_height = '';
@@ -128,6 +130,7 @@ class ObservableStore {
                 'veh_width',
                 'passportNumber',
                 'passportSeries',
+                'appVersion',
             ];
 
             requiredFieldsNames.forEach((fieldName) => {
@@ -302,9 +305,19 @@ class ObservableStore {
     }
 }
 
-const Store = new ObservableStore();
+const store = new ObservableStore();
 
-export default Store;
+autorun(async () => {
+    if (
+        store.appVersion &&
+        (store.appVersion.android !== appVersion().android || store.appVersion.ios !== appVersion().ios)
+    ) {
+        await NetworkRequests.setAppVersion(store.userId, appVersion());
+    }
+    console.log('APP VERSION !', appVersion());
+});
+
+export default store;
 //userName: response.data.name,
 //userType: response.data.isDriver,
 //workingStatus: response.data.onWork
