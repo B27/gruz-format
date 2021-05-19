@@ -18,7 +18,7 @@ export default async function registerForPushNotificationsAsync(pushToken) {
         return;
     }
 
-    const body = { token: pushToken };
+    const body = { token: curPushToken };
 
     try {
         await axios.post('/push_token', body);
