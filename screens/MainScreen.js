@@ -6,7 +6,7 @@ import React from 'react';
 import { FlatList, NativeModules, Platform, Text, View, YellowBox } from 'react-native';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import DefaultPreference from 'react-native-default-preference';
-import { checkMultiple, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import { checkMultiple, PERMISSIONS, request, requestMultiple, RESULTS } from 'react-native-permissions';
 import OrderCard from '../components/OrderCard';
 import NetworkRequests from '../mobx/NetworkRequests';
 import styles from '../styles';
@@ -94,28 +94,38 @@ class MainScreen extends React.Component {
             return;
         }
 
+        const checkLocationFn = async () => {
+            const version = Platform.Version;
+            if (version < 29) {
+                await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+            }
+            if (version === 29) {
+                await requestMultiple([
+                    PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+                    PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION,
+                ]);
+            }
+            if (version > 29) {
+                await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+                await request(PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION, {
+                    title: 'Внимание',
+                    message: 'Необходимо разрешить доступ к гелокации в любом режиме',
+                });
+            }
+            await DefaultPreference.set('isInfoDisclosureShown', 'y');
+        };
+
         if (!isInfoDisclosureShown) {
             showAlert(
                 '',
                 'Чтобы поддерживать работу функции контроля за выполнением принятого заказа приложение собирает данные о местоположении, даже когда приложение закрыто или не используется',
                 {
                     cancelable: true,
-                    okFn: async () => {
-                        await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-                        await request(PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION, {
-                            title: 'Внимание',
-                            message: 'Необходимо разрешить доступ к гелокации в любом режиме',
-                        });
-                        await DefaultPreference.set('isInfoDisclosureShown', 'y');
-                    },
+                    okFn: checkLocationFn,
                 },
             );
         } else {
-            await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-            await request(PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION, {
-                title: 'Внимание',
-                message: 'Необходимо разрешить доступ к местоположению в любом режиме',
-            });
+            await checkLocationFn();
         }
     }
 
